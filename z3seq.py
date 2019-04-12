@@ -8,7 +8,7 @@ import timer
 
 path = shutil.which ("z3")
 
-def run (eq,timeout = None):
+def run (eq,timeout):
     if not path:
         raise "Z3 Not in Path"
 
@@ -19,7 +19,7 @@ def run (eq,timeout = None):
     try:
         out = subprocess.check_output ([path,"smt.string_solver=seq",smtfile],timeout=timeout).decode().strip()
     except subprocess.TimeoutExpired:
-        return None,None
+        return None,timeout
     time.stop ()
     shutil.rmtree (tempd)
     if out == "sat":

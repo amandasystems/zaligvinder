@@ -8,12 +8,15 @@ import timer
 
 path = "z3"
 
-def run (eq):
+def run (eq,timeout = None):
     tempd = tempfile.mkdtemp ()
     smtfile = os.path.join (tempd,"out.smt")
     woorpje2smt.run (eq,smtfile)
     time = timer.Timer ()
-    out = subprocess.check_output ([path,"smt.string_solver=seq",smtfile]).decode().strip()
+    try:
+        out = subprocess.check_output ([path,"smt.string_solver=seq",smtfile],timeout=timeout).decode().strip()
+    except subprocess.TimeoutExpired:
+        return None,None
     time.stop ()
     shutil.rmtree (tempd)
     if out == "sat":

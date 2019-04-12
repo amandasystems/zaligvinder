@@ -1,0 +1,6 @@
+Variables {AFJI}
+Terminals {acb}
+Equation: cabccabbaccbcFcabbc = cabccabbaccbccaAaabcJaaabaacbaacabbc
+Equation: cbcbbaccaIcacbbbaacabacbbbbcabcaaaaaaabbbcabcbbabaabcabcbc = cbcbbaccaIcacbbbaacabacbbbbcabcaaaaaaabbbcabcbbabaabcabcbc
+Equation: cbbIbcacccbaabccbacbbbbbacaccacaacacacbabcacccaacbbaacccaa = cbbbcbabbcacccbaabccbacbbbbbacaccacaacacacbabcacccaacbbaacccaa
+SatGlucose(100)

@@ -1,0 +1,6 @@
+Variables {AEI}
+Terminals {acbfde}
+Equation: aebcdaecfbcdcbAIAdaefccAfaaedfdd = aE
+Equation: cccbedeAedAeacbfcAdadeedaAcfaeaaccfcaAdA = cccbedebedbeacAfcbdadeedaAcfaeaaccfcabdb
+Equation: bfffffecAadfdeaAebbcebeAcaccceaecafeefAc = bfffffecbadfdeabeAAceAeAcaccceaecafeefbc
+SatGlucose(100)

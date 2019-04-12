@@ -20,6 +20,8 @@ def run (eq,timeout):
         out = subprocess.check_output ([path,"smt.string_solver=z3str3",smtfile],timeout=timeout).decode().strip()
     except subprocess.TimeoutExpired:
         return None,timeout
+    except subprocess.CalledProcessError:
+        return None,timeout
     time.stop()
     shutil.rmtree (tempd)
     if out == "sat":

@@ -31,5 +31,5 @@ def run (eq,timeout):
     return None,time.getTime  ()
     
 if __name__ == "__main__":
-    print(run (sys.argv[1]))
+    print(run (sys.argv[1],None))
 

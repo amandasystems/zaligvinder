@@ -14,6 +14,7 @@ def run (eqfile,timeout):
             time.stop ()
             return True,time.getTime()
         except subprocess.CalledProcessError as ex:
+            time.stop ()
             if ex.returncode == 10 or ex.returncode == 20:
                 return None,time.getTime ()
             elif ex.returncode == 1:
@@ -28,5 +29,5 @@ def run (eqfile,timeout):
         raise "woorpje Not in Path" 
 
 if __name__ == "__main__":
-    run (sys.argv[1])
+    run (sys.argv[1],None)
 

@@ -19,16 +19,16 @@ def run (eq,timeout):
     try:
         out = subprocess.check_output ([path,"--lang","smt","-m","--strings-exp",smtfile],timeout=timeout).decode().strip()
     except subprocess.TimeoutExpired:
-        return None,timeout
+        return None,timeout,True
     except subprocess.CalledProcessError:
-        return None,timeout
+        return None,timeout,False
     time.stop ()
     shutil.rmtree (tempd)
     if out == "sat":
-        return True, time.getTime()
+        return True, time.getTime(),False
     elif out  =="unsat":
-        return False, time.getTime()
-    return None,time.getTime()
+        return False, time.getTime(),False
+    return None,time.getTime(),False
     
 if __name__ == "__main__":
     print(run (sys.argv[1],None))

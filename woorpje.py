@@ -12,17 +12,17 @@ def run (eqfile,timeout):
             time = timer.Timer ()
             subprocess.check_output ([tool,eqfile],timeout=timeout)
             time.stop ()
-            return True,time.getTime()
+            return True,time.getTime(),False
         except subprocess.CalledProcessError as ex:
             time.stop ()
             if ex.returncode == 10 or ex.returncode == 20:
-                return None,time.getTime ()
+                return None,time.getTime (),False
             elif ex.returncode == 1:
-                return False,time.getTime ()
+                return False,time.getTime (),False
             else:
-                return None,time.getTime ()
+                return None,time.getTime (),False
         except subprocess.TimeoutExpired:
-            return None,timeout
+            return None,timeout,True
                 
             
     else:

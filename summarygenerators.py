@@ -19,10 +19,13 @@ def cactusPlot (name,res):
     for p in res.keys():
         data = [i[1] for i in res[p]]
         data.sort()
-        data = list(accumulate(data))
-                               
+        data = list(accumulate(data))                       
         plt.scatter (range(0,len(data)),data,label = p)
+
     plt.title (name)
     plt.legend (loc='upper left')
     plt.savefig ("{0}-cactus.png".format(name))
     plt.close()
+
+def timePlot (name,res):
+    pass

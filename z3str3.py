@@ -3,10 +3,12 @@ import subprocess
 import tempfile
 import os
 import shutil
+import utils
 import sys
 import timer
 
-path = shutil.which ("z3")
+
+path = utils.findProgram ("Z3BINARY","z3")
 
 def run (eq,timeout):
     if not path:

@@ -1,12 +1,13 @@
 import woorpje2smt
 import subprocess
 import tempfile
-import os
+import utils
 import shutil
+import os
 import sys
 import timer
 
-path = shutil.which ("z3")
+path = utils.findProgram ("Z3BINARY","z3")
 
 def run (eq,timeout):
     if not path:

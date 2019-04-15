@@ -2,9 +2,9 @@ import sys
 import subprocess
 import shutil
 import timer
+import utils
 
-
-tool = path = shutil.which ("woorpje") 
+tool = utils.findProgram ("WOORPJEBINARY","woorpje")
 
 def run (eqfile,timeout):
     if tool:

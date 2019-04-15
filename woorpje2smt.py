@@ -1,8 +1,8 @@
 import sys
 import subprocess
-import shutil
+import utils
 
-tool = path = shutil.which ("woorpje2SMT") 
+tool =  utils.findProgram ("WOORPJE2SMT","woorpje2SMT")
 
 def run (eqfile,outfile):
     if tool:

@@ -5,8 +5,11 @@ import os
 import shutil
 import sys
 import timer
+import utils
 
-path = shutil.which ("cvc4")
+#path = shutil.which ("cvc4")
+path = utils.findProgram ("CVC4BINARY","cvc4")
+
 
 def run (eq,timeout):
     if not path:

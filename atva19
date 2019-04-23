@@ -14,13 +14,15 @@ timeout = 30
 solvers = {'z3str3' : z3str3.run,
            'z3seq' : z3seq.run,
            'cvc4' : cvc4.run,
-           'woorpje' :  woorpje.run
+           'woorpje' :  woorpje.run,
 }
 
 summaries = [summarygenerators.terminalResult,
              summarygenerators.cactusPlot,
+             summarygenerators.JSONOutputter ("atva19")
 ]
 
     
 outputfile = open("atva19.csv",'w')
 testrunner.runTestSetup (tracks,solvers,summaries,outputfile,timeout)
+summaries[2].writeout()

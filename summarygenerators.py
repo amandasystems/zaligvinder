@@ -44,14 +44,15 @@ def correctReferenceList (name,res):
     return ref
             
 class JSONOutputter:
-    def __init__(self):
+    def __init__(self,loc = "hh"):
         self._data = []
+        self._name = loc
 
     def __call__ (self,name,res):
         self._data.append((name,res))
     
     def writeout (self):
-        f = open ("fff",'w')
+        f = open (self._name+".json",'w')
         json.dump (self._data,f)    
         
 def timePlot (name,res):

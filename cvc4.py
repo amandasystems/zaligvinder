@@ -26,7 +26,7 @@ def run (eq,timeout):
     except subprocess.CalledProcessError:
         return None,timeout,False
     time.stop ()
-    shutil.rmtree (tempd)
+    shutil.rmtree (tempd) 
     if out == "sat":
         return True, time.getTime(),False
     elif out  =="unsat":

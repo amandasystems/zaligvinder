@@ -10,7 +10,7 @@ def run (eqfile,timeout):
     if tool:
         try:
             time = timer.Timer ()
-            subprocess.check_output ([tool,eqfile],timeout=timeout)
+            subprocess.check_output ([tool,'--simplify',eqfile],timeout=timeout)
             time.stop ()
             return True,time.getTime(),False
         except subprocess.CalledProcessError as ex:

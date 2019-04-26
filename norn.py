@@ -9,6 +9,8 @@ import timer
 
 
 path = utils.findProgram ("NORNBINARY","norn")
+FNULL = open(os.devnull, 'w')
+
 
 def run (eq,timeout):
     if not path:
@@ -19,16 +21,17 @@ def run (eq,timeout):
     woorpje2smt.run (eq,smtfile)
     time = timer.Timer ()
     try:
-        out = subprocess.check_output ([path,"+model",smtfile],timeout=timeout).decode().strip()
+        out = subprocess.check_output ([path,"+model",smtfile],timeout=timeout,stderr=FNULL).decode().strip()
     except subprocess.TimeoutExpired:
         return None,timeout,True
     except subprocess.CalledProcessError:
         return None,timeout,False
     time.stop()
+	
     shutil.rmtree (tempd)
-    if out == "sat":
+    if out.startswith("sat"):
         return True,time.getTime(),False
-    elif out  =="unsat":
+    elif out.startswith("unsat"):
         return False,time.getTime (),False
     return None,time.getTime  (),False
 

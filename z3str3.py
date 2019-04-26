@@ -27,7 +27,7 @@ def run (eq,timeout):
     time.stop()
     shutil.rmtree (tempd)
     if out == "sat":
-        return True,time.getTime(),False
+       return True,time.getTime(),False
     elif out  =="unsat":
         return False,time.getTime (),False
     return None,time.getTime  (),False

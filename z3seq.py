@@ -9,7 +9,7 @@ import timer
 
 path = utils.findProgram ("Z3BINARY","z3")
 
-def run (eq,timeout):
+def run (eq,timeout,solver="1",param="60"):
     if not path:
         raise "Z3 Not in Path"
 
@@ -30,7 +30,7 @@ def run (eq,timeout):
     elif out  =="unsat":
         return False, time.getTime(),False
     return None,time.getTime(),False
-    
+
 if __name__ == "__main__":
     print(run (sys.argv[1],None))
-    
+

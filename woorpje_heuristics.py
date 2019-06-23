@@ -6,11 +6,11 @@ import utils
 
 tool = utils.findProgram ("WOORPJEBINARY","woorpje")
 
-def run (eqfile,timeout):
+def run (eqfile,timeout,heuristicNo,smtSolverNo,heuristic_param_name,param):
     if tool:
         try:
             time = timer.Timer ()
-            out = subprocess.check_output ([tool, '--solver', '4' ,'-S','1','--smttimeout', '10', eqfile],timeout=timeout)
+            out = subprocess.check_output ([tool, '--solver', '4' ,'-S',str(smtSolverNo),'--smttimeout', '10', '--levisheuristics',str(heuristicNo),str(heuristic_param_name),str(param), eqfile],timeout=timeout)
             #out = subprocess.check_output ([tool,'--simplify', eqfile],timeout=timeout)
             #print(out.decode().strip())
             time.stop ()

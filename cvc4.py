@@ -11,7 +11,7 @@ import utils
 path = utils.findProgram ("CVC4BINARY","cvc4")
 
 
-def run (eq,timeout):
+def run (eq,timeout,solver="1",param="60"):
     if not path:
         raise "Z3 Not in Path"
 
@@ -26,7 +26,7 @@ def run (eq,timeout):
     except subprocess.CalledProcessError:
         return None,timeout,False
     time.stop ()
-    shutil.rmtree (tempd) 
+    shutil.rmtree (tempd)
     if out == "sat":
         return True, time.getTime(),False
     elif out  =="unsat":

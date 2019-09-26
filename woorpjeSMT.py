@@ -9,7 +9,7 @@ tool = utils.findProgram ("WOORPJESMTBINARY","woorpjeSMT")
 
 def extractFile(eqfile):
     fileName=ntpath.basename(eqfile)
-    dest="/home/mku/Uni_WORK/04_Vuurds/dbpBenchmarks/kaluzaSmallSatExtracted/"
+    dest="/root/words/benchmarkExtract/benchmarkTool/kaluzaSmallSatExtracted/"
     shutil.copyfile(eqfile, dest+fileName)
 
 def run (eqfile,timeout):
@@ -20,6 +20,7 @@ def run (eqfile,timeout):
             #out = subprocess.check_output ([tool,'--simplify', eqfile],timeout=timeout)
             #print(out.decode().strip())
             time.stop ()
+            extractFile(eqfile)
             return True,time.getTime(),False
         except subprocess.CalledProcessError as ex:
             time.stop ()

@@ -34,9 +34,9 @@ def runTrack (dir,solvers,outputfile,timeout):
                     if not n.startswith("heuristic"):
                         progressMessage (root,name,n,i,len(files))
                         res, time,timeouted = func (os.path.join (root,name),timeout)
-                        outputfile.write ("{0},{1},{2},{3},{4}\n".format (os.path.join (root,name),n,res,time,timeouted))
+                        outputfile.write ("{0},{1},{2},{3},{4},0\n".format (os.path.join (root,name),n,res,time,timeouted))
                         outputfile.flush ()
-                        results[n] = results.get(n,[]) + [(res,time,timeouted)]
+                        results[n] = results.get(n,[]) + [(res,time,timeouted,0)]
                     else:
                         for j in smtSolvers.keys():
                             for h in heuristics:

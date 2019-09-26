@@ -26,17 +26,18 @@ def run (eqfile,timeout):
             return True,time.getTime(),False
         except subprocess.CalledProcessError as ex:
             time.stop ()
-            if ex.returncode == 10 or ex.returncode == 20:
+
+            if ex.returncode == 0:
                 extractFile(eqfile,sfile)
+
+
+            if ex.returncode == 10 or ex.returncode == 20:
                 return None,time.getTime (),False
             elif ex.returncode == 1:
-                extractFile(eqfile,sfile)
                 return False,time.getTime (),False
             elif ex.returncode == 134 or ex.returncode == 255:
-                print("Shitfile: " + eqfile)
                 return None,0,False
             else:
-                extractFile(eqfile,sfile)
                 return None,time.getTime (),False
         except subprocess.TimeoutExpired:
             extractFile(eqfile,sfile)

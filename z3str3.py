@@ -1,4 +1,4 @@
-import woorpje2smt
+#import woorpje2smt
 import subprocess
 import tempfile
 import os
@@ -15,8 +15,10 @@ def run (eq,timeout):
         raise "Z3 Not in Path"
 
     tempd = tempfile.mkdtemp ()
-    smtfile = os.path.join (tempd,"out.smt")
-    woorpje2smt.run (eq,smtfile)
+    #smtfile = os.path.join (tempd,"out.smt")
+    #woorpje2smt.run (eq,smtfile)
+    smtfile = eq
+
     time = timer.Timer ()
     try:
         out = subprocess.check_output ([path,"smt.string_solver=z3str3","smt.str.in_processing_lemmas=false",smtfile],timeout=timeout).decode().strip()

@@ -70,7 +70,7 @@ if __name__ == "__main__":
     solvers = {'z3str3' : z3str3.run,
            'z3seq' : z3seq.run,
            'cvc4' : cvc4.run,
-           'woorpje' :  woorpje.run
+           'woorpjeSMT' :  woorpjeSMT.run
     }
 
     summaries = [summarygenerators.terminalResult,

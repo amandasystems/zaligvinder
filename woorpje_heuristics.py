@@ -5,7 +5,7 @@ import timer
 import utils
 import subprocess
 
-tool = utils.findProgram ("WOORPJEBINARY","woorpje")
+tool = utils.findProgram ("WOORPJESMTBINARY","woorpjeSMT")
 
 def run (eqfile,timeout,heuristicNo,smtSolverNo,heuristic_param_name,param):
     if tool:

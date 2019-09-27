@@ -21,7 +21,7 @@ def run (eq,timeout):
 
     time = timer.Timer ()
     try:
-        out = subprocess.check_output ([path,"smt.string_solver=z3str3","smt.str.in_processing_lemmas=false",smtfile],timeout=timeout).decode().strip()
+        out = subprocess.check_output ([path,"smt.string_solver=z3str3",smtfile],timeout=timeout).decode().strip()
     except subprocess.TimeoutExpired:
         return None,timeout,True
     except subprocess.CalledProcessError:

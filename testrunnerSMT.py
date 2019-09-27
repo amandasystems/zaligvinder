@@ -15,15 +15,15 @@ def runTrack (dir,solvers,outputfile,timeout):
     smtSolvers = dict()
     smtSolvers[0] = "CVC4"
     #smtSolvers[1] = "z3seq"
-    #smtSolvers[2] = "z3str3"
+    smtSolvers[2] = "z3str3"
 
     # heuristic setup
     heuristics = dict()
 
-    #heuristics[0] = ('VariableTerminalRatio','--VarTerminalRation',[3.14,0.15,1.12358])
-    #heuristics[1] = ('WaitingListLimitReached','--WaitingLimit',[314,15,1123])
-    #heuristics[2] = ('EquationGrowth','--growth',[0.15,1.075,2])
-    #heuristics[3] = ('EquationLengthExceeded','--eqLength',[2,20,400])
+    heuristics[0] = ('VariableTerminalRatio','--VarTerminalRation',[3.14,0.15,1.12358])
+    heuristics[1] = ('WaitingListLimitReached','--WaitingLimit',[314,15,1123])
+    heuristics[2] = ('EquationGrowth','--growth',[0.15,1.075,2])
+    heuristics[3] = ('EquationLengthExceeded','--eqLength',[2,20,400])
     heuristics[0] = ('NoSMT','--VarTerminalRation',[0])
 
     for root,dirs,files in os.walk (dir):

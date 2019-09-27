@@ -1,3 +1,4 @@
+(set-logic QF_S)
 (declare-fun T_1 () Bool)
 (declare-fun T_2 () Bool)
 (declare-fun var_0xINPUT_44535 () String)

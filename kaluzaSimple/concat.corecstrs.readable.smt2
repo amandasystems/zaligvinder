@@ -1,3 +1,4 @@
+(set-logic QF_S)
 (declare-fun PCTEMP_LHS_1 () String)
 (declare-fun T1_2 () String)
 (declare-fun T1_6 () String)

@@ -1,3 +1,4 @@
+(set-logic QF_S)
 (declare-fun T_1 () Bool)
 (declare-fun var_0xINPUT_113761 () String)
 (assert (= T_1 (= "dLCtWAGBY4" var_0xINPUT_113761)))

@@ -1,3 +1,4 @@
+(set-logic QF_S)
 (declare-fun T_1 () Bool)
 (declare-fun T_10 () Bool)
 (declare-fun T_2 () Bool)

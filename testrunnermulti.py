@@ -1,23 +1,39 @@
 #!/usr/bin/python3
 import os
 import sys
+from multiprocessing import Pool
+from multiprocessing import current_process
 
+cores = 4
 
-def progressMessage (track,file,solver,cur,total):
-    sys.stdout.write ("\x1b[2K\r[ {0}  {1} {2} - {3}/{4}]".format(track,file,solver,cur+1,total))
+def progressMessage (file,solver):
+    sys.stdout.write ("\x1b[2K[ {0} -  {1} | {2} ]\r".format(file,solver,current_process().pid))
 
+def runSpecific (tup):
+    solvername,func,model,timeout = tup
+    progressMessage (model,solvername)
+    res,time,timeouted,smtcalls = func(model,timeout)
+    tores = (solvername,(res,time,timeouted,smtcalls))
+    tofile = "{0},{1},{2},{3},{4},{5}\n".format (model,solvername,res,time,timeouted,smtcalls)
+    return tores,tofile
 
 def runTrack (track,solvers,outputfile,timeout):
     results = {}
     tname, files =track
-    
+
+    todispatch = []
+    tasks = []
     for solver,func in solvers.items():
         for i,n in enumerate(files):
-            progressMessage (tname,n,solver,i,len(files))
-            res, time,timeouted,smtcalls = func (n,timeout)
-            outputfile.write ("{0},{1},{2},{3},{4},{5}\n".format (n,solver,res,time,timeouted,smtcalls))
-            outputfile.flush ()
-            results[solver] = results.get(solver,[]) + [(res,time,timeouted,smtcalls)]
+            tasks.append ((solver,func,n,timeout))
+    p = Pool (cores)
+    res = p.map (runSpecific,tasks)
+    
+    for tores,tofile in res: 
+        
+        outputfile.write (tofile)
+        outputfile.flush ()
+        results[tores[0]] = results.get(tores[0],[]) + [tores[1]]
     sys.stdout.write ("\n")
     return results
 

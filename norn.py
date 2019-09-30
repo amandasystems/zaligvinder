@@ -23,17 +23,17 @@ def run (eq,timeout):
     try:
         out = subprocess.check_output ([path,"+model",smtfile],timeout=timeout,stderr=FNULL).decode().strip()
     except subprocess.TimeoutExpired:
-        return None,timeout,True
+        return None,timeout,True,1
     except subprocess.CalledProcessError:
-        return None,timeout,False
+        return None,timeout,False,1
     time.stop()
 	
     shutil.rmtree (tempd)
     if out.startswith("sat"):
-        return True,time.getTime(),False
+        return True,time.getTime(),False,1
     elif out.startswith("unsat"):
-        return False,time.getTime (),False
-    return None,time.getTime  (),False
+        return False,time.getTime (),False,1
+    return None,time.getTime  (),False,1
 
 if __name__ == "__main__":
     print(run (sys.argv[1],None))

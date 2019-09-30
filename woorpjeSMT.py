@@ -9,20 +9,20 @@ tool = utils.findProgram ("WOORPJESMTBINARY","woorpjeSMT")
 
 def extractFile(eqfile,sfile):
     fileName=ntpath.basename(eqfile)
-    dest="/root/words/benchmarkExtract/benchmarkTool/kaluzaSmallSatExtracted/"
+    #dest="/root/words/benchmarkExtract/benchmarkTool/kaluzaSmallSatExtracted/"
     #shutil.copyfile(eqfile, dest+fileName)
     shutil.copyfile(eqfile, dest+"/simplify/"+fileName)
 
 def run (eqfile,timeout):
-    sfile = "/root/words/benchmarkExtract/benchmarkTool/kaluzaSmallSatExtracted/test.smt"
+    #sfile = "/root/words/benchmarkExtract/benchmarkTool/kaluzaSmallSatExtracted/test.smt"
     if tool:
         try:
             time = timer.Timer ()
-            out = subprocess.check_output ([tool, '--solver', '4' ,'-S','1','--smttimeout', '10', '--outputfile', sfile, eqfile],timeout=timeout)
+            out = subprocess.check_output ([tool, '--solver', '4' ,'-S','1','--smttimeout', '10', eqfile],timeout=timeout)
             #out = subprocess.check_output ([tool,'--simplify', eqfile],timeout=timeout)
             #print(out.decode().strip())
             time.stop ()
-            extractFile(eqfile,sfile)
+            #extractFile(eqfile,sfile)
             return True,time.getTime(),False
         except subprocess.CalledProcessError as ex:
             time.stop ()
@@ -40,7 +40,7 @@ def run (eqfile,timeout):
             else:
                 return None,time.getTime (),False
         except subprocess.TimeoutExpired:
-            extractFile(eqfile,sfile)
+            #extractFile(eqfile,sfile)
             return None,timeout,True
 
 
@@ -48,4 +48,4 @@ def run (eqfile,timeout):
         raise "woorpje Not in Path"
 
 if __name__ == "__main__":
-    run (sys.argv[1],None)
+    print (run (sys.argv[1],None))

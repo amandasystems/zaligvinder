@@ -23,17 +23,17 @@ def run (eq,timeout):
     try:
         out = subprocess.check_output ([path,"smt.string_solver=z3str3",smtfile],timeout=timeout).decode().strip()
     except subprocess.TimeoutExpired:
-        return None,timeout,True
+        return None,timeout,True,1
     except subprocess.CalledProcessError:
-        return None,timeout,False
+        return None,timeout,False,1
 
     time.stop()
     shutil.rmtree (tempd)
     if "unsat" in out:
-        return False,time.getTime (),False
+        return False,time.getTime (),False,1
     elif "sat" in out:
-        return True,time.getTime(),False
-    return None,time.getTime  (),False
+        return True,time.getTime(),False,1
+    return None,time.getTime  (),False,1
 
 if __name__ == "__main__":
     print(run (sys.argv[1],None))

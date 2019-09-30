@@ -3,10 +3,11 @@ from itertools import accumulate
 import tabulate
 import json
 
-def terminalResult (name,res):
+def terminalResult (track,res):
+    name,files = track
     print ("Track:" + name)
     table = []
-    ref = correctReferenceList (name,res)
+    ref = correctReferenceList (track,res)
     for n in res.keys():
         smtcalls = sum([i[3] for i in res[n]])
         sat = sum([1 for i in res[n] if True == i[0]])
@@ -19,7 +20,8 @@ def terminalResult (name,res):
         table.append ([n,sat,nsat,unk,errors,smtcalls,t,cort])
     print(tabulate.tabulate(table,["Solver", "Satis", "NSatis", "Unknown", "Errors",  "SMT Solver Calls", "Total Time", "Total Correct"]))
 
-def cactusPlot (name,res):
+def cactusPlot (track,res):
+    name,files = track
     for p in res.keys():
         data = [i[1] for i in res[p]]
         data.sort()
@@ -31,7 +33,8 @@ def cactusPlot (name,res):
     plt.savefig ("{0}-cactus.png".format(name))
     plt.close()
 
-def correctReferenceList (name,res):
+def correctReferenceList (track,res):
+    name,files = track
     ref = []
     for elem in zip (*res.values()):
         sat = sum([1 for i in elem  if i[0]])
@@ -49,7 +52,8 @@ class JSONOutputter:
         self._data = []
         self._name = loc
 
-    def __call__ (self,name,res):
+    def __call__ (self,track,res):
+        name,files = track
         self._data.append((name,res))
 
     def writeout (self):

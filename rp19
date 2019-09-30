@@ -1,0 +1,45 @@
+#!/usr/bin/python
+
+import testrunnermulti
+import z3seq
+import z3str3
+import cvc4
+import woorpje
+
+import track01
+import track02
+import track03
+import track04
+import track05
+
+
+
+
+
+import summarygenerators
+from datetime import datetime
+
+tracks = [track01.trackdata,
+          #track02.trackdata,
+          #track03.trackdata,
+          #track04.trackdata,
+          #track05.trackdata,
+]
+timeout = 30
+
+solvers = {
+    #'z3str3' : z3str3.run,
+    #'z3seq' : z3seq.run,
+    #'cvc4' : cvc4.run,
+    #'norn' :  norn.run,
+    'woorpje' :  woorpje.run
+}
+
+summaries = [summarygenerators.terminalResult
+]
+
+
+timestamp = datetime.timestamp(datetime.now())
+
+outputfile = open("results/results_"+str(timestamp)+".csv",'w')
+testrunnermulti.runTestSetup (tracks,solvers,summaries,outputfile,timeout)

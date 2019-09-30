@@ -70,8 +70,19 @@ runName = {
     }
 
 
+class RunProxy:
+    def __init__ (self,func,smtsolver,param):
+        self._func = func
+        self._smtsolver = smtsolver
+        self._param = param
+
+    def __call__ (self,eq,timeout):
+        return self._func (eq,timeout,smtsolvers[self._smtsolver],self._param)
+            
+
 def makeRunner (func,smtsolver,param):
-    return lambda eq,timeout : func(eq,timeout,smtsolvers[smtsolver],param)
+    return RunProxy (func,smtsolver,param)
+    #return lambda eq,timeout : func(eq,timeout,smtsolvers[smtsolver],param)
 
 def addRunners (runname,solvers,param,addTo):
     for solver in solvers:

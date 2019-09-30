@@ -8,12 +8,13 @@ import cvc4
 #import woorpjeSMT
 import woorpje_heuristics
 import kaluzaSimple
+import track01
 
 #import sloth
 import summarygenerators
 from datetime import datetime
 
-tracks = [kaluzaSimple.trackdata]
+tracks = [track01.trackdata]
 timeout = 30
 
 solvers = {

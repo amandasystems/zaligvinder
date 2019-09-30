@@ -7,4 +7,4 @@ for root, dirs, files in os.walk(dir_path, topdown=False):
         if name.endswith (".smt"):
             filest.append(os.path.join (root,name))
 
-trackdata = ("kaluze_simple",filest)
+trackdata = ("track1",filest)

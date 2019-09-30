@@ -52,7 +52,7 @@ def runEquationGrowth (eqfile,timeout,solver,ratio):
 def runEquationGrowthExceeded (eqfile,timeout,solver,ratio):
     return run (eqfile,timeout,3,solver,"--eqLength",ratio)
 
-def runNone (eqfile,timeout):
+def runNone (eqfile,timeout,solver,ratio):
     return run (eqfile,timeout,4,solver,"--VarTerminalRation",0)
 
 

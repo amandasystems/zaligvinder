@@ -19,11 +19,11 @@ import track05
 import summarygenerators
 from datetime import datetime
 
-tracks = [track01.trackdata,
-          #track02.trackdata,
-          #track03.trackdata,
-          #track04.trackdata,
-          #track05.trackdata,
+tracks = [track01.trackdataeq,
+          track02.trackdata,
+          track03.trackdata,
+          track04.trackdata,
+          track05.trackdata,
 ]
 timeout = 30
 

@@ -10,6 +10,7 @@ def progressMessage (track,file,solver,cur,total):
 def runTrack (track,solvers,outputfile,timeout):
     results = {}
     tname, files =track
+    print ("Running track {0} with {1} files.".format (tname,len(files)))
     
     for solver,func in solvers.items():
         for i,n in enumerate(files):

@@ -1,4 +1,4 @@
-#import woorpje2smt
+import woorpje2smt
 import subprocess
 import tempfile
 import os
@@ -15,9 +15,8 @@ def run (eq,timeout):
         raise "Z3 Not in Path"
 
     tempd = tempfile.mkdtemp ()
-    #smtfile = os.path.join (tempd,"out.smt")
-    #woorpje2smt.run (eq,smtfile)
-    smtfile = eq
+    smtfile = os.path.join (tempd,"out.smt")
+    woorpje2smt.run (eq,smtfile)
 
     time = timer.Timer ()
     try:

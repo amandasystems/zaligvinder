@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
-import testrunnermulti
-#import z3seq
+import testrunner
+import z3seq
 import z3str3
 import cvc4
 #import norn
@@ -18,9 +18,9 @@ tracks = [kaluzaWoorpje.trackdata]
 timeout = 30
 
 solvers = {
-    #'z3str3' : z3str3.run,
-    #'z3seq' : z3seq.run,
-    #'cvc4' : cvc4.run,
+    'z3str3' : z3str3.run,
+    'z3seq' : z3seq.run,
+    'cvc4' : cvc4.run,
 }
 
 smtsolvers = ["z3seq","cvc4","z3str3"]
@@ -53,4 +53,4 @@ summaries = [summarygenerators.terminalResult,
 timestamp = datetime.timestamp(datetime.now())
 
 outputfile = open("results/results_"+str(timestamp)+".csv",'w')
-testrunnermulti.runTestSetup (tracks,solvers,summaries,outputfile,timeout)
+testrunner.runTestSetup (tracks,solvers,summaries,outputfile,timeout)

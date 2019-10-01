@@ -1,4 +1,4 @@
-#import woorpje2smt
+import woorpje2smt
 import subprocess
 import tempfile
 import os
@@ -16,24 +16,23 @@ def run (eq,timeout,solver="1",param="60"):
         raise "Z3 Not in Path"
 
     tempd = tempfile.mkdtemp ()
-    #smtfile = os.path.join (tempd,"out.smt")
-    #woorpje2smt.run (eq,smtfile)
-    smtfile = eq
+    smtfile = os.path.join (tempd,"out.smt")
+    woorpje2smt.run (eq,smtfile)
 
     time = timer.Timer ()
     try:
         out = subprocess.check_output ([path,"--lang","smt","-m","--strings-exp",smtfile],timeout=timeout).decode().strip()
     except subprocess.TimeoutExpired:
-        return None,timeout,True
+        return None,timeout,True,1
     except subprocess.CalledProcessError:
-        return None,timeout,False
+        return None,timeout,False,1
     time.stop ()
     shutil.rmtree (tempd)
     if out == "sat":
-        return True, time.getTime(),False
+        return True, time.getTime(),False,1
     elif out  =="unsat":
-        return False, time.getTime(),False
-    return None,time.getTime(),False
+        return False, time.getTime(),False,1
+    return None,time.getTime(),False,1
 
 if __name__ == "__main__":
     print(run (sys.argv[1],None))

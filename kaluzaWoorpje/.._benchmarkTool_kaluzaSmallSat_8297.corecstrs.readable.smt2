@@ -1,0 +1,8 @@
+(set-logic QF_S)
+(declare-fun _var_0xINPUT_102191_() String)
+(declare-fun __woorpje_diseq_pref0_() String)
+(declare-fun __woorpje_diseq_suf_l0_() String)
+(declare-fun __woorpje_diseq_suf_r0_() String)
+(assert (=(str.++  "i9wNKDBbHG" "")(str.++ __woorpje_diseq_pref0_  "D" __woorpje_diseq_suf_l0_  "")) )
+(assert (=(str.++ _var_0xINPUT_102191_  "")(str.++ __woorpje_diseq_pref0_  "G" __woorpje_diseq_suf_r0_  "")) )
+(check-sat)

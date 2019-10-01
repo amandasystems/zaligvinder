@@ -4,7 +4,7 @@ import sys
 from multiprocessing import Pool
 from multiprocessing import current_process
 
-cores = 4
+cores = 75
 
 def progressMessage (file,solver):
     sys.stdout.write ("\x1b[2K[ {0} -  {1} | {2} ]\r".format(file,solver,current_process().pid))

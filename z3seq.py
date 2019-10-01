@@ -25,11 +25,11 @@ def run (eq,timeout,solver="1",param="60"):
         return None,timeout,False,1
     time.stop ()
     shutil.rmtree (tempd)
-    if out == "sat":
-        return True, time.getTime(),False,1
-    elif out  =="unsat":
-        return False, time.getTime(),False,
-    return None,time.getTime(),False,1
+    if "unsat" in out:
+        return False,time.getTime (),False,1
+    elif "sat" in out:
+        return True,time.getTime(),False,1
+    return None,time.getTime  (),False,1
 
 if __name__ == "__main__":
     print(run (sys.argv[1],None))

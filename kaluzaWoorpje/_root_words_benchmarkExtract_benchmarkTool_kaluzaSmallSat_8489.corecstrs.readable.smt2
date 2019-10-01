@@ -1,8 +1,0 @@
-(set-logic QF_S)
-(declare-fun _var_0xINPUT_114888_() String)
-(declare-fun __woorpje_diseq_pref0_() String)
-(declare-fun __woorpje_diseq_suf_l0_() String)
-(declare-fun __woorpje_diseq_suf_r0_() String)
-(assert (=(str.++  "ORAvs8BdKx" "")(str.++ __woorpje_diseq_pref0_  "8" __woorpje_diseq_suf_l0_  "")) )
-(assert (=(str.++ _var_0xINPUT_114888_  "")(str.++ __woorpje_diseq_pref0_  "x" __woorpje_diseq_suf_r0_  "")) )
-(check-sat)

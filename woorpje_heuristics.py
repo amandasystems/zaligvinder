@@ -16,7 +16,7 @@ def run (eqfile,timeout,heuristicNo,smtSolverNo,heuristic_param_name,param):
             #out = subprocess.check_output ([tool,'--simplify', eqfile],timeout=timeout)
             
             
-            p = subprocess.run([tool, '--solver', '4' ,'-S',str(smtSolverNo),'--smttimeout', '10', '--levisheuristics',str(heuristicNo),str(heuristic_param_name),str(param), eqfile],  stdout=subprocess.PIPE, encoding='ascii', universal_newlines = True,timeout=timeout)
+            p = subprocess.run([tool, '--solver', '4' ,'-S',str(smtSolverNo),'--smttimeout', '15', '--levisheuristics',str(heuristicNo),str(heuristic_param_name),str(param), eqfile],  stdout=subprocess.PIPE, encoding='ascii', universal_newlines = True,timeout=timeout)
             time.stop ()
             output = p.stdout.splitlines()
 

@@ -20,7 +20,7 @@ def run (eq,timeout):
 
     time = timer.Timer ()
     try:
-        out = subprocess.check_output ([path,"smt.string_solver=z3str3",smtfile],timeout=timeout).decode().strip()
+        out = subprocess.check_output ([path,"smt.string_solver=z3str3","dump_models=true","model_validate=true",smtfile],timeout=timeout).decode().strip()
     except subprocess.TimeoutExpired:
         return None,timeout,True,1
     except subprocess.CalledProcessError:

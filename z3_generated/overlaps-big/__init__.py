@@ -10,5 +10,5 @@ for root, dirs, files in os.walk(dir_path, topdown=False):
         if name.endswith (".eq"):
             filesteq.append(os.path.join (root,name))
 
-trackdata = ("z3-concats-balanced",filest)
-trackdataeq = ("z3-concats-balanced",filesteq)
+trackdata = ("z3-overlaps-big",filest)
+trackdataeq = ("z3-overlaps-big",filesteq)

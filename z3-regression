@@ -15,12 +15,29 @@ import cvc4
 #import track05
 import z3_regression
 
+import z3_generated/concats-balanced
+import z3_generated/concats-big
+import z3_generated/concats-extracts-big
+import z3_generated/concats-extracts-small
+import z3_generated/concats-small
+import z3_generated/different-prefix
+import z3_generated/lengths-concats
+import z3_generated/lengths-long
+import z3_generated/lengths-short
+import z3_generated/many-regexes
+import z3_generated/overlaps-big
+import z3_generated/overlaps-small
+import z3_generated/regex-big
+import z3_generated/regex-deep
+import z3_generated/regex-lengths
+import z3_generated/regex-pair
+
 
 #import sloth
 import summarygenerators
 from datetime import datetime
 
-tracks = [z3_regression.trackdata]
+tracks = [z3_regression.trackdata,concats-balanced.trackdata,concats-extracts-small.trackdata,lengths-short.trackdata,overlaps-small.trackdata,regex-lengths.trackdata,concats-big.trackdata,concats-small.trackdata,lengths-concats.trackdata,many-regexes.trackdata,regex-big.trackdata,regex-pair.trackdata,concats-extracts-big.trackdata,different-prefix.trackdata,lengths-long.trackdata,overlaps-big.trackdata,regex-deep.trackdata,regex-small.trackdata]
 timeout = 30
 
 solvers = {

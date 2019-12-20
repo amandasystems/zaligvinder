@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import os
 import sys
+import utils
 from multiprocessing import Pool
 from multiprocessing import current_process
 
@@ -13,7 +14,7 @@ def runSpecific (tup):
     solvername,func,model,timeout = tup
     progressMessage (model,solvername)
     res,time,timeouted,smtcalls = func(model,timeout)
-    tores = (solvername,(res,time,timeouted,smtcalls))
+    tores = (solvername,utils.Result(res,time,timeouted,smtcalls))
     tofile = "{0},{1},{2},{3},{4},{5}\n".format (model,solvername,res,time,timeouted,smtcalls)
     return tores,tofile
 

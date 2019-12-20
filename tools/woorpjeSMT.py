@@ -18,12 +18,12 @@ def run (eqfile,timeout):
     if tool:
         try:
             time = timer.Timer ()
-            out = subprocess.check_output ([tool, '--solver', '4' ,'-S','1','--smttimeout', '10', eqfile],timeout=timeout)
+            out = subprocess.check_output ([tool, '--solver', '1' ,'-S','1','--smttimeout', '10', eqfile],timeout=timeout)
             #out = subprocess.check_output ([tool,'--simplify', eqfile],timeout=timeout)
             #print(out.decode().strip())
             time.stop ()
             #extractFile(eqfile,sfile)
-            return True,time.getTime(),False
+            return True,time.getTime(),False,0
         except subprocess.CalledProcessError as ex:
             time.stop ()
 
@@ -32,16 +32,16 @@ def run (eqfile,timeout):
 
 
             if ex.returncode == 10 or ex.returncode == 20:
-                return None,time.getTime (),False
+                return None,time.getTime (),False,0
             elif ex.returncode == 1:
-                return False,time.getTime (),False
+                return False,time.getTime (),False,0
             elif ex.returncode == 134 or ex.returncode == 255:
-                return None,0,False
+                return None,0,False,0
             else:
-                return None,time.getTime (),False
+                return None,time.getTime (),False,0
         except subprocess.TimeoutExpired:
             #extractFile(eqfile,sfile)
-            return None,timeout,True
+            return None,timeout,True,0
 
 
     else:

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import os
 import sys
-
+import utils
 
 def progressMessage (track,file,solver,cur,total):
     sys.stdout.write ("\x1b[2K\r[ {0}  {1} {2} - {3}/{4}]".format(track,file,solver,cur+1,total))
@@ -18,7 +18,7 @@ def runTrack (track,solvers,outputfile,timeout):
             res, time,timeouted,smtcalls = func (n,timeout)
             outputfile.write ("{0},{1},{2},{3},{4},{5}\n".format (n,solver,res,time,timeouted,smtcalls))
             outputfile.flush ()
-            results[solver] = results.get(solver,[]) + [(res,time,timeouted,smtcalls)]
+            results[solver] = results.get(solver,[]) + [utils.Result(res,time,timeouted,smtcalls)]
     sys.stdout.write ("\n")
     return results
 

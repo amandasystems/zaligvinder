@@ -1,44 +1,52 @@
 #!/usr/bin/python
 
-import testrunnermulti
-import z3seq
-import z3str3
-import cvc4
-#import norn
-#import woorpjeSMT
-#import woorpje_heuristics
-#import kaluzaWoorpje
-#import track01
-#import track02
-#import track03
-#import track04
-#import track05
+import runners.multi as testrunnermulti
+import tools.z3seq as z3seq
+import tools.z3str3 as z3str3
+import tools.cvc4 as cvc4
 
-import z3_regression
-
-import concats_balanced
-import concats_big
-import concats_extracts_big
-import concats_extracts_small
-import concats_small
-import different_prefix
-import lengths_concats
-import lengths_long
-import lengths_short
-import many_regexes
-import overlaps_big
-import overlaps_small
-import regex_big
-import regex_deep
-import regex_lengths
-import regex_pair
-import regex_small
+import models.z3_regression as z3_regression
+import models.stringfuzz.concats_balanced as concats_balanced
+import models.stringfuzz.concats_big as concats_big 
+import models.stringfuzz.concats_extracts_big as concats_extracts_big
+import models.stringfuzz.concats_extracts_small as concats_extracts_small
+import models.stringfuzz.concats_small as concats_small 
+import models.stringfuzz.different_prefix as different_prefix
+import models.stringfuzz.lengths_concats as lengths_concats
+import models.stringfuzz.lengths_long as lengths_long
+import models.stringfuzz.lengths_short as lengths_short
+import models.stringfuzz.many_regexes as many_regexes
+import models.stringfuzz.overlaps_big as overlaps_big
+import models.stringfuzz.overlaps_small as overlaps_small
+import models.stringfuzz.regex_big as regex_big
+import models.stringfuzz.regex_deep as regex_deep
+import models.stringfuzz.regex_lengths as regex_lengths
+import models.stringfuzz.regex_pair as regex_pair
+import models.stringfuzz.regex_small as regex_small
 
 #import sloth
 import summarygenerators
 from datetime import datetime
 
-tracks = [z3_regression.trackdata,concats_balanced.trackdata,concats_extracts_small.trackdata,lengths_short.trackdata,overlaps_small.trackdata,regex_lengths.trackdata,concats_big.trackdata,concats_small.trackdata,lengths_concats.trackdata,many_regexes.trackdata,regex_big.trackdata,regex_pair.trackdata,concats_extracts_big.trackdata,different_prefix.trackdata,lengths_long.trackdata,overlaps_big.trackdata,regex_deep.trackdata,regex_small.trackdata]
+tracks = [z3_regression.trackdata,
+          concats_balanced.trackdata,
+          concats_extracts_small.trackdata,
+          lengths_short.trackdata,
+          overlaps_small.trackdata,
+          regex_lengths.trackdata,
+          concats_big.trackdata,
+          concats_small.trackdata,
+          lengths_concats.trackdata,
+          many_regexes.trackdata,
+          regex_big.trackdata,
+          regex_pair.trackdata,
+          concats_extracts_big.trackdata,
+          different_prefix.trackdata,
+          lengths_long.trackdata,
+          overlaps_big.trackdata,
+          regex_deep.trackdata,
+          regex_small.trackdata
+] 
 timeout = 30
 
 solvers = {
@@ -48,25 +56,6 @@ solvers = {
 }
 
 smtsolvers = ["z3seq","cvc4","z3str3"]
-
-#woorpje_heuristics.addRunners ("variableTermRatio",smtsolvers,3.14,solvers)
-#woorpje_heuristics.addRunners ("variableTermRatio",smtsolvers,0.15,solvers)
-#woorpje_heuristics.addRunners ("variableTermRatio",smtsolvers,1.12358,solvers)
-
-#woorpje_heuristics.addRunners ("waitingListLimit",smtsolvers,314,solvers)
-#woorpje_heuristics.addRunners ("waitingListLimit",smtsolvers,15,solvers)
-#woorpje_heuristics.addRunners ("waitingListLimit",smtsolvers,1123,solvers)
-
-#woorpje_heuristics.addRunners ("equationGrowth",smtsolvers,0.15,solvers)
-#woorpje_heuristics.addRunners ("equationGrowth",smtsolvers,1.075,solvers)
-#woorpje_heuristics.addRunners ("equationGrowth",smtsolvers,2.0,solvers)
-
-#woorpje_heuristics.addRunners ("equationLength",smtsolvers,2,solvers)
-#woorpje_heuristics.addRunners ("equationLength",smtsolvers,20,solvers)
-#woorpje_heuristics.addRunners ("equationLength",smtsolvers,400,solvers)
-
-#woorpje_heuristics.addRunners ("none",smtsolvers,5,solvers)
-
 
 
 summaries = [summarygenerators.terminalResult,

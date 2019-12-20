@@ -1,18 +1,18 @@
 #!/usr/bin/python
 
-import testrunnermulti
-import z3seq
-import z3str3
-import cvc4
+import runners.multi as testrunner
+import tools.z3seq
+import tools.z3str3
+import tools.cvc4
 #import norn
 #import woorpjeSMT
-import woorpje_heuristics
-import kaluzaWoorpje
-import track01
-import track02
-import track03
-import track04
-import track05
+import tools.woorpje_heuristics
+import models.kaluza.kaluzaWoorpje as kaluzaWoorpje 
+import models.woorpje.track01 as track01
+import models.woorpje.track02 as track02
+import models.woorpje.track03 as track03
+import models.woorpje.track04 as track04
+import models.woorpje.track05 as track05
 
 #import sloth
 import summarygenerators
@@ -22,30 +22,30 @@ tracks = [track01.trackdata,track02.trackdata,track03.trackdata,track04.trackdat
 timeout = 30
 
 solvers = {
-    'z3str3' : z3str3.run,
-    'z3seq' : z3seq.run,
-    'cvc4' : cvc4.run,
+    'z3str3' : tools.z3str3.run,
+    'z3seq' : tools.z3seq.run,
+    'cvc4' : tools.cvc4.run,
 }
 
 smtsolvers = ["z3seq","cvc4","z3str3"]
 
-woorpje_heuristics.addRunners ("variableTermRatio",smtsolvers,3.14,solvers)
-woorpje_heuristics.addRunners ("variableTermRatio",smtsolvers,0.15,solvers)
-woorpje_heuristics.addRunners ("variableTermRatio",smtsolvers,1.12358,solvers)
+tools.woorpje_heuristics.addRunners ("variableTermRatio",smtsolvers,3.14,solvers)
+tools.woorpje_heuristics.addRunners ("variableTermRatio",smtsolvers,0.15,solvers)
+tools.woorpje_heuristics.addRunners ("variableTermRatio",smtsolvers,1.12358,solvers)
 
-woorpje_heuristics.addRunners ("waitingListLimit",smtsolvers,314,solvers)
-woorpje_heuristics.addRunners ("waitingListLimit",smtsolvers,15,solvers)
-woorpje_heuristics.addRunners ("waitingListLimit",smtsolvers,1123,solvers)
+tools.woorpje_heuristics.addRunners ("waitingListLimit",smtsolvers,314,solvers)
+tools.woorpje_heuristics.addRunners ("waitingListLimit",smtsolvers,15,solvers)
+tools.woorpje_heuristics.addRunners ("waitingListLimit",smtsolvers,1123,solvers)
 
-woorpje_heuristics.addRunners ("equationGrowth",smtsolvers,0.15,solvers)
-woorpje_heuristics.addRunners ("equationGrowth",smtsolvers,1.075,solvers)
-woorpje_heuristics.addRunners ("equationGrowth",smtsolvers,2.0,solvers)
+tools.woorpje_heuristics.addRunners ("equationGrowth",smtsolvers,0.15,solvers)
+tools.woorpje_heuristics.addRunners ("equationGrowth",smtsolvers,1.075,solvers)
+tools.woorpje_heuristics.addRunners ("equationGrowth",smtsolvers,2.0,solvers)
 
-woorpje_heuristics.addRunners ("equationLength",smtsolvers,2,solvers)
-woorpje_heuristics.addRunners ("equationLength",smtsolvers,20,solvers)
-woorpje_heuristics.addRunners ("equationLength",smtsolvers,400,solvers)
+tools.woorpje_heuristics.addRunners ("equationLength",smtsolvers,2,solvers)
+tools.woorpje_heuristics.addRunners ("equationLength",smtsolvers,20,solvers)
+tools.woorpje_heuristics.addRunners ("equationLength",smtsolvers,400,solvers)
 
-woorpje_heuristics.addRunners ("none",smtsolvers,5,solvers)
+tools.woorpje_heuristics.addRunners ("none",smtsolvers,5,solvers)
 
 
 
@@ -57,4 +57,4 @@ summaries = [summarygenerators.terminalResult,
 timestamp = datetime.timestamp(datetime.now())
 
 outputfile = open("results/results_"+str(timestamp)+".csv",'w')
-testrunnermulti.runTestSetup (tracks,solvers,summaries,outputfile,timeout)
+testrunner.runTestSetup (tracks,solvers,summaries,outputfile,timeout)

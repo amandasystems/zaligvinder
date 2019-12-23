@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
-import runners.base as testrunner
+import runners.multi as testrunner
+import storage
 import tools.z3seq
 import tools.z3str3
 import tools.cvc4
@@ -39,7 +40,6 @@ summaries = [summarygenerators.terminalResult
 ]
 
 
-timestamp = datetime.timestamp(datetime.now())
 
-outputfile = open("results/results_"+str(timestamp)+".csv",'w')
-testrunner.runTestSetup (tracks,solvers,summaries,outputfile,timeout)
+store = storage.FileWriter ("rp")
+testrunner.runTestSetup (tracks,solvers,summaries,store,timeout)

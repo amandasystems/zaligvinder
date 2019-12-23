@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
-import runners.multi as testrunnermulti
+import storage
+import runners.multi as testrunner
 import tools.z3seq as z3seq
 import tools.z3str3 as z3str3
 import tools.cvc4 as cvc4
@@ -62,8 +63,6 @@ summaries = [summarygenerators.terminalResult,
              #summarygenerators.cactusPlot
 ]
 
+storage = storage.FileWriter ("z3-reg")
 
-timestamp = datetime.timestamp(datetime.now())
-
-outputfile = open("results/results_"+str(timestamp)+".csv",'w')
-testrunnermulti.runTestSetup (tracks,solvers,summaries,outputfile,timeout)
+testrunner.runTestSetup (tracks,solvers,summaries,storage,timeout)

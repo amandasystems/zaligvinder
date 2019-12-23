@@ -4,8 +4,7 @@ import runners.multi as testrunner
 import tools.z3seq
 import tools.z3str3
 import tools.cvc4
-#import norn
-#import woorpjeSMT
+import storage
 import tools.woorpje_heuristics
 import models.kaluza.kaluzaWoorpje as kaluzaWoorpje 
 import models.woorpje.track01 as track01
@@ -54,7 +53,5 @@ summaries = [summarygenerators.terminalResult,
 ]
 
 
-timestamp = datetime.timestamp(datetime.now())
-
-outputfile = open("results/results_"+str(timestamp)+".csv",'w')
-testrunner.runTestSetup (tracks,solvers,summaries,outputfile,timeout)
+output = storage.FileWriter ("icst")
+testrunner.runTestSetup (tracks,solvers,summaries,output,timeout)

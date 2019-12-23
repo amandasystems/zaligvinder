@@ -20,18 +20,17 @@ def runSpecific (tup):
 
 def runTrack (track,solvers,outputfile,timeout):
     results = {}
-    tname, files =track
+    tname, files =track.name,track.instances
 
     todispatch = []
     tasks = []
     for solver,func in solvers.items():
         for i,n in enumerate(files):
-            tasks.append ((solver,func,n,timeout))
+            tasks.append ((solver,func,n.filepath,timeout))
     p = Pool (cores)
     res = p.map (runSpecific,tasks)
     
     for tores,tofile in res: 
-        
         outputfile.write (tofile)
         outputfile.flush ()
         results[tores[0]] = results.get(tores[0],[]) + [tores[1]]

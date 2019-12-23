@@ -9,13 +9,13 @@ def progressMessage (track,file,solver,cur,total):
 
 def runTrack (track,solvers,outputfile,timeout):
     results = {}
-    tname, files =track
+    tname, files = track.name, track.instances
     print ("Running track {0} with {1} files.".format (tname,len(files)))
     
     for solver,func in solvers.items():
         for i,n in enumerate(files):
-            progressMessage (tname,n,solver,i,len(files))
-            res, time,timeouted,smtcalls = func (n,timeout)
+            progressMessage (tname,n.name,solver,i,len(files))
+            res, time,timeouted,smtcalls = func (n.filepath,timeout)
             outputfile.write ("{0},{1},{2},{3},{4},{5}\n".format (n,solver,res,time,timeouted,smtcalls))
             outputfile.flush ()
             results[solver] = results.get(solver,[]) + [utils.Result(res,time,timeouted,smtcalls)]

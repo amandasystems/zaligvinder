@@ -49,7 +49,7 @@ def calculateErrors(res):
     return errors
 
 def terminalResult (track,res):
-    name,files = track
+    name,files = track.name,track.instances
     print ("Track:" + name)
     table = []
     ref = correctReferenceList (track,res)
@@ -61,15 +61,14 @@ def terminalResult (track,res):
         nsat = sum([1 for i in res[n] if False == i.result])
         unk = sum([1 for i in res[n] if None == i.result])
         t = sum([i.time for i in res[n] ])
-        #twto = sum([i[1] for i in res[n] if not i[2] ])
         cort = sum([i[0][1] for i in zip([(j.result,j.time) for j in res[n]],ref) if i[0][0] == i[1] and i[1] != None])
-        error = errors[n] #sum([1 for i in zip([j[0] for j in res[n]],ref) if i[0] != i[1] and i[1] != None and i[0] != None])
+        error = errors[n] 
         table.append ([n,sat,nsat,unk,error,smtcalls,t,cort])
 
     print(tabulate.tabulate(table,["Solver", "Satis", "NSatis", "Unknown", "Errors",  "SMT Solver Calls", "Total Time", "Total Correct"]))
 
 def cactusPlot (track,res):
-    name,files = track
+    name,files = track.name,track.instances
     for p in res.keys():
         data = [i[1] for i in res[p]]
         data.sort()
@@ -82,7 +81,7 @@ def cactusPlot (track,res):
     plt.close()
 
 def correctReferenceList (track,res):
-    name,files = track
+    name,files = track.name,track.instances
     ref = []
     for elem in zip (*res.values()):
         sat = sum([1 for i in elem  if i.result ])

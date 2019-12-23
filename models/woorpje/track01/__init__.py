@@ -1,4 +1,5 @@
 import os 
+import utils
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 filest = []
@@ -6,9 +7,9 @@ filesteq = []
 for root, dirs, files in os.walk(dir_path, topdown=False):
     for name in files:
         if name.endswith (".smt"):
-            filest.append(os.path.join (root,name))
+            filest.append(utils.TrackInstance(name,os.path.join (root,name)))
         if name.endswith (".eq"):
-            filesteq.append(os.path.join (root,name))
+            filesteq.append(utils.TrackInstance(name,os.path.join (root,name)))
         
-trackdata = ("track1",filest)
-trackdataeq = ("track1",filesteq)
+trackdata = utils.Track("track1",filest)
+trackdataeq = utils.Track("track1",filesteq)

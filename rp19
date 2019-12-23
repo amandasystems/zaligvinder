@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import runners.multi as testrunner
+import runners.base as testrunner
 import storage
 import tools.z3seq
 import tools.z3str3
@@ -41,5 +41,5 @@ summaries = [summarygenerators.terminalResult
 
 
 
-store = storage.FileWriter ("rp")
+store = storage.SQLiteDB ("rp")
 testrunner.runTestSetup (tracks,solvers,summaries,store,timeout)

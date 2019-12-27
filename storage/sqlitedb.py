@@ -30,7 +30,9 @@ class TrackInstanceRepository:
             trackinstance.dbid = self._id
             self._id = self._id+1
         return trackinstance.dbid
-        
+
+
+    
 class TrackRepository:
     def __init__ (self,db,instancerepo):
         self._db = db
@@ -87,7 +89,7 @@ class SQLiteDB:
     def writeData (self,track,trackinstance,solvername,result):
         self._trackrepo.storeTrack (track)
         self._resrepo.storeResult (result,solvername,trackinstance)
-        
+    
         
         
 

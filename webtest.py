@@ -1,9 +1,9 @@
-
+import sys
 import storage.sqlitedb
 import webserver.views.jsonview
 import webserver.controllers
 
-db = storage.sqlitedb.DB ("rp_results_1577476702.557139.db")
+db = storage.sqlitedb.DB (sys.argv[1])
 trackinstance = storage.sqlitedb.TrackInstanceRepository (db)
 track = storage.sqlitedb.TrackRepository(db,trackinstance)
 results = storage.sqlitedb.ResultRepository (db,track,trackinstance)

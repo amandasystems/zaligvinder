@@ -1,15 +1,41 @@
 import webserver.views
+import re
 
+class ExactMatch:
+    def __init__(self,path):
+        self._path = path
+
+    def match (self,query):
+        if query == self._path:
+            return True, {}
+        else:
+            return False, None
+
+class RegexMatch:
+    def __init__(self,path):
+        self._path = path
+
+    def match (self,query):
+        m = re.match(self._path, query)
+        if m:
+            return True,m.groupdict ()
+        else:
+            return False,None
+        
 class Router:
     def __init__(self):
-        self._endpoints = {}
-
+        self._endpoints = []
+        
     def doRouting (self,path,params):
-        if path in self._endpoints:
-            return self._endpoints[path] (params)
-        else:
-            return webserver.views.ErrorText ("Unknown Endpoint")
+        path = path.strip ("/")
+        for name,callable in self._endpoints:
+            parser,p = name.match (path)
+            if parser:
+                params.update(p)
+                return callable (params)
+            
+        return webserver.views.ErrorText ("Unknown Endpoint")
     
     def addEndpoint (self,name,callable):
-        self._endpoints[name] = callable
+        self._endpoints.append ((name,callable)) 
         

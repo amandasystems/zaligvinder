@@ -1,0 +1,54 @@
+import webserver.views
+
+
+class ResultController:
+    def __init__(self,results):
+        self._results = results
+
+    def getSummaryForSolver (self,params):
+        res = {}
+        print (params)
+        
+        s = params["solver"]
+        instances = self._results.getSummaryForSolver (s)
+        res[s] = {'smtcalls' : instances[0],
+                  'timeouted' : instances[1],
+                  'satisfied' : instances[2],
+                  'time' : instances[3],
+                  'instances' : instances[4]
+            }
+        return webserver.views.jsonview.JSONView (res)
+            
+        
+    def getAllResults (self,params):
+        instances = self._results.getAllResults ()
+        
+        return webserver.views.jsonview.JSONView ([{"solver" : tt[0],
+                                                    "instanceid" : tt[1],
+                                                    "Result" : {
+                                                        "smtcalls" : tt[2].smtcalls,
+                                                        "timeouted" : tt[2].timeouted,
+                                                        "result" : tt[2].result,
+                                                        "time" : tt[2].time}
+                                                    }
+                                                     for tt in instances])
+    
+
+    def getTrackResults (self,params):
+        if "track" in params:
+            assert(len(params) == 1)
+            instances = self._results.getTrackResults (params["track"][0])
+            return webserver.views.jsonview.JSONView ([{"solver" : tt[0],
+                                                        "instanceid" : tt[1],
+                                                        "Result" : {
+                                                            "smtcalls" : tt[2].smtcalls,
+                                                            "timeouted" : tt[2].timeouted,
+                                                            "result" : tt[2].result,
+                                                        "time" : tt[2].time}
+                                                    }
+                                                       for tt in instances])
+        else:
+            return webserver.views.jsonview.JSONView ({"Error" : "Missing parameter"})
+
+    def getSolvers (self,params):
+        return webserver.views.jsonview.JSONView (self._results.getSolvers ())

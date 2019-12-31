@@ -17,6 +17,7 @@ class CustomHandler(BaseHTTPRequestHandler):
     res = urllib.parse.urlparse(self.path)
     print (res[2])
     params = urllib.parse.parse_qs (res[4])
+    print (params)
     view = self._router.doRouting (res[2],params)
     
     # Send response status code

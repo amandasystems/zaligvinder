@@ -8,7 +8,10 @@ class ChartController:
 
     def generateCactus(self,params):
         rdata = {}
-        solvers = self._result.getSolvers ()
+        if "solver" in params:
+            solvers = params["solver"]
+        else:
+            solvers = self._result.getSolvers ()
         for solv in solvers:
             res = self._result.getResultForSolver (solv)
             list = []
@@ -28,11 +31,10 @@ class ChartController:
             from io import BytesIO
             fig = Figure()
             ax = fig.subplots()
-            ax.plot([1, 2])
             for p in rdata.keys():
                 data = [i["y"] for i in rdata[p]]
                 ax.scatter (range(0,len(data)),data,label = p)
-                # Save it to a temporary buffer.
+            # Save it to a temporary buffer.
             buf = BytesIO()
             fig.savefig(buf, format="png")
             return webserver.views.PNGView.PNGView (buf)

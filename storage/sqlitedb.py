@@ -121,6 +121,11 @@ class ResultRepository:
         query = '''SELECT * FROM Result WHERE solver = ? ORDER BY time ASC '''
         rows = self._db.executeRet (query,(solver,))
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
+
+    def getTrackResultForSolver (self,solver):
+        query = '''SELECT * FROM Result WHERE solver = ? ORDER BY time ASC '''
+        rows = self._db.executeRet (query,(solver,))
+        return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
     
     
     def getAllResults (self):

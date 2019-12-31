@@ -12,4 +12,5 @@ class PNGView:
         sendto.send_response (200)
 
     def message (self,sendto):
+        self._text.seek(0)
         sendto.write (self._text.read())

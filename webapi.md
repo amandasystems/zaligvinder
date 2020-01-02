@@ -8,7 +8,7 @@ The server is started by running `python webtest sqlite.db`
 - localhost:8081/results - json-formatted result data
 - localhost:8081/results/{trackid} - json-formatted result for particular track
 - localhost:8081/chart/cactus - json-formatted data for a cactus plot (solvers can be selected by adding a sequence of ?solver=solvername) 
-- localhost:8081/chart/cactus?png=1 - generate an actual png image for cactus plot
+- localhost:8081/chart/cactus?format=png - generate an actual png image for cactus plot
 - localhost:8081/solvers - solvernames used in the benchmark
 
 

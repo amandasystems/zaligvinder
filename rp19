@@ -13,7 +13,7 @@ import models.woorpje.track02 as track02
 import models.woorpje.track03 as track03
 import models.woorpje.track04 as track04
 import models.woorpje.track05 as track05
-
+import startwebserver
 
 
 
@@ -44,3 +44,4 @@ ploc = utils.JSONProgramConfig ()
 
 store = storage.SQLiteDB ("rp")
 testrunner.runTestSetup (tracks,solvers,summaries,store,timeout,ploc)
+startwebserver.Server (store.getDB ()).startServer ()

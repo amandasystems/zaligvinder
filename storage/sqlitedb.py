@@ -160,7 +160,10 @@ class SQLiteDB:
         self._resrepo = ResultRepository (self._db,self._trackrepo,self._instancerepo)
         for i in [self._instancerepo,self._trackrepo,self._resrepo]:
             i.createSchema ()
-        
+
+    def getDB (self):
+        return self._db
+            
     def writeData (self,track,trackinstance,solvername,result):
         self._trackrepo.storeTrack (track)
         self._resrepo.storeResult (result,solvername,trackinstance)

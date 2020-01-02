@@ -35,6 +35,10 @@ def run (eq,timeout,ploc):
         return True,time.getTime(),False,1
     return None,time.getTime  (),False,1
 
+def addRunner (addto):
+    addto['z3str3'] = run
+
+
 if __name__ == "__main__":
     print(run (sys.argv[1],None))
 

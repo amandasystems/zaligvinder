@@ -61,6 +61,9 @@ def runSMT (eqfile,timeout,ploc):
     else:
         raise "woorpjeSMT Not in Path"
 
+def addRunner (addto):
+    addto['woorpje'] = run
+
     
 if __name__ == "__main__":
     run (sys.argv[1],None)

@@ -141,12 +141,24 @@ class ResultRepository:
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
         
     def getSummaryForSolver (self,solver):
-        query = '''SELECT SUM(Result.smtcalls), SUM(Result.timeouted), SUM(Result.result), SUM(Result.time),COUNT(*) FROM Result WHERE solver = ?'''
+        query = '''SELECT SUM(Result.smtcalls), SUM(Result.timeouted), SUM(Result.time),COUNT(*) FROM Result WHERE solver = ?'''
             
         rows = self._db.executeRet (query, (solver,))
+        smtcalls,timeouted,time,total = rows[0]
         assert(len(rows) == 1)
-        t = rows[0]
-        return (t[0],t[1],t[2],t[3],t[4]) 
+
+        satisquery = ''' SELECT COUNT(*) FROM Result WHERE Solver = ? AND Result.result = true'''
+        satis = self._db.executeRet (satisquery, (solver,))[0][0]
+
+        unkquery = ''' SELECT COUNT(*) FROM Result WHERE Solver = ? AND Result.result IS NULL'''
+        unk = self._db.executeRet (unkquery, (solver,))[0][0]
+
+        nsatisquery = ''' SELECT COUNT(*) FROM Result WHERE Solver = ? AND Result.result = false'''
+        nsatis = self._db.executeRet (nsatisquery, (solver,))[0][0]
+        
+        
+        smtcalls,timeouted,time,total = rows[0]
+        return (smtcalls,timeouted,satis,unk,nsatis,time,total) 
         
 
         

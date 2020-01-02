@@ -10,12 +10,14 @@ class ResultController:
         print (params)
         
         s = params["solver"]
-        instances = self._results.getSummaryForSolver (s)
-        res[s] = {'smtcalls' : instances[0],
-                  'timeouted' : instances[1],
-                  'satisfied' : instances[2],
-                  'time' : instances[3],
-                  'instances' : instances[4]
+        smtcalls,timeouted,satis,unk,nsatis,time,instances = self._results.getSummaryForSolver (s)
+        res[s] = {'smtcalls' : smtcalls,
+                  'timeouted' : timeouted,
+                  'satisfied' : satis,
+                  'not satisfied' :  nsatis,
+                  'Unknown' : unk,
+                  'time' : time,
+                  'instances' : instances
             }
         return webserver.views.jsonview.JSONView (res)
             

@@ -1,4 +1,4 @@
-import webserver.views
+import webserver.views.TextView
 import re
 
 class ExactMatch:
@@ -34,7 +34,7 @@ class Router:
                 params.update(p)
                 return callable (params)
             
-        return webserver.views.ErrorText ("Unknown Endpoint")
+        return webserver.views.TextView.ErrorText ("Unknown Endpoint")
     
     def addEndpoint (self,name,callable):
         self._endpoints.append ((name,callable)) 

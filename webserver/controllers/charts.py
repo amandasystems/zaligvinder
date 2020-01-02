@@ -15,6 +15,7 @@ class ChartController:
             solvers = params["solver"]
         else:
             solvers = self._result.getSolvers ()
+        print (solvers)
         for solv in solvers:
             res = self._result.getResultForSolver (solv)
             list = []
@@ -37,13 +38,14 @@ class ChartController:
                 fig = Figure()
                 ax = fig.subplots()
                 for p in rdata.keys():
+                    print (p)
                     data = [i["y"] for i in rdata[p]]
                     ax.scatter (range(0,len(data)),data,label = p)
                     ax.legend()
                     # Save it to a temporary buffer.
                     buf = BytesIO()
-                    fig.savefig(buf, format="png")
-                    return webserver.views.PNGView.PNGView (buf)
+                fig.savefig(buf, format="png")
+                return webserver.views.PNGView.PNGView (buf)
             else:
                 return webserver.views.TextView.ErrorText ("Unknown format")
                     

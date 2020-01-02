@@ -16,7 +16,7 @@ def run (eq,timeout,solver="1",param="60"):
 
     tempd = tempfile.mkdtemp ()
     smtfile = os.path.join (tempd,"out.smt")
-    tools.woorpje2smt.run (eq,smtfile)
+    tools.woorpje2smt.run (eq,smtfile,ploc)
     time = timer.Timer ()
     try:
         out = subprocess.check_output ([path,"smt.string_solver=seq",smtfile],timeout=timeout).decode().strip()

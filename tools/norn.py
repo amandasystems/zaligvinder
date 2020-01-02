@@ -19,7 +19,7 @@ def run (eq,timeout,ploc):
 
     tempd = tempfile.mkdtemp ()
     smtfile = os.path.join (tempd,"out.smt")
-    woorpje2smt.run (eq,smtfile)
+    woorpje2smt.run (eq,smtfile,ploc)
     time = timer.Timer ()
     try:
         out = subprocess.check_output ([path,"+model",smtfile],timeout=timeout,stderr=FNULL).decode().strip()

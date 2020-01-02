@@ -11,14 +11,14 @@ import utils
 #path = utils.findProgram ("CVC4BINARY","cvc4")
 
 
-def run (eq,timeout,solver="1",param="60",ploc=None):
+def run (eq,timeout,ploc,solver="1",param="60"):
     path = ploc.findProgram ("cvc4")
     if not path:
         raise "Z3 Not in Path"
 
     tempd = tempfile.mkdtemp ()
     smtfile = os.path.join (tempd,"out.smt")
-    tools.woorpje2smt.run (eq,smtfile)
+    tools.woorpje2smt.run (eq,smtfile,ploc)
 
     time = timer.Timer ()
     try:

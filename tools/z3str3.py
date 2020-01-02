@@ -17,7 +17,7 @@ def run (eq,timeout,ploc):
 
     tempd = tempfile.mkdtemp ()
     smtfile = os.path.join (tempd,"out.smt")
-    tools.woorpje2smt.run (eq,smtfile)
+    tools.woorpje2smt.run (eq,smtfile,ploc)
 
     time = timer.Timer ()
     try:

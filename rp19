@@ -22,7 +22,7 @@ import summarygenerators
 from datetime import datetime
 
 tracks = [track01.trackdata,
-          #track02.trackdata,
+          track02.trackdata,
           #track03.trackdata,
           #track04.trackdata,
           #track05.trackdata,
@@ -32,7 +32,7 @@ timeout = 30
 solvers = {
     #'z3str3' : tools.z3str3.run,
     #'z3seq' : tools.z3seq.run,
-    #'cvc4' : tools.cvc4.run,
+    'cvc4' : tools.cvc4.run,
     #'norn' :  tools.norn.run,
     'woorpje' :  tools.woorpjeSMT.run
 }

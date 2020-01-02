@@ -22,7 +22,9 @@ class Server:
         app.addEndpoint (webserver.routing.ExactMatch("solvers"),self._rcontroller.getSolvers)
         app.addEndpoint (webserver.routing.RegexMatch("results/(?P<track>\d+)"),self._rcontroller.getTrackResults)
         app.addEndpoint (webserver.routing.RegexMatch("summary/(?P<solver>[^/]+)"),self._rcontroller.getSummaryForSolver)
+        app.addEndpoint (webserver.routing.RegexMatch("summary/(?P<solver>[^/]+)/(?P<track>\d+)"),self._rcontroller.getSummaryForSolverTrack)
         app.addEndpoint (webserver.routing.ExactMatch("chart/cactus"),self._ccontroller.generateCactus)
+        app.addEndpoint (webserver.routing.ExactMatch("chart/distribution"),self._ccontroller.generateDistribution)
         self._app = app
 
     def startServer (self):

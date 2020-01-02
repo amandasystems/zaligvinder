@@ -13,7 +13,7 @@ class ExactMatch:
 
 class RegexMatch:
     def __init__(self,path):
-        self._path = path
+        self._path = path+"$"
 
     def match (self,query):
         m = re.match(self._path, query)

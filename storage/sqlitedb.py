@@ -122,11 +122,6 @@ class ResultRepository:
         rows = self._db.executeRet (query,(solver,))
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
 
-    def getTrackResultForSolver (self,solver):
-        query = '''SELECT * FROM Result WHERE solver = ? ORDER BY time ASC '''
-        rows = self._db.executeRet (query,(solver,))
-        return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
-    
     
     def getAllResults (self):
             query = '''SELECT * FROM Result ORDER BY time ASC '''
@@ -159,8 +154,27 @@ class ResultRepository:
         
         smtcalls,timeouted,time,total = rows[0]
         return (smtcalls,timeouted,satis,unk,nsatis,time,total) 
-        
+    
+    def getSummaryForSolverTrack (self,solver,track):
+        query = '''SELECT SUM(Result.smtcalls), SUM(Result.timeouted), SUM(Result.time),COUNT(*) FROM Result,TrackInstanceMap WHERE solver = ? AND TrackInstanceMap.track = ? AND TrackInstanceMap.instance = Result.instanceid'''
+            
+        rows = self._db.executeRet (query, (solver,track))
+        smtcalls,timeouted,time,total = rows[0]
+        assert(len(rows) == 1)
 
+        satisquery = ''' SELECT COUNT(*) FROM Result,TrackInstanceMap WHERE Solver = ? AND Result.result = true AND TrackInstanceMap.track = ? AND TrackInstanceMap.instance = Result.instanceid'''
+        satis = self._db.executeRet (satisquery, (solver,track))[0][0]
+
+        unkquery = ''' SELECT COUNT(*) FROM Result,TrackInstanceMap WHERE Solver = ? AND Result.result IS NULL AND TrackInstanceMap.track = ? AND TrackInstanceMap.instance = Result.instanceid'''
+        unk = self._db.executeRet (unkquery, (solver,track))[0][0]
+
+        nsatisquery = ''' SELECT COUNT(*) FROM Result,TrackInstanceMap WHERE Solver = ? AND Result.result = false AND TrackInstanceMap.track = ? AND TrackInstanceMap.instance = Result.instanceid'''
+        nsatis = self._db.executeRet (nsatisquery, (solver,track))[0][0]
+        
+        
+        smtcalls,timeouted,time,total = rows[0]
+        return (smtcalls,timeouted,satis,unk,nsatis,time,total) 
+    
         
 class SQLiteDB:
     def __init__ (self,prefix = ""):

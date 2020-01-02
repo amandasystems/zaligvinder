@@ -7,7 +7,7 @@ def progressMessage (track,file,solver,cur,total):
     sys.stdout.write ("\x1b[2K\r[ {0}  {1} {2} - {3}/{4}]".format(track,file,solver,cur+1,total))
 
 
-def runTrack (track,solvers,store,timeout):
+def runTrack (track,solvers,store,timeout,ploc):
     results = {}
     tname, files = track.name, track.instances
     print ("Running track {0} with {1} files.".format (tname,len(files)))
@@ -15,7 +15,7 @@ def runTrack (track,solvers,store,timeout):
     for solver,func in solvers.items():
         for i,n in enumerate(files):
             progressMessage (tname,n.name,solver,i,len(files))
-            res, time,timeouted,smtcalls = func (n.filepath,timeout)
+            res, time,timeouted,smtcalls = func (n.filepath,timeout,ploc)
             result = utils.Result (res, time,timeouted,smtcalls)
             store.writeData (track,n,solver,result)
             #outputfile.write ("{0},{1},{2},{3},{4},{5}\n".format (n,solver,res,time,timeouted,smtcalls))
@@ -24,9 +24,9 @@ def runTrack (track,solvers,store,timeout):
     sys.stdout.write ("\n")
     return results
 
-def runTestSetup (tracks,solvers,summaries,outputfile,timeout):
+def runTestSetup (tracks,solvers,summaries,outputfile,timeout,ploc):
     for t in tracks:
-        res = runTrack (t,solvers,outputfile,timeout)
+        res = runTrack (t,solvers,outputfile,timeout,ploc)
         for s in summaries:
             s(t,res)
 

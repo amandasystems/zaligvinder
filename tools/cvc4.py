@@ -8,10 +8,11 @@ import timer
 import utils
 
 #path = shutil.which ("cvc4")
-path = utils.findProgram ("CVC4BINARY","cvc4")
+#path = utils.findProgram ("CVC4BINARY","cvc4")
 
 
-def run (eq,timeout,solver="1",param="60"):
+def run (eq,timeout,solver="1",param="60",ploc=None):
+    path = ploc.findProgram ("cvc4")
     if not path:
         raise "Z3 Not in Path"
 

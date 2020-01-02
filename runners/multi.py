@@ -11,14 +11,14 @@ def progressMessage (file,solver):
     sys.stdout.write ("\x1b[2K[ {0} -  {1} | {2} ]\r".format(file.name,solver,current_process().pid))
 
 def runSpecific (tup):
-    solvername,func,model,timeout = tup
+    solvername,func,model,timeout,ploc = tup
     progressMessage (model,solvername)
-    res,time,timeouted,smtcalls = func(model.filepath,timeout)
+    res,time,timeouted,smtcalls = func(model.filepath,timeout,ploc)
     tores = (solvername,utils.Result(res,time,timeouted,smtcalls))
     tofile = (model,solvername,res,time,timeouted,smtcalls)
     return tores,tofile
 
-def runTrack (track,solvers,store,timeout):
+def runTrack (track,solvers,store,timeout,ploc):
     results = {}
     tname, files =track.name,track.instances
 
@@ -26,7 +26,7 @@ def runTrack (track,solvers,store,timeout):
     tasks = []
     for solver,func in solvers.items():
         for i,n in enumerate(files):
-            tasks.append ((solver,func,n,timeout))
+            tasks.append ((solver,func,n,timeout,ploc))
     p = Pool (cores)
     res = p.map (runSpecific,tasks)
 
@@ -37,9 +37,9 @@ def runTrack (track,solvers,store,timeout):
     sys.stdout.write ("\n")
     return results
 
-def runTestSetup (tracks,solvers,summaries,outputfile,timeout):
+def runTestSetup (tracks,solvers,summaries,outputfile,timeout,ploc):
     for t in tracks:
-        res = runTrack (t,solvers,outputfile,timeout)
+        res = runTrack (t,solvers,outputfile,timeout,ploc)
         for s in summaries:
             s(t,res)
 

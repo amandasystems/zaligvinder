@@ -52,6 +52,8 @@ summaries = [summarygenerators.terminalResult,
              #summarygenerators.cactusPlot
 ]
 
+ploc = utils.ProgramLocator ()
+
 
 output = storage.FileWriter ("icst")
-testrunner.runTestSetup (tracks,solvers,summaries,output,timeout)
+testrunner.runTestSetup (tracks,solvers,summaries,output,timeout,ploc)

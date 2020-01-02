@@ -4,9 +4,11 @@ import shutil
 import timer
 import utils
 
-tool = utils.findProgram ("WOORPJEBINARY","woorpje")
+#tool = utils.findProgram ("WOORPJEBINARY","woorpje")
 
-def run (eqfile,timeout):
+def run (eqfile,timeout,ploc):
+    path = ploc.findProgram ("woorpje")
+    
     if tool:
         try:
             time = timer.Timer ()
@@ -31,7 +33,7 @@ def run (eqfile,timeout):
         raise "woorpje Not in Path"
     
     
-def runSMT (eqfile,timeout):
+def runSMT (eqfile,timeout,ploc):
     import woorpje2smt
     toolsmt = utils.findProgram ("WOORPJESMTBINARY","woorpjeSMT")
     tempd = tempfile.mkdtemp ()

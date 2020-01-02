@@ -7,7 +7,9 @@ import subprocess
 
 tool = utils.findProgram ("WOORPJESMTBINARY","woorpjeSMT")
 
-def run (eqfile,timeout,heuristicNo,smtSolverNo,heuristic_param_name,param):
+def run (eqfile,timeout,heuristicNo,smtSolverNo,heuristic_param_name,param,ploc):
+    tool = ploc.findProgram ("woorpjeSMT")
+
     if tool:
         SMTSolverCalls = 0
         try:
@@ -40,20 +42,20 @@ def run (eqfile,timeout,heuristicNo,smtSolverNo,heuristic_param_name,param):
     else:
         raise "woorpje Not in Path"
 
-def runVariableTermRatio (eqfile,timeout,solver,ratio):
+def runVariableTermRatio (eqfile,timeout,solver,ratio,ploc):
     return run (eqfile,timeout,0,solver,"--VarTerminalRation",ratio)
 
-def runWaitingListLimitReached (eqfile,timeout,solver,ratio):
+def runWaitingListLimitReached (eqfile,timeout,solver,ratio,ploc):
     return run (eqfile,timeout,1,solver,"--WaitingLimit",ratio)
 
-def runEquationGrowth (eqfile,timeout,solver,ratio):
-    return run (eqfile,timeout,2,solver,"--growth",ratio)
+def runEquationGrowth (eqfile,timeout,solver,ratio,ploc):
+    return run (eqfile,timeout,2,solver,"--growth",ratio,ploc)
 
-def runEquationGrowthExceeded (eqfile,timeout,solver,ratio):
-    return run (eqfile,timeout,3,solver,"--eqLength",ratio)
+def runEquationGrowthExceeded (eqfile,timeout,solver,ratio,ploc):
+    return run (eqfile,timeout,3,solver,"--eqLength",ratio,ploc)
 
-def runNone (eqfile,timeout,solver,ratio):
-    return run (eqfile,timeout,4,solver,"--VarTerminalRation",0)
+def runNone (eqfile,timeout,solver,ratio,ploc):
+    return run (eqfile,timeout,4,solver,"--VarTerminalRation",0,ploc)
 
 
 smtsolvers= {"z3seq" : 0,
@@ -76,13 +78,12 @@ class RunProxy:
         self._smtsolver = smtsolver
         self._param = param
 
-    def __call__ (self,eq,timeout):
-        return self._func (eq,timeout,smtsolvers[self._smtsolver],self._param)
+    def __call__ (self,eq,timeout,ploc):
+        return self._func (eq,timeout,smtsolvers[self._smtsolver],self._param,ploc)
             
 
 def makeRunner (func,smtsolver,param):
     return RunProxy (func,smtsolver,param)
-    #return lambda eq,timeout : func(eq,timeout,smtsolvers[smtsolver],param)
 
 def addRunners (runname,solvers,param,addTo):
     for solver in solvers:

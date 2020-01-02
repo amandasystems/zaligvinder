@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import runners.base as testrunner
+import utils
 import storage
 import tools.z3seq
 import tools.z3str3
@@ -39,7 +40,7 @@ solvers = {
 summaries = [summarygenerators.terminalResult
 ]
 
-
+ploc = utils.JSONProgramConfig ()
 
 store = storage.SQLiteDB ("rp")
-testrunner.runTestSetup (tracks,solvers,summaries,store,timeout)
+testrunner.runTestSetup (tracks,solvers,summaries,store,timeout,ploc)

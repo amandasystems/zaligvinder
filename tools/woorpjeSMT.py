@@ -5,7 +5,7 @@ import timer
 import utils
 import ntpath
 
-tool = utils.findProgram ("WOORPJESMTBINARY","woorpjeSMT")
+#tool = utils.findProgram ("WOORPJESMTBINARY","woorpjeSMT")
 
 def extractFile(eqfile,sfile):
     fileName=ntpath.basename(eqfile)
@@ -13,8 +13,9 @@ def extractFile(eqfile,sfile):
     #shutil.copyfile(eqfile, dest+fileName)
     shutil.copyfile(eqfile, dest+"/simplify/"+fileName)
 
-def run (eqfile,timeout):
+def run (eqfile,timeout,ploc):
     #sfile = "/root/words/benchmarkExtract/benchmarkTool/kaluzaSmallSatExtracted/test.smt"
+    tool = ploc.findProgram ("woorpjeSMT")
     if tool:
         try:
             time = timer.Timer ()

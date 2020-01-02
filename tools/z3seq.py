@@ -7,9 +7,10 @@ import os
 import sys
 import timer
 
-path = utils.findProgram ("Z3BINARY","z3")
+#path = utils.findProgram ("Z3BINARY","z3")
 
 def run (eq,timeout,solver="1",param="60"):
+    path = ploc.findProgram ("Z3")
     if not path:
         raise "Z3 Not in Path"
 

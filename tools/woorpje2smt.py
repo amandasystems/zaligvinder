@@ -4,9 +4,9 @@ import utils
 import os
 
 
-def run (eqfile,outfile):
+def run (eqfile,outfile,ploc):
         if eqfile.endswith (".eq"): 
-            tool =  utils.findProgram ("WOORPJE2SMT","woorpje2SMT")
+            tool =  ploc.findProgram ("woorpje2SMT")#ploc.findProgram ("WOORPJE2SMT","woorpje2SMT")
             if tool:
                 subprocess.run ([tool,eqfile,outfile])
                 os.rename (outfile+"_1",outfile)

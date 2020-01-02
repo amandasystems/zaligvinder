@@ -8,11 +8,12 @@ import sys
 import timer
 
 
-path = utils.findProgram ("NORNBINARY","norn")
+#path = utils.findProgram ("NORNBINARY","norn")
 FNULL = open(os.devnull, 'w')
 
 
-def run (eq,timeout):
+def run (eq,timeout,ploc):
+    path = ploc.findProgram ("norn")
     if not path:
         raise "Norn Not in Path"
 

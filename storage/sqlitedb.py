@@ -104,13 +104,13 @@ class ResultRepository:
         self.trackrepo = trackrepo
 
     def createSchema (self):
-        query = '''Create Table IF NOT EXISTS Result (solver TEXT, instanceid INTEGER, smtcalls INTEGER, timeouted BOOLEAN,result BOOLEAN,time INTEGER,output TEXT)'''       
+        query = '''Create Table IF NOT EXISTS Result (solver TEXT, instanceid INTEGER, smtcalls INTEGER, timeouted BOOLEAN,result BOOLEAN,time INTEGER,output TEXT,model TEXT)'''       
         self._db.execute (query)
 
     def storeResult (self,result,solver,instance):
-        query = '''INSERT INTO Result (solver,instanceid,smtcalls,timeouted,result,time,output) VALUES(?,?,?,?,?,?,?)'''
+        query = '''INSERT INTO Result (solver,instanceid,smtcalls,timeouted,result,time,output,model) VALUES(?,?,?,?,?,?,?,?)'''
         tid = self.instancerepo.storeInstance ( instance)
-        self._db.execute (query,(solver,tid,result.smtcalls,result.timeouted,result.result,result.time,result.output))
+        self._db.execute (query,(solver,tid,result.smtcalls,result.timeouted,result.result,result.time,result.output,result.model))
 
     def getSolvers (self):
         query = '''SELECT DISTINCT solver  FROM Result'''
@@ -161,7 +161,17 @@ class ResultRepository:
             return out.decode('utf8')
         else:
             return self._db.executeRet (query,(solver,instance))[0][0]
+
+
+    def getModelForSolverInstance (self,solver,instance):
+        query = '''SELECT model  FROM Result WHERE solver = ? AND instanceid = ?'''
+        out = self._db.executeRet (query,(solver,instance))[0][0]
+        if hasattr(out,'decode'):
+            return out.decode('utf8')
+        else:
+            return self._db.executeRet (query,(solver,instance))[0][0]
     
+        
     def getSummaryForSolverTrack (self,solver,track):
         query = '''SELECT SUM(Result.smtcalls), SUM(Result.timeouted), SUM(Result.time),COUNT(*) FROM Result,TrackInstanceMap WHERE solver = ? AND TrackInstanceMap.track = ? AND TrackInstanceMap.instance = Result.instanceid'''
             

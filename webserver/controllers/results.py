@@ -63,6 +63,12 @@ class ResultController:
         print (params)
         instances = self._results.getOutputForSolverInstance (params["solver"],params["instance"])
         return webserver.views.TextView.TextView (instances)
+
+    def getModel (self,params):
+        print (params)
+        instances = self._results.getModelForSolverInstance (params["solver"],params["instance"])
+        return webserver.views.TextView.TextView (instances)
+    
     
     def getTrackResults (self,params):
         if "track" in params:

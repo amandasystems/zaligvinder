@@ -21,16 +21,16 @@ def run (eq,timeout,solver="1",param="60"):
     try:
         out = subprocess.check_output ([path,"smt.string_solver=seq",smtfile],timeout=timeout).decode().strip()
     except subprocess.TimeoutExpired:
-        return None,timeout,True,1
+        return utils.Result(None,timeout,True,1)
     except subprocess.CalledProcessError:
-        return None,timeout,False,1
+        return utils.Result(None,timeout,False,1)
     time.stop ()
     shutil.rmtree (tempd)
     if "unsat" in out:
-        return False,time.getTime (),False,1
+        return utils.Result(False,time.getTime (),False,1,out)
     elif "sat" in out:
-        return True,time.getTime(),False,1
-    return None,time.getTime  (),False,1
+        return utils.Result(True,time.getTime(),False,1,out,"\n".join(out.split("\n")[1:]))
+    return utils.Result(None,time.getTime  (),False,1,out)
 
 def addRunner (addto):
     addto['z3seq3'] = run

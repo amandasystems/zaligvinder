@@ -30,10 +30,10 @@ def run (eq,timeout,ploc,solver="1",param="60"):
     time.stop ()
     shutil.rmtree (tempd)
     if "unsat" in out:
-        return utils.Result(False,time.getTime (),False,1)
+        return utils.Result(False,time.getTime (),False,1,out)
     elif "sat" in out:
-        return utils.Result(True,time.getTime(),False,1)
-    return utils.Result(None,time.getTime  (),False,1)
+        return utils.Result(True,time.getTime(),False,1,out,"\n".join(out.split("\n")[1:]))
+    return utils.Result(None,time.getTime  (),False,1,out)
 
 def addRunner (addto):
     addto['cvc4'] = run

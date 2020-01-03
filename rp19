@@ -34,7 +34,7 @@ solvers = {
     #'z3seq' : tools.z3seq.run,
     'cvc4' : tools.cvc4.run,
     #'norn' :  tools.norn.run,
-    'woorpje' :  tools.woorpjeSMT.run
+    #'woorpje' :  tools.woorpjeSMT.run
 }
 
 summaries = [summarygenerators.terminalResult

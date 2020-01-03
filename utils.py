@@ -2,13 +2,13 @@ import os
 import shutil
 
 class Result:
-    def __init__(self,result,time,timeouted,smtcalls,output = "None"):
+    def __init__(self,result,time,timeouted,smtcalls,output = "",model=""):
         self.result = result
         self.time = time
         self.timeouted = timeouted
         self.smtcalls = smtcalls
         self.output = output
-                 
+        self.model = model
 
 class TrackInstance:
     def __init__ (self,name,filepath):

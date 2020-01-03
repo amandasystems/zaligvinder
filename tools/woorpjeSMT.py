@@ -33,16 +33,16 @@ def run (eqfile,timeout,ploc):
 
 
             if ex.returncode == 10 or ex.returncode == 20:
-                return None,time.getTime (),False,0
+                return utils.Result(None,time.getTime (),False,0)
             elif ex.returncode == 1:
-                return False,time.getTime (),False,0
+                return utils.Result(False,time.getTime (),False,0)
             elif ex.returncode == 134 or ex.returncode == 255:
-                return None,0,False,0
+                return utils.Result(None,0,False,0)
             else:
-                return None,time.getTime (),False,0
+                return utils.Result(None,time.getTime (),False,0)
         except subprocess.TimeoutExpired:
             #extractFile(eqfile,sfile)
-            return None,timeout,True,0
+            return utils.Result(None,timeout,True,0)
 
 
     else:

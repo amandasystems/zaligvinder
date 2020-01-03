@@ -20,13 +20,13 @@ def run (eqfile,timeout,ploc):
         except subprocess.CalledProcessError as ex:
             time.stop ()
             if ex.returncode == 10 or ex.returncode == 20:
-                return None,time.getTime (),False,0
+                return utils.Result(None,time.getTime (),False,0)
             elif ex.returncode == 1:
-                return False,time.getTime (),False,0
+                return utils.Result(False,time.getTime (),False,0)
             else:
-                return None,time.getTime (),False,0
+                return utils.Result(None,time.getTime (),False,0)
         except subprocess.TimeoutExpired:
-            return None,timeout,True,0
+            return utils.Result(None,timeout,True,0)
 
 
     else:

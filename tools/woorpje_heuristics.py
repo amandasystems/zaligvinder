@@ -28,16 +28,16 @@ def run (eqfile,timeout,heuristicNo,smtSolverNo,heuristic_param_name,param,ploc)
 
 
             if p.returncode == 0:
-                return True,time.getTime(),False,SMTSolverCalls
+                return utils.Result(True,time.getTime(),False,SMTSolverCalls)
             elif p.returncode == 10 or p.returncode == 20:
-                return None,time.getTime (),False,SMTSolverCalls
+                return utils.Result(None,time.getTime (),False,SMTSolverCalls)
             elif p.returncode == 1:
-                return False,time.getTime (),False,SMTSolverCalls
+                return utils.Result(False,time.getTime (),False,SMTSolverCalls)
             else:
-                return None,time.getTime (),False,SMTSolverCalls
+                return utils.Result(None,time.getTime (),False,SMTSolverCalls)
         except Exception as  e:
             time.stop ()
-            return None,timeout,True,SMTSolverCalls
+            return utils.Result(None,timeout,True,SMTSolverCalls)
 
     else:
         raise "woorpje Not in Path"

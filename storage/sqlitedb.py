@@ -152,15 +152,14 @@ class ResultRepository:
         nsatis = self._db.executeRet (nsatisquery, (solver,))[0][0]
         
         
-        smtcalls,timeouted,time,total = rows[0]
         return (smtcalls,timeouted,satis,unk,nsatis,time,total) 
     
     def getSummaryForSolverTrack (self,solver,track):
         query = '''SELECT SUM(Result.smtcalls), SUM(Result.timeouted), SUM(Result.time),COUNT(*) FROM Result,TrackInstanceMap WHERE solver = ? AND TrackInstanceMap.track = ? AND TrackInstanceMap.instance = Result.instanceid'''
             
         rows = self._db.executeRet (query, (solver,track))
+        assert(len(rows) == 1)                
         smtcalls,timeouted,time,total = rows[0]
-        assert(len(rows) == 1)
 
         satisquery = ''' SELECT COUNT(*) FROM Result,TrackInstanceMap WHERE Solver = ? AND Result.result = true AND TrackInstanceMap.track = ? AND TrackInstanceMap.instance = Result.instanceid'''
         satis = self._db.executeRet (satisquery, (solver,track))[0][0]
@@ -171,8 +170,6 @@ class ResultRepository:
         nsatisquery = ''' SELECT COUNT(*) FROM Result,TrackInstanceMap WHERE Solver = ? AND Result.result = false AND TrackInstanceMap.track = ? AND TrackInstanceMap.instance = Result.instanceid'''
         nsatis = self._db.executeRet (nsatisquery, (solver,track))[0][0]
         
-        
-        smtcalls,timeouted,time,total = rows[0]
         return (smtcalls,timeouted,satis,unk,nsatis,time,total) 
     
         

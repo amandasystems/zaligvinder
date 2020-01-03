@@ -5,43 +5,44 @@ import utils
 from multiprocessing import Pool
 from multiprocessing import current_process
 
-cores = 1
-
 def progressMessage (file,solver):
     sys.stdout.write ("\x1b[2K[ {0} -  {1} | {2} ]\r".format(file.name,solver,current_process().pid))
 
 def runSpecific (tup):
     solvername,func,model,timeout,ploc = tup
     progressMessage (model,solvername)
-    res,time,timeouted,smtcalls = func(model.filepath,timeout,ploc)
-    tores = (solvername,utils.Result(res,time,timeouted,smtcalls))
-    tofile = (model,solvername,res,time,timeouted,smtcalls)
-    return tores,tofile
+    result = func(model.filepath,timeout,ploc)
+    return result
 
-def runTrack (track,solvers,store,timeout,ploc):
-    results = {}
-    tname, files =track.name,track.instances
+class TheRunner:
+    def __init__(self,cores = 2):
+        self._cores = cores
 
-    todispatch = []
-    tasks = []
-    for solver,func in solvers.items():
-        for i,n in enumerate(files):
-            tasks.append ((solver,func,n,timeout,ploc))
-    p = Pool (cores)
-    res = p.map (runSpecific,tasks)
+    def runTrack (self,track,solvers,store,timeout,ploc):
+        results = {}
+        tname, files =track.name,track.instances
+        
+        todispatch = []
+        tasks = []
+        for solver,func in solvers.items():
+            for i,n in enumerate(files):
+                tasks.append ((solver,func,n,timeout,ploc))
+        p = Pool (self._cores)
+        res = p.map (runSpecific,tasks)
 
     
-    for tores,tofile in res:
-        store.writeData (track,tofile[0],tofile[1],tores[1])
-        results[tores[0]] = results.get(tores[0],[]) + [tores[1]]
-    sys.stdout.write ("\n")
-    return results
+        for setting,result in zip (tasks,res):
+            solvername,model = setting[0],setting[2]
+            store.writeData (track,model,solvername,result)
+            results[solvername] = results.get(solvername,[]) + [result]
+        sys.stdout.write ("\n")
+        return results
 
-def runTestSetup (tracks,solvers,summaries,outputfile,timeout,ploc):
-    for t in tracks:
-        res = runTrack (t,solvers,outputfile,timeout,ploc)
-        for s in summaries:
-            s(t,res)
+    def runTestSetup (self,tracks,solvers,summaries,outputfile,timeout,ploc):
+        for t in tracks:
+            res = self.runTrack (t,solvers,outputfile,timeout,ploc)
+            for s in summaries:
+                s(t,res)
 
 
 if __name__ == "__main__":

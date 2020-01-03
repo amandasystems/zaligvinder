@@ -21,6 +21,7 @@ class Server:
         app.addEndpoint (webserver.routing.ExactMatch("results"),self._rcontroller.getAllResults)
         app.addEndpoint (webserver.routing.ExactMatch("solvers"),self._rcontroller.getSolvers)
         app.addEndpoint (webserver.routing.RegexMatch("results/(?P<track>\d+)"),self._rcontroller.getTrackResults)
+        app.addEndpoint (webserver.routing.RegexMatch("results/(?P<solver>[^/]+)/(?P<instance>\d+)/output"),self._rcontroller.getOutput)
         app.addEndpoint (webserver.routing.RegexMatch("summary/(?P<solver>[^/]+)"),self._rcontroller.getSummaryForSolver)
         app.addEndpoint (webserver.routing.RegexMatch("summary/(?P<solver>[^/]+)/(?P<track>\d+)"),self._rcontroller.getSummaryForSolverTrack)
         app.addEndpoint (webserver.routing.ExactMatch("chart/cactus"),self._ccontroller.generateCactus)

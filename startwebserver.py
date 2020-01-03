@@ -14,8 +14,10 @@ class Server:
         self._icontroller = webserver.controllers.TrackInstanceController (self._trackinstance)
         self._rcontroller = webserver.controllers.ResultController (self._results)
         self._ccontroller = webserver.controllers.ChartController (self._results)
-
+        self._fcontroller = webserver.controllers.FileControl ()
+        
         app = webserver.app.App ()
+        app.addEndpoint (webserver.routing.RegexMatch("files/(?P<path>.+)"),self._fcontroller.findFile)
         app.addEndpoint (webserver.routing.ExactMatch("solvers"),self._rcontroller.getSolvers)
         app.addEndpoint (webserver.routing.ExactMatch("tracks"),self._tcontroller.getAllTracks)
         app.addEndpoint (webserver.routing.ExactMatch("instances"),self._icontroller.getAllInstances)

@@ -2,11 +2,12 @@ import os
 import shutil
 
 class Result:
-    def __init__(self,result,time,timeouted,smtcalls):
+    def __init__(self,result,time,timeouted,smtcalls,output = "None"):
         self.result = result
         self.time = time
         self.timeouted = timeouted
         self.smtcalls = smtcalls
+        self.output = output
                  
 
 class TrackInstance:

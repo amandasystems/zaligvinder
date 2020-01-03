@@ -15,6 +15,6 @@ class TrackInstanceController:
         if (os.path.isfile(instance.filepath)):
             file = open(instance.filepath)
             str = file.read()
-            return webserver.views.TextView (str)
+            return webserver.views.TextView.TextView (str)
         else:
-            return webserver.views.ErrorText ("Model not available")
+            return webserver.views.TextView.ErrorText ("Model not available")

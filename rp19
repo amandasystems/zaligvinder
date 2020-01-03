@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from runners.multi import TheRunner as testrunner
+from runners.base import TheRunner as testrunner
 import utils
 import storage
 import tools.z3seq

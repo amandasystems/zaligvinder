@@ -24,22 +24,19 @@ def run (eqfile,timeout,ploc):
             #print(out.decode().strip())
             time.stop ()
             #extractFile(eqfile,sfile)
-            return True,time.getTime(),False,0
+            return utils.Result(True,time.getTime(),False,0,out)
         except subprocess.CalledProcessError as ex:
             time.stop ()
-
             if ex.returncode == 0:
                 extractFile(eqfile,sfile)
-
-
             if ex.returncode == 10 or ex.returncode == 20:
-                return utils.Result(None,time.getTime (),False,0)
+                return utils.Result(None,time.getTime (),False,0,ex.output)
             elif ex.returncode == 1:
-                return utils.Result(False,time.getTime (),False,0)
+                return utils.Result(False,time.getTime (),False,0,ex.output)
             elif ex.returncode == 134 or ex.returncode == 255:
-                return utils.Result(None,0,False,0)
+                return utils.Result(None,0,False,0,ex.output)
             else:
-                return utils.Result(None,time.getTime (),False,0)
+                return utils.Result(None,time.getTime (),False,0,ex.output)
         except subprocess.TimeoutExpired:
             #extractFile(eqfile,sfile)
             return utils.Result(None,timeout,True,0)

@@ -16,15 +16,16 @@ def run (eqfile,timeout,ploc):
             #out = subprocess.check_output ([tool,'--simplify', eqfile],timeout=timeout)
             #print(out.decode().strip())
             time.stop ()
-            return True,time.getTime(),False,0
+            return utils.Result(True,time.getTime(),False,0,out)
         except subprocess.CalledProcessError as ex:
+            
             time.stop ()
             if ex.returncode == 10 or ex.returncode == 20:
-                return utils.Result(None,time.getTime (),False,0)
+                return utils.Result(None,time.getTime (),False,0,ex.output)
             elif ex.returncode == 1:
-                return utils.Result(False,time.getTime (),False,0)
+                return utils.Result(False,time.getTime (),False,0,ex.output)
             else:
-                return utils.Result(None,time.getTime (),False,0)
+                return utils.Result(None,time.getTime (),False,0,ex.output)
         except subprocess.TimeoutExpired:
             return utils.Result(None,timeout,True,0)
 

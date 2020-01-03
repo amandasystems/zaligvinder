@@ -3,6 +3,7 @@ import webserver.app
 import webserver.views.jsonview
 import webserver.controllers
 
+
 class Server:
     def __init__ (self,db):
         self._db = db

@@ -10,6 +10,7 @@ class TextView:
         sendto.send_response (200)
 
     def message (self,sendto):
+        print (self._text)
         sendto.write (bytes(self._text,"utf8"))
 
 

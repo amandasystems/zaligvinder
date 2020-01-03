@@ -16,12 +16,14 @@ class Server:
         self._ccontroller = webserver.controllers.ChartController (self._results)
 
         app = webserver.app.App ()
+        app.addEndpoint (webserver.routing.ExactMatch("solvers"),self._rcontroller.getSolvers)
         app.addEndpoint (webserver.routing.ExactMatch("tracks"),self._tcontroller.getAllTracks)
         app.addEndpoint (webserver.routing.ExactMatch("instances"),self._icontroller.getAllInstances)
         app.addEndpoint (webserver.routing.RegexMatch("instances/(?P<instance>\d+)/model.smt"),self._icontroller.getInstanceModel)
         app.addEndpoint (webserver.routing.ExactMatch("results"),self._rcontroller.getAllResults)
-        app.addEndpoint (webserver.routing.ExactMatch("solvers"),self._rcontroller.getSolvers)
         app.addEndpoint (webserver.routing.RegexMatch("results/(?P<track>\d+)"),self._rcontroller.getTrackResults)
+        app.addEndpoint (webserver.routing.RegexMatch("results/reference/(?P<instance>\d+)"),self._rcontroller.getReferenceResult)
+        
         app.addEndpoint (webserver.routing.RegexMatch("results/(?P<solver>[^/]+)/(?P<instance>\d+)/output"),self._rcontroller.getOutput)
         app.addEndpoint (webserver.routing.RegexMatch("summary/(?P<solver>[^/]+)"),self._rcontroller.getSummaryForSolver)
         app.addEndpoint (webserver.routing.RegexMatch("summary/(?P<solver>[^/]+)/(?P<track>\d+)"),self._rcontroller.getSummaryForSolverTrack)

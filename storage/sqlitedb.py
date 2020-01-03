@@ -179,7 +179,24 @@ class ResultRepository:
         nsatis = self._db.executeRet (nsatisquery, (solver,track))[0][0]
         
         return (smtcalls,timeouted,satis,unk,nsatis,time,total) 
-    
+
+    def getReferenceForInstance (self,instance):
+        query = '''SELECT result,Solver FROM Result WHERE instanceid = ? '''
+        rows = self._db.executeRet (query, (instance,))
+        sat = []
+        nsat = []
+        for r in rows:
+            if r[0] == True:
+                sat.append(r[1])
+            elif r[1] == False:
+                nsat.append(r[1])
+        res = None
+        if len(sat) > len(nsat):
+            res = True
+        elif len(nsat) > len(sat):
+            res = False
+        return utils.ReferenceResult (res,sat,nsat)
+        
         
 class SQLiteDB:
     def __init__ (self,prefix = ""):

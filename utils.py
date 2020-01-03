@@ -20,6 +20,12 @@ class Track:
         self.name = trackname
         self.instances = instances
 
+class ReferenceResult:
+    def __init__(self,result,satissolvers,nsatissolvers):
+        self.result=result
+        self.satissolvers = satissolvers
+        self.nsatissolvers = nsatissolvers
+        
 class ProgramLocator:
     def __init__(self):
         self._map = {

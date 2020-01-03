@@ -37,8 +37,15 @@ class ResultController:
                   'instances' : instances
             }
         return webserver.views.jsonview.JSONView (res)
+
+    def getReferenceResult (self,params):
+        ref = self._results.getReferenceForInstance (params["instance"])
+        res = {'result' : ref.result,
+               'satisfying solvers' : ref.satissolvers,
+               'nsatisfying solvers' : ref.nsatissolvers
+        }
+        return webserver.views.jsonview.JSONView (res)
     
-        
     def getAllResults (self,params):
         instances = self._results.getAllResults ()
         

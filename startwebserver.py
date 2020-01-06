@@ -33,7 +33,11 @@ class Server:
         app.addEndpoint (webserver.routing.RegexMatch("summary/(?P<solver>[^/]+)/(?P<track>\d+)"),self._rcontroller.getSummaryForSolverTrack)
         app.addEndpoint (webserver.routing.ExactMatch("chart/cactus"),self._ccontroller.generateCactus)
         app.addEndpoint (webserver.routing.ExactMatch("chart/distribution"),self._ccontroller.generateDistribution)
-        app.addEndpoint (webserver.routing.RegexMatch("test"),self._ccontrollerJS.generateCactus)
+        app.addEndpoint (webserver.routing.RegexMatch("jschart/cactus"),self._ccontrollerJS.generateCactus)
+        app.addEndpoint (webserver.routing.RegexMatch("jschart/distribution"),self._ccontrollerJS.generateDistribution)  
+        app.addEndpoint (webserver.routing.RegexMatch("jschart/pie"),self._ccontrollerJS.generatePie)
+
+
         self._app = app
 
     def startServer (self):

@@ -185,9 +185,7 @@ class ResultRepository:
         
     def getSummaryForSolverTrack (self,solver,track):
         query = '''SELECT SUM(Result.smtcalls), SUM(Result.timeouted), SUM(Result.time),COUNT(*) FROM Result,TrackInstanceMap WHERE solver = ? AND TrackInstanceMap.track = ? AND TrackInstanceMap.instance = Result.instanceid'''
-            
-        print("LOLOLO" + str(track) + str(solver))
-
+       
         rows = self._db.executeRet (query, (solver,track))
         assert(len(rows) == 1)                
         smtcalls,timeouted,time,total = rows[0]

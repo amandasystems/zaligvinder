@@ -14,6 +14,7 @@ tcontroller = webserver.controllers.TracksController (track)
 icontroller = webserver.controllers.TrackInstanceController (trackinstance)
 rcontroller = webserver.controllers.ResultController (results)
 ccontroller = webserver.controllers.ChartController (results)
+ccontrollerJS = webserver.controllers.ChartControllerJS (results)
 import webserver.app
 
 
@@ -28,6 +29,7 @@ app.addEndpoint (webserver.routing.ExactMatch("solvers"),rcontroller.getSolvers)
 app.addEndpoint (webserver.routing.RegexMatch("results/(?P<track>\d+)"),rcontroller.getTrackResults)
 app.addEndpoint (webserver.routing.RegexMatch("summary/(?P<solver>[^/]+)"),rcontroller.getSummaryForSolver)
 app.addEndpoint (webserver.routing.ExactMatch("chart/cactus"),ccontroller.generateCactus)
+app.addEndpoint (webserver.routing.RegexMatch("test"),ccontrollerJS.generateCactus)
 
 
 app.run ()

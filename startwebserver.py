@@ -15,6 +15,7 @@ class Server:
         self._rcontroller = webserver.controllers.ResultController (self._results)
         self._ccontroller = webserver.controllers.ChartController (self._results)
         self._fcontroller = webserver.controllers.FileControl ()
+        self._ccontrollerJS = webserver.controllers.ChartControllerJS (self._results)
         
         app = webserver.app.App ()
         app.addEndpoint (webserver.routing.RegexMatch("files/(?P<path>.+)"),self._fcontroller.findFile)
@@ -32,6 +33,7 @@ class Server:
         app.addEndpoint (webserver.routing.RegexMatch("summary/(?P<solver>[^/]+)/(?P<track>\d+)"),self._rcontroller.getSummaryForSolverTrack)
         app.addEndpoint (webserver.routing.ExactMatch("chart/cactus"),self._ccontroller.generateCactus)
         app.addEndpoint (webserver.routing.ExactMatch("chart/distribution"),self._ccontroller.generateDistribution)
+        app.addEndpoint (webserver.routing.RegexMatch("test"),self._ccontrollerJS.generateCactus)
         self._app = app
 
     def startServer (self):

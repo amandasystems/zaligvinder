@@ -117,9 +117,20 @@ class ResultRepository:
         rows = self._db.executeRet (query)
         return [t[0] for  t in rows]
 
+    def getTrackIds (self):
+        query = '''SELECT DISTINCT track  FROM TrackInstanceMap'''
+        rows = self._db.executeRet (query)
+        return [t[0] for  t in rows]
+
+
     def getResultForSolver (self,solver):
         query = '''SELECT * FROM Result WHERE solver = ? ORDER BY time ASC '''
         rows = self._db.executeRet (query,(solver,))
+        return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
+
+    def getResultForSolverTrack (self,solver,track):
+        query = '''SELECT Result.* FROM Result,TrackInstanceMap WHERE Result.solver = ? and Result.instanceid = TrackInstanceMap.instance and TrackInstanceMap.track = ? ORDER BY time ASC '''
+        rows = self._db.executeRet (query,(solver,track))
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
 
     
@@ -175,6 +186,8 @@ class ResultRepository:
     def getSummaryForSolverTrack (self,solver,track):
         query = '''SELECT SUM(Result.smtcalls), SUM(Result.timeouted), SUM(Result.time),COUNT(*) FROM Result,TrackInstanceMap WHERE solver = ? AND TrackInstanceMap.track = ? AND TrackInstanceMap.instance = Result.instanceid'''
             
+        print("LOLOLO" + str(track) + str(solver))
+
         rows = self._db.executeRet (query, (solver,track))
         assert(len(rows) == 1)                
         smtcalls,timeouted,time,total = rows[0]

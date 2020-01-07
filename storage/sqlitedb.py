@@ -122,6 +122,11 @@ class ResultRepository:
         rows = self._db.executeRet (query)
         return [t[0] for  t in rows]
 
+    def getTrackNames (self):
+        query = '''SELECT DISTINCT Track.*  FROM Track'''
+        rows = self._db.executeRet (query)
+        return [(t[0],t[1]) for  t in rows]
+
 
     def getResultForSolver (self,solver):
         query = '''SELECT * FROM Result WHERE solver = ? ORDER BY time ASC '''
@@ -130,6 +135,23 @@ class ResultRepository:
 
     def getResultForSolverTrack (self,solver,track):
         query = '''SELECT Result.* FROM Result,TrackInstanceMap WHERE Result.solver = ? and Result.instanceid = TrackInstanceMap.instance and TrackInstanceMap.track = ? ORDER BY time ASC '''
+        rows = self._db.executeRet (query,(solver,track))
+
+        for t in rows:
+            print(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2]).result)
+
+
+        return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
+
+
+    # TODO:Needs a check whether an instance was misclassified...
+    def getResultForSolverNoUnk (self,solver):
+        query = '''SELECT * FROM Result WHERE solver = ? and Result.result != 'None' ORDER BY time ASC '''
+        rows = self._db.executeRet (query,(solver,))
+        return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
+
+    def getResultForSolverTrackNoUnk (self,solver,track):
+        query = '''SELECT Result.* FROM Result,TrackInstanceMap WHERE Result.solver = ? and Result.result != 'None' and Result.instanceid = TrackInstanceMap.instance and TrackInstanceMap.track = ? ORDER BY time ASC '''
         rows = self._db.executeRet (query,(solver,track))
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
 

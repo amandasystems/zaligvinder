@@ -638,11 +638,20 @@ class ChartControllerJS:
                 <a class="nav-link" href="#">Track 4</a>
             </li>'''
 
+        if trackName == "Summary":
+            trackName = "Summery for the whole benchmark set XXX"
+        else: 
+            trackName = "Overview for Track " + trackName
+
+
         outputstr+='''</ul></nav><h1 clrfocusonviewinit="" style="padding-left:25px">'''+trackName+'''</h1>'''
         return outputstr
 
 
     def cld_trackPage(self,params):
+        # dict to get nice Titles
+        nameMapping = {"Pie" : "Pie chart for", "Line" : "Cactus plot", "Bar" : "Distribution diagramm"}
+
 
         # JavaScript Stuff
         jsout = "<script>"
@@ -658,7 +667,10 @@ class ChartControllerJS:
             data.append(("pie"+str(s)+str(divWrap),"Pie",self.generatePieGraphForSolver(params,"pie"+str(s)+str(divWrap),s)))
 
         for (divName,diagram,d) in data:
-            names+=[(diagram+" "+divName,divName)]
+            if diagram == "Pie":
+                names+=[(nameMapping[diagram] +" "+ divName[3:-len(divWrap)],divName)]
+            else:
+                names+=[(nameMapping[diagram],divName)]
             for l in d:
                 jsout+="var " + l + " = { " + d[l] + " };\n" 
             jsout+="new Chartist."+str(diagram)+"('#"+str(divName)+"', data"+str(divName)+",options"+str(divName)+");\n"

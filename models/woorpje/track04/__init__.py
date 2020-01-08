@@ -10,4 +10,4 @@ def getTrackData (bname = ""):
             if name.endswith (".smt"):
                 filest.append(utils.TrackInstance(name,os.path.join (root,name)))
         
-    return [utils.Track("track4",filest,bname)]
+    return [utils.Track("Track 4",filest,bname)]

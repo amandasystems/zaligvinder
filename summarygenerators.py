@@ -3,7 +3,38 @@ from itertools import accumulate
 import tabulate
 import json
 
-def calculateErrors(res):
+def calculateErrors (res):
+    errors = {}
+    for solver, mres in res.items ():
+        errors[solver] = 0
+        for i,k in enumerate(mres):
+            myres = k.result
+            if k.result == None:
+                continue
+            #collect results
+            returnvalues = [j[i] for kk,j in res.items()]
+            tts = [i for i in returnvalues if i.result == True]
+            ffs = [i for i in returnvalues if i.result == False]
+            result = None
+            ctts = len(tts)
+            cffs = len(ffs)
+            print (ctts,cffs)
+            if ctts != 0 or cffs != 0:
+                if ctts > cffs:
+                    if len([0 for i in returnvalues if i.model != ""]) > 0:
+                        result = True
+                    else:
+                        result = None
+                else:
+                    result = False
+            if result != None:        
+                print (myres,result)
+                if myres != result:
+                    errors[solver]+=1
+           
+    return errors
+
+def calculateErrorsOld(res):
     errors = dict()
 
     for solver in res.keys():

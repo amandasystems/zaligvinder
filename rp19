@@ -11,7 +11,7 @@ import tools.trau
 import tools.dummy
 
 
-import models.woorpje.track02
+import models.woorpje
 import models.kaluza
 import models.stringfuzz
 import models.z3_regression
@@ -22,10 +22,10 @@ import startwebserver
 
 import summarygenerators
 
-tracks = (models.woorpje.track02.getTrackData () +
+tracks = (models.woorpje.getTrackData () +
           #models.kaluza.getTrackData () +
           #models.stringfuzz.getTrackData () +
-          #models.z3_regression.getTrackData()
+          #models.z3_regression.getTrackData()+
           []
 )
 #solvers = {
@@ -41,7 +41,7 @@ solvers = {}
 for s in [tools.z3seq,
           tools.z3str3,
           tools.cvc4,
-          #tools.woorpjeSMT,
+          tools.woorpjeSMT,
           #tools.trau,
           tools.dummy]:
     s.addRunner (solvers)

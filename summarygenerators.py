@@ -92,11 +92,11 @@ def terminalResult (track,res):
         nsat = sum([1 for i in res[n] if False == i.result])
         unk = sum([1 for i in res[n] if None == i.result])
         t = sum([i.time for i in res[n] ])
-        cort = sum([i[0][1] for i in zip([(j.result,j.time) for j in res[n]],ref) if i[0][0] == i[1] and i[1] != None])
+        #cort = sum([i[0][1] for i in zip([(j.result,j.time) for j in res[n]],ref) if i[0][0] == i[1] and i[1] != None])
         error = errors[n] 
-        table.append ([n,sat,nsat,unk,error,smtcalls,t,cort])
+        table.append ([n,sat,nsat,unk,error,smtcalls,t])
 
-    print(tabulate.tabulate(table,["Solver", "Satis", "NSatis", "Unknown", "Errors",  "SMT Solver Calls", "Total Time", "Total Correct"]))
+    print(tabulate.tabulate(table,["Solver", "Satis", "NSatis", "Unknown", "Errors",  "SMT Solver Calls", "Total Time"]))
 
 def cactusPlot (track,res):
     name,files = track.name,track.instances

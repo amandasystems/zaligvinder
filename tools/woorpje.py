@@ -16,7 +16,7 @@ def run (eqfile,timeout,ploc):
             #out = subprocess.check_output ([tool,'--simplify', eqfile],timeout=timeout)
             #print(out.decode().strip())
             time.stop ()
-            return utils.Result(True,time.getTime(),False,0,out)
+            return utils.Result(True,time.getTime(),False,0,out,out)
         except subprocess.CalledProcessError as ex:
             
             time.stop ()

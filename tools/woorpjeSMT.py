@@ -24,7 +24,7 @@ def run (eqfile,timeout,ploc):
             #print(out.decode().strip())
             time.stop ()
             #extractFile(eqfile,sfile)
-            return utils.Result(True,time.getTime(),False,0,out)
+            return utils.Result(True,time.getTime(),False,0,out,out)
         except subprocess.CalledProcessError as ex:
             time.stop ()
             if ex.returncode == 0:

@@ -9,10 +9,14 @@ def progressMessage (file,solver):
     sys.stdout.write ("\x1b[2K[ {0} -  {1} | {2} ]\r".format(file.name,solver,current_process().pid))
 
 def runSpecific (tup):
-    solvername,func,model,timeout,ploc = tup
-    progressMessage (model,solvername)
-    result = func(model.filepath,timeout,ploc)
-    return result
+    try:
+        solvername,func,model,timeout,ploc = tup
+        progressMessage (model,solvername)
+        result = func(model.filepath,timeout,ploc)
+        return result
+    except Exception as e:
+        print (str(e))
+        return utils.Result(None,timeout,True,0,str(e))
 
 class TheRunner:
     def __init__(self,cores = 60):

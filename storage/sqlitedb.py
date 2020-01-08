@@ -124,10 +124,19 @@ class ResultRepository:
         return [t[0] for  t in rows]
 
     def getTrackNames (self):
-        query = '''SELECT DISTINCT Track.*  FROM Track'''
+        query = '''SELECT DISTINCT Track.id, Track.name  FROM Track'''
         rows = self._db.executeRet (query)
         return [(t[0],t[1]) for  t in rows]
 
+    def getTrackInfo (self):
+        query = '''SELECT *  FROM Track'''
+        rows = self._db.executeRet (query)
+        data = dict()
+        for (tid,tname,bgroup) in rows:
+            if bgroup not in data:
+                data[bgroup] = []
+            data[bgroup]+= [(tid,tname)]
+        return data
 
     def getResultForSolver (self,solver):
         query = '''SELECT * FROM Result WHERE solver = ? ORDER BY time ASC '''
@@ -164,10 +173,33 @@ class ResultRepository:
             return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
     
     def getTrackResults (self,trackid):
-        query = '''SELECT Result.solver, Result.instanceid, Result.smtcalls, Result.timeouted, Result.result, Result.time FROM Result,Track, TrackInstanceMap WHERE Result.instanceid = TrackInstanceMap.instance AND TrackInstanceMap.track = ? ORDER BY Result.time ASC'''
-        
+        query = '''SELECT Result.solver, Result.instanceid, Result.smtcalls, Result.timeouted, Result.result, Result.time FROM Result,Track,TrackInstanceMap WHERE Result.instanceid = TrackInstanceMap.instance AND TrackInstanceMap.track = ? ORDER BY Result.time ASC'''
+    
         rows = self._db.executeRet (query, (trackid,))
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
+
+    # TODO: Remove Errors as soon as available and refactor
+    def _getUniquelyClassifiedInstancesHelper(self,query,trackid=None):
+        if trackid != None:
+            rows = self._db.executeRet (query,(trackid))
+        else:
+            rows = self._db.executeRet (query)
+        to_bool = lambda x: True if x==1 else False
+        data = dict()
+
+        for (solver,iid,res) in rows:
+            if solver not in data:
+                data[solver] = []
+            data[solver]+=[(iid,to_bool(res))]
+        return data
+
+    def getUniquelyClassifiedInstances(self):
+        query = '''SELECT Result.solver, Result.instanceid, Result.result FROM Result WHERE Result.result != "None" GROUP BY Result.instanceid,Result.result HAVING COUNT(Result.result) = 1'''
+        return self._getUniquelyClassifiedInstancesHelper(query)
+
+    def getUniquelyClassifiedInstancesForTrack(self,trackid):
+        query = '''SELECT Result.solver, Result.instanceid, Result.result FROM Result,TrackInstanceMap WHERE Result.instanceid = TrackInstanceMap.instance AND TrackInstanceMap.track = ? AND Result.result != "None" GROUP BY Result.instanceid,Result.result HAVING COUNT(Result.result) = 1'''
+        return self._getUniquelyClassifiedInstancesHelper(query,str(trackid))
         
     def getSummaryForSolver (self,solver):
         query = '''SELECT SUM(Result.smtcalls), SUM(Result.timeouted), SUM(Result.time),COUNT(*) FROM Result WHERE solver = ?'''

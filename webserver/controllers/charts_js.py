@@ -9,7 +9,15 @@ class ChartControllerJS:
     def __init__(self,result):
         self._result = result
 
-    def generateCactusData(self,params):
+    def generateCactusData(self,params,no_unk=False):
+        if no_unk:
+            results_for_solver_func=self._result.getResultForSolver
+            results_for_solver_track_func=self._result.getResultForSolverTrack
+        else:
+            results_for_solver_func=self._result.getResultForSolverNoUnk
+            results_for_solver_track_func=self._result.getResultForSolverTrackNoUnk
+
+
         rdata = {}
         if "solver" in params:
             solvers = params["solver"]
@@ -21,10 +29,10 @@ class ChartControllerJS:
             avtracks = self._result.getTrackIds()
 
             if "track" not in params or int(str(params["track"][0])) not in avtracks:
-                res = self._result.getResultForSolverNoUnk (solv)
+                res = results_for_solver_func(solv)
             else:
                 track = int(str(params["track"][0]))
-                res = self._result.getResultForSolverTrackNoUnk(solv,track)
+                res = results_for_solver_track_func(solv,track)
 
             s = 0
             for i,data in enumerate(res):
@@ -144,8 +152,8 @@ class ChartControllerJS:
 
         return webserver.views.TextView.TextView (outputstr)
 
-    def generateCactusGraph(self,params,divName="chart1"):
-        rdata = self.generateCactusData(params)
+    def generateCactusGraph(self,params,divName="chart1",no_unk=False):
+        rdata = self.generateCactusData(params,no_unk)
 
         labels = "labels: []" # "labels: " + str(list(rdata.keys()))
         #series = "series: " + str([list(rdata[s]) for s in rdata])
@@ -583,10 +591,21 @@ class ChartControllerJS:
 
     def cld_navigation(self,params):
         activeTrack = 0
+        activeGroup = None
+        trackInfo = self._result.getTrackInfo()
+
+        # Return Error if trackInfo empty... TODO!!
+
         if "track" in params:
             activeTrack = params["track"][0]
 
-        tracks = self._result.getTrackNames()
+        if "bgroup" in params:
+            activeGroup = params["bgroup"][0]
+        else:
+            activeGroup = list(trackInfo.keys())[0]
+
+        tracks = trackInfo[activeGroup]
+        #tracks = self._result.getTrackNames()
         tracks+=[(0,"Summary")]
         trackName = " "
 
@@ -594,10 +613,15 @@ class ChartControllerJS:
 
         outputstr = '''<header class="header-1">
       <div class="branding">
-      </div>
-      <div class="header-nav">
-          <a href="javascript://" class="active nav-link nav-text">Benchmarks</a>
-      </div>
+      </div><div class="header-nav">'''
+
+        for bgroup in trackInfo:
+            outputstr+='''<a href="/?bgroup='''+bgroup+'''" class="'''
+            if bgroup == activeGroup:
+                outputstr+="active "
+            outputstr+='''nav-link nav-text">'''+bgroup+'''</a>'''
+
+        outputstr+='''</div>
       <div class="header-actions">
           <a href="javascript://" class="nav-link nav-icon" aria-label="settings">
               <clr-icon shape="cog"></clr-icon>
@@ -617,42 +641,29 @@ class ChartControllerJS:
                 outputstr+=" active"
                 trackName = tname
 
-            outputstr+='''" href="/?track='''+str(tid)+'''">'''+str(tname)+'''</a>
+            outputstr+='''" href="/?track='''+str(tid)+'''&bgroup='''+activeGroup+'''">'''+str(tname)+'''</a>
             </li>'''
-
-
             
-
-
-
-        '''<li class="nav-item">
-                <a class="nav-link active" href="#">Track 1</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Track 2</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Track 3</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Track 4</a>
-            </li>'''
-
         if trackName == "Summary":
-            trackName = "Summery for the whole benchmark set XXX"
+            trackName = "Summary for the whole benchmark set " + activeGroup
         else: 
-            trackName = "Overview for Track " + trackName
+            trackName = "Overview for " + trackName + " on " + activeGroup
 
 
         outputstr+='''</ul></nav><h1 clrfocusonviewinit="" style="padding-left:25px">'''+trackName+'''</h1>'''
         return outputstr
 
+    def _card_title(self,divWrap,divName):
+        print(divName,divWrap)
+        titleMapping = {"pie" : "Pie chart for", "cactus" : "Cactus plot w/o unknown and errors", "cactus_unk" : "Cactus plot with unknown and errors", "distr" : "Distribution diagramm", "uci" : "Uniquely classified instances"}
+        if len(divWrap) > 0:
+            divName = divName[0:-len(divWrap)]
+        if divName.startswith("pie"):
+            divName = "pie"
+        return titleMapping[divName]
+
 
     def cld_trackPage(self,params):
-        # dict to get nice Titles
-        nameMapping = {"Pie" : "Pie chart for", "Line" : "Cactus plot", "Bar" : "Distribution diagramm"}
-
-
         # JavaScript Stuff
         jsout = "<script>"
         divWrap = ""
@@ -661,27 +672,33 @@ class ChartControllerJS:
 
         solvers = self._result.getSolvers()
         names = []
-        data = [("distr"+str(divWrap),"Bar",self.generateDistributionGraph(params,"distr"+str(divWrap))),("cactus"+str(divWrap),"Line",self.generateCactusGraph(params,"cactus"+str(divWrap)))]
+        data = [("distr"+str(divWrap),"Bar",self.generateDistributionGraph(params,"distr"+str(divWrap))),("cactus"+str(divWrap),"Line",self.generateCactusGraph(params,"cactus"+str(divWrap))),("cactus_unk"+str(divWrap),"Line",self.generateCactusGraph(params,"cactus_unk"+str(divWrap),True))]
+
+
+        print("LOL"+divWrap)
 
         for s in solvers: 
             data.append(("pie"+str(s)+str(divWrap),"Pie",self.generatePieGraphForSolver(params,"pie"+str(s)+str(divWrap),s)))
 
         for (divName,diagram,d) in data:
             if diagram == "Pie":
-                names+=[(nameMapping[diagram] +" "+ divName[3:-len(divWrap)],divName)]
+                names+=[(self._card_title(divWrap,divName) +" "+ divName[3:-len(divWrap)],divName)]
             else:
-                names+=[(nameMapping[diagram],divName)]
+                names+=[(self._card_title(divWrap,divName),divName)]
             for l in d:
                 jsout+="var " + l + " = { " + d[l] + " };\n" 
             jsout+="new Chartist."+str(diagram)+"('#"+str(divName)+"', data"+str(divName)+",options"+str(divName)+");\n"
         jsout+="</script>\n\n"
 
         # html Stuff
-        
+
+
         htmlout= '''<div class="content-container"><div class="content-area">'''
         htmlout+=self.getResultsTable(params)
-        htmlout+=self.placeCardUnit(names[0:2])
-        htmlout+=self.placeCardUnit(names[2:])
+        htmlout+= self.getUniquelyClassifiedInstances(params)
+        htmlout+=self.placeCardUnit([names[0]])
+        htmlout+=self.placeCardUnit(names[1:3])
+        htmlout+=self.placeCardUnit(names[3:])
         htmlout+="</div></div>"
 
         return htmlout+jsout
@@ -698,6 +715,34 @@ class ChartControllerJS:
                 </div>
               </div>\n'''
         outputstr+="</div>"
+        return outputstr
+
+    def getUniquelyClassifiedInstances(self,params):
+        outputstr='<div class="clr-row"><div class="clr-col"><div class="card card-block" style="min-width:300px"><h3 class="card-title">Uniquely classified instances</h3>'
+        avtracks = self._result.getTrackIds()
+        for solv in self._result.getSolvers():
+            if "track" not in params or int(str(params["track"][0])) not in avtracks:
+                data = self._result.getUniquelyClassifiedInstances ()
+            else:
+                track = int(str(params["track"][0]))
+                data = self._result.getUniquelyClassifiedInstancesForTrack(track)
+
+        for solv in data:
+            outputstr+="<h4>" + solv + "</h4>"
+            outputstr+= '''<table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Instance ID</th>
+                                    <th>Result</th>
+                                </tr>
+                            </thead>
+                            <tbody>'''
+            for (iid,res) in data[solv]:
+                outputstr+='''<tr>
+                <td>'''+str(iid)+'''</td>
+                <td>'''+str(res)+'''</td>
+            </tr>'''
+            outputstr+="</tbody></table></div></div></div>"
         return outputstr
 
 

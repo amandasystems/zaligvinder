@@ -11,5 +11,5 @@ for root, dirs, files in os.walk(dir_path, topdown=False):
         if name.endswith (".eq"):
             filesteq.append(utils.TrackInstance(name,os.path.join (root,name)))
         
-trackdata = utils.Track("track5",filest)
-trackdataeq = utils.Track("track5",filesteq)
+trackdata = utils.Track("Track 5",filest)
+trackdataeq = utils.Track("Track 5",filesteq)

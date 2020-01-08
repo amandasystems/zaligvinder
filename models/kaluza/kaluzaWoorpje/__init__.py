@@ -8,4 +8,4 @@ for root, dirs, files in os.walk(dir_path, topdown=False):
         if name.endswith (".smt2") and not name.startswith("."):
             filest.append(utils.TrackInstance(name,os.path.join (root,name)))
 
-trackdata = utils.Track("kaluze_woorpje",filest)
+trackdata = utils.Track("Kaluza Woorpje",filest)

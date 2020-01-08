@@ -45,8 +45,8 @@ def run (eqfile,timeout,ploc):
     else:
         raise "woorpje Not in Path"
 
-    def addRunner (addto):
-        addto['woorpje'] = run
+def addRunner (addto):
+    addto['woorpje'] = run
 
     
 if __name__ == "__main__":

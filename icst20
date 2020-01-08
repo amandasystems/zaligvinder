@@ -4,6 +4,7 @@ import runners.multi as testrunner
 import tools.z3seq
 import tools.z3str3
 import tools.cvc4
+import tools.trau
 import storage
 import tools.woorpje_heuristics
 import models.kaluza.kaluzaWoorpje as kaluzaWoorpje 
@@ -24,9 +25,10 @@ solvers = {
     'z3str3' : tools.z3str3.run,
     'z3seq' : tools.z3seq.run,
     'cvc4' : tools.cvc4.run,
+    'trau' : tools.trau.run,
 }
 
-smtsolvers = ["z3seq","cvc4","z3str3"]
+smtsolvers = ["cvc4"]
 
 tools.woorpje_heuristics.addRunners ("variableTermRatio",smtsolvers,3.14,solvers)
 tools.woorpje_heuristics.addRunners ("variableTermRatio",smtsolvers,0.15,solvers)

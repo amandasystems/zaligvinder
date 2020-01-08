@@ -11,13 +11,14 @@ import timer
 #path = utils.findProgram ("Z3BINARY","z3")
 
 def run (eq,timeout,ploc):
-    path = ploc.findProgram ("Z3")
+    path = ploc.findProgram ("Trau")
     if not path:
-        raise "Z3 Not in Path"
+        raise "Trau Not in Path"
 
     tempd = tempfile.mkdtemp ()
     smtfile = os.path.join (tempd,"out.smt")
     #tools.woorpje2smt.run (eq,smtfile,ploc)
+
 
     # hack to get rid of (get-model), not needed for z3 and returns 1 / Error if input is unsat
     f=open(eq,"r")
@@ -29,13 +30,16 @@ def run (eq,timeout,ploc):
     f.close()
     copy.close() 
 
+
+
     time = timer.Timer ()
     try:
-        out = subprocess.check_output ([path,"smt.string_solver=z3str3","dump_models=true",smtfile],timeout=timeout).decode().strip()
+        out = subprocess.check_output ([path,"smt.string_solver=trau","dump_models=true",smtfile],timeout=timeout).decode().strip()
     except subprocess.TimeoutExpired:
         return utils.Result(None,timeout,True,1)
     except subprocess.CalledProcessError:
         return utils.Result(None,timeout,False,1)
+
     time.stop()
     shutil.rmtree (tempd)
     if "unsat" in out:
@@ -45,7 +49,7 @@ def run (eq,timeout,ploc):
     return utils.Result(None,time.getTime  (),False,1,out)
 
 def addRunner (addto):
-    addto['z3str3'] = run
+    addto['trau'] = run
 
 
 if __name__ == "__main__":

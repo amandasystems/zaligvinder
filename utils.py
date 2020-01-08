@@ -9,17 +9,22 @@ class Result:
         self.smtcalls = smtcalls
         self.output = output
         self.model = model
-
+        
 class TrackInstance:
     def __init__ (self,name,filepath):
         self.name = name
         self.filepath = filepath
 
 class Track:
-    def __init__ (self,trackname,instances = []):
+    def __init__ (self,trackname,instances = [],bname = None):
         self.name = trackname
         self.instances = instances
+        self.benchmark = bname or trackname
 
+    def __str__(self):
+        return self.benchmark+ "/"+self.name
+        
+        
 class ReferenceResult:
     def __init__(self,result,satissolvers,nsatissolvers):
         self.result=result

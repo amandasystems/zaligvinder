@@ -8,6 +8,7 @@ def progressMessage (track,file,solver,cur,total):
 
 class TheRunner:
     def runTrack (self,track,solvers,store,timeout,ploc):
+        print (track)
         results = {}
         tname, files = track.name, track.instances
         print ("Running track {0} with {1} files.".format (tname,len(files)))

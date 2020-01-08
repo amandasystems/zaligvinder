@@ -50,7 +50,7 @@ def calculateErrors(res):
 
 def terminalResult (track,res):
     name,files = track.name,track.instances
-    print ("Track:" + name)
+    print ("Track: " + str(track))
     table = []
     ref = correctReferenceList (track,res)
     errors = calculateErrors(res)

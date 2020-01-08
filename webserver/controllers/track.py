@@ -7,12 +7,14 @@ class TracksController:
     def getAllTracks (self,params):
         def constr (t):
             data = {"name" : t.name,
-                    "id" : t.dbid
+                    "id" : t.dbid,
+                    "benchmark" : t.benchmark
             }
             trackfiles = []
             for tt  in t.instances:
                 trackfiles.append ({"name" : tt.name,
-                                    "id" : tt.dbid})
+                                    "id" : tt.dbid
+                })
             data["instances"] = trackfiles
             return data
         res = self._track.loadAllTracks ()

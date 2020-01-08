@@ -60,15 +60,15 @@ class TrackRepository:
         self.instancerepo = instancerepo
         
     def createSchema (self):
-        query = '''Create Table  IF NOT EXISTS Track (id INTEGER PRIMARY KEY, name TEXT)'''
+        query = '''Create Table  IF NOT EXISTS Track (id INTEGER PRIMARY KEY, name TEXT, bgroup TEXT)'''
         self._db.execute (query)
         query = '''Create Table IF NOT EXISTS TrackInstanceMap (track INTEGER, instance INTEGER)'''
         self._db.execute (query)
         
     def storeTrack (self,track):
         if not hasattr (track,'dbid'):
-            query = '''INSERT INTO Track (id,name) Values (?,?)'''
-            self._db.execute(query,(self._id,track.name))
+            query = '''INSERT INTO Track (id,name,bgroup) Values (?,?,?)'''
+            self._db.execute(query,(self._id,track.name,track.benchmark))
             track.dbid = self._id
             self._id = self._id+1
             for inst in track.instances:
@@ -84,9 +84,10 @@ class TrackRepository:
         rows = self._db.executeRet (query,(id,))
         assert(len(rows) == 1)
         tname = rows[0][1]
+        bname = rows[0][2]
         rows = self._db.executeRet (instancequery,(id,))
         tinstances = [self.instancerepo.loadTrackInstance (instance) for (tid,instance) in rows]
-        res = utils.Track (tname,tinstances)
+        res = utils.Track (tname,tinstances,bname)
         res.dbid = id
         return res
 

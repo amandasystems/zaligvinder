@@ -17,8 +17,9 @@ def runSpecific (tup):
 class TheRunner:
     def __init__(self,cores = 60):
         self._cores = cores
-
+        
     def runTrack (self,track,solvers,store,timeout,ploc):
+        print (track)
         results = {}
         tname, files =track.name,track.instances
         

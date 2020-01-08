@@ -8,42 +8,43 @@ import tools.z3str3
 import tools.cvc4
 import tools.woorpjeSMT
 import tools.trau
+import tools.dummy
 
-import models.woorpje.track01 as track01
-import models.woorpje.track02 as track02
-import models.woorpje.track03 as track03
-import models.woorpje.track04 as track04
-import models.woorpje.track05 as track05
+
+import models.woorpje
+import models.kaluza
+import models.stringfuzz
+import models.z3_regression
 import startwebserver
 
 
 
 
 import summarygenerators
-from datetime import datetime
 
-tracks = [track01.trackdata,
-          track02.trackdata,
-          track03.trackdata,
-          track04.trackdata,
-          track05.trackdata,
-]
-timeout = 30
-
-solvers = {
-    'z3str3' : tools.z3str3.run,
-    'z3seq' : tools.z3seq.run,
-    'cvc4' : tools.cvc4.run,
-    'trau' : tools.trau.run
+tracks = (models.woorpje.getTrackData () +
+          #models.kaluza.getTrackData () +
+          #models.stringfuzz.getTrackData () +
+          #models.z3_regression.getTrackData()
+          []
+)
+#solvers = {
+#    'z3str3' : tools.z3str3.run,
+#    'z3seq' : tools.z3seq.run,
+#    'cvc4' : tools.cvc4.run,
+#    'trau' : tools.trau.run
     #'norn' :  tools.norn.run,
     #'woorpje' :  tools.woorpjeSMT.run
-}
+#}
+
+solvers = {}
+tools.dummy.addRunner (solvers)
 
 summaries = [summarygenerators.terminalResult
 ]
-
+timeout = 30 
 ploc = utils.JSONProgramConfig ()
 
-store = storage.SQLiteDB ("rp")
+store = storage.SQLiteDB ("RP")
 testrunner().runTestSetup (tracks,solvers,summaries,store,timeout,ploc)
 startwebserver.Server (store.getDB ()).startServer ()

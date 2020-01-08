@@ -10,7 +10,7 @@ import timer
 
 #path = utils.findProgram ("Z3BINARY","z3")
 
-def run (eq,timeout,ploc):
+def run (eq,timeout,ploc,wd):
     path = ploc.findProgram ("Trau")
     if not path:
         raise "Trau Not in Path"

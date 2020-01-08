@@ -1,5 +1,6 @@
 import sys
 import subprocess
+import os
 import shutil
 import timer
 import utils
@@ -13,18 +14,21 @@ def extractFile(eqfile,sfile):
     #shutil.copyfile(eqfile, dest+fileName)
     shutil.copyfile(eqfile, dest+"/simplify/"+fileName)
 
-def run (eqfile,timeout,ploc):
+def run (eqfile,timeout,ploc,wd):
     #sfile = "/root/words/benchmarkExtract/benchmarkTool/kaluzaSmallSatExtracted/test.smt"
     tool = ploc.findProgram ("woorpjeSMT")
     if tool:
         try:
+            smtmodel = os.path.join (wd,"smtmodel.smt")
             time = timer.Timer ()
-            out = subprocess.check_output ([tool, '--solver', '1' ,'-S','1','--smttimeout', '10', eqfile],timeout=timeout)
+            out = subprocess.check_output ([tool, '--smtmodel',smtmodel,'--solver', '1' ,'-S','1','--smttimeout', '10', eqfile],timeout=timeout)
             #out = subprocess.check_output ([tool,'--simplify', eqfile],timeout=timeout)
             #print(out.decode().strip())
             time.stop ()
             #extractFile(eqfile,sfile)
-            return utils.Result(True,time.getTime(),False,0,out,out)
+            with open(smtmodel) as f:
+                    model = f.read()
+                    return utils.Result(True,time.getTime(),False,0,out,model)
         except subprocess.CalledProcessError as ex:
             time.stop ()
             if ex.returncode == 0:

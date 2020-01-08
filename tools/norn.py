@@ -12,7 +12,7 @@ import timer
 FNULL = open(os.devnull, 'w')
 
 
-def run (eq,timeout,ploc):
+def run (eq,timeout,ploc,wd):
     path = ploc.findProgram ("norn")
     if not path:
         raise "Norn Not in Path"

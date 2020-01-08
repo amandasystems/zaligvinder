@@ -16,7 +16,7 @@ class TheRunner:
         for solver,func in solvers.items():
             for i,n in enumerate(files):
                 progressMessage (tname,n.name,solver,i,len(files))
-                result = func (n.filepath,timeout,ploc)
+                result = func (n.filepath,timeout,ploc,os.path.abspath("."))
                 store.writeData (track,n,solver,result)
                 results[solver] = results.get(solver,[]) + [result]
         sys.stdout.write ("\n")

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from runners.multi import TheRunner as testrunner
+from runners.base import TheRunner as testrunner
 import utils
 import storage
 import tools.z3seq
@@ -11,7 +11,7 @@ import tools.trau
 import tools.dummy
 
 
-import models.woorpje
+import models.woorpje.track01
 import models.kaluza
 import models.stringfuzz
 import models.z3_regression
@@ -22,7 +22,7 @@ import startwebserver
 
 import summarygenerators
 
-tracks = (models.woorpje.getTrackData () +
+tracks = (models.woorpje.track01.getTrackData () +
           #models.kaluza.getTrackData () +
           #models.stringfuzz.getTrackData () +
           #models.z3_regression.getTrackData()+
@@ -38,12 +38,13 @@ tracks = (models.woorpje.getTrackData () +
 #}
 
 solvers = {}
-for s in [tools.z3seq,
-          tools.z3str3,
-          tools.cvc4,
+for s in [#tools.z3seq,
+          #tools.z3str3,
+          #tools.cvc4,
           tools.woorpjeSMT,
           #tools.trau,
-          tools.dummy]:
+          #tools.dummy
+]:
     s.addRunner (solvers)
 
 

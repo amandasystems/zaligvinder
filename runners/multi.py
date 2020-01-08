@@ -2,6 +2,9 @@
 import os
 import sys
 import utils
+import tempfile
+import shutil
+
 from multiprocessing import Pool
 from multiprocessing import current_process
 
@@ -12,12 +15,15 @@ def runSpecific (tup):
     try:
         solvername,func,model,timeout,ploc = tup
         progressMessage (model,solvername)
-        result = func(model.filepath,timeout,ploc)
+        tempd = tempfile.mkdtemp ()
+        result = func(model.filepath,timeout,ploc,tempd)
+        shutil.rmtree (tempd)    
         return result
     except Exception as e:
         print (str(e))
+        shutil.rmtree (tempd)
         return utils.Result(None,timeout,True,0,str(e))
-
+    
 class TheRunner:
     def __init__(self,cores = 60):
         self._cores = cores

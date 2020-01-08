@@ -11,7 +11,7 @@ import utils
 #path = utils.findProgram ("CVC4BINARY","cvc4")
 
 
-def run (eq,timeout,ploc,solver="1",param="60"):
+def run (eq,timeout,ploc,wd,solver="1",param="60"):
     path = ploc.findProgram ("cvc4")
     if not path:
         raise "Z3 Not in Path"

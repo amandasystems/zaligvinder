@@ -38,15 +38,17 @@ class TheRunner:
         for solver,func in solvers.items():
             for i,n in enumerate(files):
                 tasks.append ((solver,func,n,timeout,ploc))
-        p = Pool (self._cores)
-        res = p.map (runSpecific,tasks)
-
+        with Pool (self._cores) as p:
+            res = p.map (runSpecific,tasks)
+        
+        
     
         for setting,result in zip (tasks,res):
             solvername,model = setting[0],setting[2]
             store.writeData (track,model,solvername,result)
             results[solvername] = results.get(solvername,[]) + [result]
         sys.stdout.write ("\n")
+        
         return results
 
     def runTestSetup (self,tracks,solvers,voter,summaries,outputfile,timeout,ploc):

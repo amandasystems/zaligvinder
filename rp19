@@ -25,7 +25,7 @@ import summarygenerators
 
 tracks = (models.woorpje.track02.getTrackData () +
           #models.kaluza.getTrackData () +
-          #models.stringfuzz.getTrackData () +
+          models.stringfuzz.getTrackData () +
           #models.z3_regression.getTrackData()+
           []
 )
@@ -43,7 +43,7 @@ for s in [tools.z3seq,
           tools.z3str3,
           tools.cvc4,
           #tools.woorpjeSMT,
-          #tools.trau,
+          tools.trau,
           #tools.dummy
 ]:
     s.addRunner (solvers)

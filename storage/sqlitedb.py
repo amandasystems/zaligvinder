@@ -1,4 +1,4 @@
-
+1
 import sqlite3
 import utils
 
@@ -48,7 +48,7 @@ class TrackInstanceRepository:
         query = '''SELECT * FROM TrackInstance WHERE id = ?'''
         rows = self._db.executeRet (query,(id,))
         assert(len(rows)==1)
-        tin = utils.TrackInstance (rows[0][1],rows[0][2])
+        tin = utils.TrackInstance (rows[0][1],rows[0][2],rows[0][3])
         tin.dbid = id
         return tin
 

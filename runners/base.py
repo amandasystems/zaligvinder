@@ -22,8 +22,9 @@ class TheRunner:
         sys.stdout.write ("\n")
         return results
 
-    def runTestSetup (self,tracks,solvers,summaries,outputfile,timeout,ploc):
+    def runTestSetup (self,tracks,solvers,voter,summaries,outputfile,timeout,ploc):
         for t in tracks:
             res = self.runTrack (t,solvers,outputfile,timeout,ploc)
+            voter.voteOnResult (t,res)
             for s in summaries:
                 s(t,res)

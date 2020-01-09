@@ -3,35 +3,17 @@ from itertools import accumulate
 import tabulate
 import json
 
-def calculateErrors (res):
+def calculateErrors (track,res):
+    instances = track.instances
     errors = {}
     for solver, mres in res.items ():
         errors[solver] = 0
         for i,k in enumerate(mres):
-            myres = k.result
-            if k.result == None:
-                continue
-            #collect results
-            returnvalues = [j[i] for kk,j in res.items()]
-            tts = [i for i in returnvalues if i.result == True]
-            ffs = [i for i in returnvalues if i.result == False]
-            result = None
-            ctts = len(tts)
-            cffs = len(ffs)
-            print (ctts,cffs)
-            if ctts != 0 or cffs != 0:
-                if ctts > cffs:
-                    if len([0 for i in returnvalues if i.model != ""]) > 0:
-                        result = True
-                    else:
-                        result = None
-                else:
-                    result = False
-            if result != None:        
-                print (myres,result)
-                if myres != result:
+            inst = instances[i]
+            if inst.expected != None and k.result != None:
+                #Only count errors if we have an expected value and this solver gave an answer
+                if inst.expected != k.result:
                     errors[solver]+=1
-           
     return errors
 
 def calculateErrorsOld(res):
@@ -79,27 +61,6 @@ def calculateErrorsOld(res):
 
     return errors
 
-def updateReferenceResult (track,res):
-    name,instances = track.name,track.instances
-    for i,inst in enumerate(instances):
-        if inst.expected != None:
-            toolResults = [r[i] for r in res.values ()]
-            tts = [r for r in toolResults if r.result == True]
-            ffs = [r for r in toolResults if r.result == False]
-            unk = [r for r in toolResults if r.result == None]
-            ctts = len(tts)
-            cffs = len(ffs)
-            cunk = len(unk)
-            if ctts > 0 or cffs > 0:
-                #Someone made a conclusion
-                if ctts > cffs:
-                    #More True vote
-                    inst.expected = True
-                    
-                elif cffs > ctts:
-                    #More False vote
-                    inst.expected = False
-
                 
                     
         
@@ -108,7 +69,7 @@ def terminalResult (track,res):
     name,files = track.name,track.instances
     print ("Track: " + str(track))
     table = []
-    errors = calculateErrors(res)
+    errors = calculateErrors(track,res)
 
     for n in res.keys():
         smtcalls = sum([i.smtcalls for i in res[n]])

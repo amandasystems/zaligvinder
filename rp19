@@ -3,6 +3,7 @@
 from runners.multi import TheRunner as testrunner
 import utils
 import storage
+import voting.majority as voting
 import tools.z3seq
 import tools.z3str3
 import tools.cvc4
@@ -11,7 +12,7 @@ import tools.trau
 import tools.dummy
 
 
-import models.woorpje.track01
+import models.woorpje.track02
 import models.kaluza
 import models.stringfuzz
 import models.z3_regression
@@ -22,7 +23,7 @@ import startwebserver
 
 import summarygenerators
 
-tracks = (models.woorpje.track01.getTrackData () +
+tracks = (models.woorpje.track02.getTrackData () +
           #models.kaluza.getTrackData () +
           #models.stringfuzz.getTrackData () +
           #models.z3_regression.getTrackData()+
@@ -38,10 +39,10 @@ tracks = (models.woorpje.track01.getTrackData () +
 #}
 
 solvers = {}
-for s in [#tools.z3seq,
-          #tools.z3str3,
-          #tools.cvc4,
-          tools.woorpjeSMT,
+for s in [tools.z3seq,
+          tools.z3str3,
+          tools.cvc4,
+          #tools.woorpjeSMT,
           #tools.trau,
           #tools.dummy
 ]:
@@ -54,8 +55,9 @@ timeout = 30
 ploc = utils.JSONProgramConfig ()
 
 store = storage.SQLiteDB ("RP")
-summaries = [summarygenerators.terminalResult,
-             store.postTrackUpdate
+summaries = [
+    summarygenerators.terminalResult,
+    store.postTrackUpdate
 ]
-testrunner().runTestSetup (tracks,solvers,summaries,store,timeout,ploc)
+testrunner().runTestSetup (tracks,solvers,voting.MajorityVoter(),summaries,store,timeout,ploc)
 startwebserver.Server (store.getDB ()).startServer ()

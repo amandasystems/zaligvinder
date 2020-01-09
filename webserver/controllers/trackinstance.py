@@ -8,7 +8,9 @@ class TrackInstanceController:
     def getAllInstances (self,params):
         instances = self._instance.loadAllInstances ()
         return webserver.views.jsonview.JSONView ([{"name" : tt.name,
-                                                    "id" : tt.dbid} for tt in instances])
+                                                    "id" : tt.dbid,
+                                                    "expected" : tt.expected
+        } for tt in instances])
     
     def getInstanceModel (self,params):
         instance = self._instance.loadTrackInstance (params["instance"])

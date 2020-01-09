@@ -105,10 +105,10 @@ class ChartControllerJS:
         for solv in solvers:
 
             if "track" not in params or int(str(params["track"][0])) not in avtracks:
-                smtcalls,timeouted,satis,unk,nsatis,time,total = self._result.getSummaryForSolverGroup (solv,activeGroup)
+                smtcalls,timeouted,satis,unk,nsatis,errors,time,total = self._result.getSummaryForSolverGroup (solv,activeGroup)
             else:
                 track = int(str(params["track"][0]))
-                smtcalls,timeouted,satis,unk,nsatis,time,total = self._result.getSummaryForSolverTrack(solv,track)
+                smtcalls,timeouted,satis,unk,nsatis,errors,time,total = self._result.getSummaryForSolverTrack(solv,track)
                    
             
             rdata[solv] = {"satis" : satis,
@@ -776,17 +776,17 @@ class ChartControllerJS:
         avtracks = self._result.getTrackIds()
         for solv in self._result.getSolvers():
             if "track" not in params or int(str(params["track"][0])) not in avtracks:
-                smtcalls,timeouted,satis,unk,nsatis,time,total = self._result.getSummaryForSolverGroup (solv,activeGroup)
+                smtcalls,timeouted,satis,unk,nsatis,errors,time,total = self._result.getSummaryForSolverGroup (solv,activeGroup)
             else:
                 track = int(str(params["track"][0]))
-                smtcalls,timeouted,satis,unk,nsatis,time,total = self._result.getSummaryForSolverTrack(solv,track)
+                smtcalls,timeouted,satis,unk,nsatis,errors,time,total = self._result.getSummaryForSolverTrack(solv,track)
                    
             outputstr+='''<tr>
                     <td>'''+str(solv)+'''</td>
                     <td>'''+str(satis)+'''</td>
                     <td>'''+str(nsatis)+'''</td>
                     <td>'''+str(unk)+'''</td>
-                    <td>---</td>
+                    <td>'''+str(errors)+'''</td>
                     <td>'''+str(timeouted)+'''</td>
                     <td>'''+str(total)+'''</td>
                     <td>'''+str(time)+'''</td>

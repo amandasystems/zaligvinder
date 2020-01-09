@@ -230,9 +230,12 @@ class ResultRepository:
 
         nsatisquery = ''' SELECT COUNT(*) FROM Result WHERE Solver = ? AND Result.result = false'''
         nsatis = self._db.executeRet (nsatisquery, (solver,))[0][0]
+
+        errorquery = ''' SELECT COUNT(*) FROM Result,TrackInstanceMap,Track,TrackInstance WHERE solver = ? AND Result.result != TrackInstance.expected AND Result.result != NULL AND TrackInstance.id = Result.instanceid ''' 
+        errors = self._db.executeRet (errorquery, (solver,))[0][0]
         
         
-        return (smtcalls,timeouted,satis,unk,nsatis,time,total) 
+        return (smtcalls,timeouted,satis,unk,nsatis,errors,time,total) 
 
     def getSummaryForSolverGroup (self,solver,group):
         query = '''SELECT SUM(Result.smtcalls), SUM(Result.timeouted), SUM(Result.time),COUNT(*) FROM Result,TrackInstanceMap,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? '''
@@ -241,17 +244,19 @@ class ResultRepository:
         smtcalls,timeouted,time,total = rows[0]
         assert(len(rows) == 1)
 
-        satisquery = ''' SELECT COUNT(*) FROM Result WHERE Solver = ? AND Result.result = true'''
-        satis = self._db.executeRet (satisquery, (solver,))[0][0]
+        satisquery = ''' SELECT COUNT(*) FROM Result,TrackInstanceMap,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ?  AND Result.result = true'''
+        satis = self._db.executeRet (satisquery, (solver,group,))[0][0]
 
-        unkquery = ''' SELECT COUNT(*) FROM Result WHERE Solver = ? AND Result.result IS NULL'''
-        unk = self._db.executeRet (unkquery, (solver,))[0][0]
+        unkquery = ''' SELECT COUNT(*) FROM Result,TrackInstanceMap,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? AND Result.result IS NULL'''
+        unk = self._db.executeRet (unkquery, (solver,group,))[0][0]
 
-        nsatisquery = ''' SELECT COUNT(*) FROM Result WHERE Solver = ? AND Result.result = false'''
-        nsatis = self._db.executeRet (nsatisquery, (solver,))[0][0]
+        nsatisquery = ''' SELECT COUNT(*)  FROM Result,TrackInstanceMap,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? AND Result.result = false'''
+        nsatis = self._db.executeRet (nsatisquery, (solver,group,))[0][0]
+
+        errorquery = ''' SELECT COUNT(*) FROM Result,TrackInstanceMap,Track,TrackInstance WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? AND Result.result != TrackInstance.expected AND Result.result != NULL AND TrackInstance.id = Result.instanceid ''' 
+        errors = self._db.executeRet (errorquery, (solver,group,))[0][0]
         
-        
-        return (smtcalls,timeouted,satis,unk,nsatis,time,total) 
+        return (smtcalls,timeouted,satis,unk,nsatis,errors,time,total) 
 
     def getOutputForSolverInstance (self,solver,instance):
         query = '''SELECT output  FROM Result WHERE solver = ? AND instanceid = ?'''
@@ -286,8 +291,11 @@ class ResultRepository:
 
         nsatisquery = ''' SELECT COUNT(*) FROM Result,TrackInstanceMap WHERE Solver = ? AND Result.result = false AND TrackInstanceMap.track = ? AND TrackInstanceMap.instance = Result.instanceid'''
         nsatis = self._db.executeRet (nsatisquery, (solver,track))[0][0]
+
+        errorquery = ''' SELECT COUNT(*) FROM Result,TrackInstanceMap,Track,TrackInstance WHERE solver = ? AND Result.result != TrackInstance.expected AND Result.result != NULL AND TrackInstance.id = Result.instanceid AND TrackInstanceMap.track = ? AND TrackInstanceMap.instance = Result.instanceid''' 
+        errors = self._db.executeRet (errorquery, (solver,track))[0][0]
         
-        return (smtcalls,timeouted,satis,unk,nsatis,time,total) 
+        return (smtcalls,timeouted,satis,unk,nsatis,errors,time,total) 
 
     def getReferenceForInstance (self,instance):
         query = '''SELECT result,Solver FROM Result WHERE instanceid = ? '''

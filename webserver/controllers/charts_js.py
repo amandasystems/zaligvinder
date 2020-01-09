@@ -9,12 +9,12 @@ class ChartControllerJS:
     def __init__(self,result):
         self._result = result
 
-    def generateCactusData(self,params,no_unk=False):
+    def generateCactusData(self,params,activeGroup,no_unk=False):
         if no_unk:
-            results_for_solver_func=self._result.getResultForSolver
+            results_for_solver_func=self._result.getResultForSolverGroup
             results_for_solver_track_func=self._result.getResultForSolverTrack
         else:
-            results_for_solver_func=self._result.getResultForSolverNoUnk
+            results_for_solver_func=self._result.getResultForSolverGroupNoUnk
             results_for_solver_track_func=self._result.getResultForSolverTrackNoUnk
 
 
@@ -29,7 +29,7 @@ class ChartControllerJS:
             avtracks = self._result.getTrackIds()
 
             if "track" not in params or int(str(params["track"][0])) not in avtracks:
-                res = results_for_solver_func(solv)
+                res = results_for_solver_func(solv,activeGroup)
             else:
                 track = int(str(params["track"][0]))
                 res = results_for_solver_track_func(solv,track)
@@ -93,7 +93,7 @@ class ChartControllerJS:
         outputstr+=self.stupidFooter()
         return webserver.views.TextView.TextView (outputstr)
 
-    def generateDistributionData (self,params):
+    def generateDistributionData (self,params,activeGroup):
         rdata = {}
         if "solver" in params:
             solvers = params["solver"]
@@ -105,7 +105,7 @@ class ChartControllerJS:
         for solv in solvers:
 
             if "track" not in params or int(str(params["track"][0])) not in avtracks:
-                smtcalls,timeouted,satis,unk,nsatis,time,total = self._result.getSummaryForSolver (solv)
+                smtcalls,timeouted,satis,unk,nsatis,time,total = self._result.getSummaryForSolverGroup (solv,activeGroup)
             else:
                 track = int(str(params["track"][0]))
                 smtcalls,timeouted,satis,unk,nsatis,time,total = self._result.getSummaryForSolverTrack(solv,track)
@@ -152,8 +152,8 @@ class ChartControllerJS:
 
         return webserver.views.TextView.TextView (outputstr)
 
-    def generateCactusGraph(self,params,divName="chart1",no_unk=False):
-        rdata = self.generateCactusData(params,no_unk)
+    def generateCactusGraph(self,params,divName="chart1",activeGroup="",no_unk=False):
+        rdata = self.generateCactusData(params,activeGroup,no_unk)
 
         labels = "labels: []" # "labels: " + str(list(rdata.keys()))
         #series = "series: " + str([list(rdata[s]) for s in rdata])
@@ -169,8 +169,8 @@ class ChartControllerJS:
         return data
 
 
-    def generateDistributionGraph(self,params,divName="chart1",solvers=None):
-        rdata = self.generateDistributionData(params)
+    def generateDistributionGraph(self,params,divName="chart1",activeGroup="",solvers=None):
+        rdata = self.generateDistributionData(params,activeGroup)
         satis = [] 
         unk = []
         nsatis = []
@@ -197,7 +197,7 @@ class ChartControllerJS:
         
         return data
 
-    def generatePieGraphForSolver(self,params,divName="chart1",solver=None):
+    def generatePieGraphForSolver(self,params,divName="chart1",solver=None,activeGroup=""):
         if solver == None:
             if "solver" in params:
                 params["solver"] = [params["solver"][0]]
@@ -211,7 +211,7 @@ class ChartControllerJS:
         unk = []
         nsatis = []
 
-        rdata = self.generateDistributionData(params)
+        rdata = self.generateDistributionData(params,activeGroup)
         satis.append(rdata[s]["satis"])
         unk.append(rdata[s]["unk"])
         nsatis.append(rdata[s]["nsatis"])
@@ -669,16 +669,23 @@ class ChartControllerJS:
         divWrap = ""
         if "track" in params:
             divWrap = params["track"][0]
+        trackInfo = self._result.getTrackInfo()
+        if "bgroup" in params:
+            activeGroup = params["bgroup"][0]
+        else:
+            activeGroup = list(trackInfo.keys())[0]
+
+
 
         solvers = self._result.getSolvers()
         names = []
-        data = [("distr"+str(divWrap),"Bar",self.generateDistributionGraph(params,"distr"+str(divWrap))),("cactus"+str(divWrap),"Line",self.generateCactusGraph(params,"cactus"+str(divWrap))),("cactus_unk"+str(divWrap),"Line",self.generateCactusGraph(params,"cactus_unk"+str(divWrap),True))]
+        data = [("distr"+str(divWrap),"Bar",self.generateDistributionGraph(params,"distr"+str(divWrap),activeGroup)),("cactus"+str(divWrap),"Line",self.generateCactusGraph(params,"cactus"+str(divWrap),activeGroup)),("cactus_unk"+str(divWrap),"Line",self.generateCactusGraph(params,"cactus_unk"+str(divWrap),activeGroup,True))]
 
 
         print("LOL"+divWrap)
 
         for s in solvers: 
-            data.append(("pie"+str(s)+str(divWrap),"Pie",self.generatePieGraphForSolver(params,"pie"+str(s)+str(divWrap),s)))
+            data.append(("pie"+str(s)+str(divWrap),"Pie",self.generatePieGraphForSolver(params,"pie"+str(s)+str(divWrap),s,activeGroup)))
 
         for (divName,diagram,d) in data:
             if diagram == "Pie":
@@ -694,7 +701,7 @@ class ChartControllerJS:
 
 
         htmlout= '''<div class="content-container"><div class="content-area">'''
-        htmlout+=self.getResultsTable(params)
+        htmlout+=self.getResultsTable(params,activeGroup)
         #htmlout+= self.getUniquelyClassifiedInstances(params)
         htmlout+=self.placeCardUnit([names[0]])
         htmlout+=self.placeCardUnit(names[1:3])
@@ -746,7 +753,7 @@ class ChartControllerJS:
         return outputstr
 
 
-    def getResultsTable(self,params):
+    def getResultsTable(self,params,activeGroup):
         outputstr='<div class="clr-row"><div class="clr-col">'
 
         outputstr+= '''<table class="table">
@@ -769,7 +776,7 @@ class ChartControllerJS:
         avtracks = self._result.getTrackIds()
         for solv in self._result.getSolvers():
             if "track" not in params or int(str(params["track"][0])) not in avtracks:
-                smtcalls,timeouted,satis,unk,nsatis,time,total = self._result.getSummaryForSolver (solv)
+                smtcalls,timeouted,satis,unk,nsatis,time,total = self._result.getSummaryForSolverGroup (solv,activeGroup)
             else:
                 track = int(str(params["track"][0]))
                 smtcalls,timeouted,satis,unk,nsatis,time,total = self._result.getSummaryForSolverTrack(solv,track)

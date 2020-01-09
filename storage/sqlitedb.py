@@ -147,6 +147,11 @@ class ResultRepository:
         rows = self._db.executeRet (query,(solver,))
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
 
+    def getResultForSolverGroup (self,solver,group):
+        query = '''SELECT * FROM Result,TrackInstanceMap,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance and TrackInstanceMap.track = Track.id and Track.bgroup = ? ORDER BY time ASC '''
+        rows = self._db.executeRet (query,(solver,group,))
+        return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
+
     def getResultForSolverTrack (self,solver,track):
         query = '''SELECT Result.* FROM Result,TrackInstanceMap WHERE Result.solver = ? and Result.instanceid = TrackInstanceMap.instance and TrackInstanceMap.track = ? ORDER BY time ASC '''
         rows = self._db.executeRet (query,(solver,track))
@@ -162,6 +167,11 @@ class ResultRepository:
     def getResultForSolverNoUnk (self,solver):
         query = '''SELECT * FROM Result WHERE solver = ? and Result.result != 'None' ORDER BY time ASC '''
         rows = self._db.executeRet (query,(solver,))
+        return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
+
+    def getResultForSolverGroupNoUnk (self,solver,group):
+        query = '''SELECT * FROM Result,TrackInstanceMap,Track WHERE solver = ? and Result.result != 'None' and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ?  ORDER BY time ASC '''
+        rows = self._db.executeRet (query,(solver,group,))
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
 
     def getResultForSolverTrackNoUnk (self,solver,track):
@@ -209,6 +219,25 @@ class ResultRepository:
         query = '''SELECT SUM(Result.smtcalls), SUM(Result.timeouted), SUM(Result.time),COUNT(*) FROM Result WHERE solver = ?'''
             
         rows = self._db.executeRet (query, (solver,))
+        smtcalls,timeouted,time,total = rows[0]
+        assert(len(rows) == 1)
+
+        satisquery = ''' SELECT COUNT(*) FROM Result WHERE Solver = ? AND Result.result = true'''
+        satis = self._db.executeRet (satisquery, (solver,))[0][0]
+
+        unkquery = ''' SELECT COUNT(*) FROM Result WHERE Solver = ? AND Result.result IS NULL'''
+        unk = self._db.executeRet (unkquery, (solver,))[0][0]
+
+        nsatisquery = ''' SELECT COUNT(*) FROM Result WHERE Solver = ? AND Result.result = false'''
+        nsatis = self._db.executeRet (nsatisquery, (solver,))[0][0]
+        
+        
+        return (smtcalls,timeouted,satis,unk,nsatis,time,total) 
+
+    def getSummaryForSolverGroup (self,solver,group):
+        query = '''SELECT SUM(Result.smtcalls), SUM(Result.timeouted), SUM(Result.time),COUNT(*) FROM Result,TrackInstanceMap,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? '''
+            
+        rows = self._db.executeRet (query, (solver,group,))
         smtcalls,timeouted,time,total = rows[0]
         assert(len(rows) == 1)
 

@@ -4,6 +4,9 @@ class Interface:
     def writeData (self,track,trackinstance,solvername,result):
         pass
 
+    def postTrackUpdate (self,track,res):
+        pass
+    
 class FileWriter:
     def __init__ (self,prefix = ""):
         from datetime import datetime
@@ -21,3 +24,7 @@ class FileWriter:
             track.name)
         )
         self._outputfile.flush ()
+
+    def postTrackUpdate (self,track,res):
+        pass
+    

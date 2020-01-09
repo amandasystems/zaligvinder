@@ -29,15 +29,19 @@ class TrackInstanceRepository:
         self._id = 1
         
     def createSchema (self):
-        query = '''Create Table IF NOT EXISTS TrackInstance (id INTEGER PRIMARY KEY, name TEXT,filepath TEXT)'''
+        query = '''Create Table IF NOT EXISTS TrackInstance (id INTEGER PRIMARY KEY, name TEXT,filepath TEXT,expected BOOLEAN)'''
         self._db.execute (query)
 
     def storeInstance (self,trackinstance):
         if not hasattr (trackinstance,'dbid'):
-            query = '''INSERT INTO TrackInstance (id,name,filepath) Values (?,?,?)'''
-            self._db.execute(query,(self._id,trackinstance.name,trackinstance.filepath))
+            query = '''INSERT INTO TrackInstance (id,name,filepath,expected) Values (?,?,?,?)'''
+            self._db.execute(query,(self._id,trackinstance.name,trackinstance.filepath,trackinstance.expected))
             trackinstance.dbid = self._id
             self._id = self._id+1
+        else:
+            query = '''UPDATE TrackInstance SET name = ?, filepath = ?, expected = ?  WHERE id = ?'''
+            self._db.execute(query,(trackinstance.name,trackinstance.filepath,trackinstance.expected,trackinstance.dbid,))
+        
         return trackinstance.dbid
 
     def loadTrackInstance (self,id):
@@ -292,6 +296,10 @@ class SQLiteDB:
         self._trackrepo.storeTrack (track)
         self._resrepo.storeResult (result,solvername,trackinstance)
     
-        
+
+    def postTrackUpdate (self,track,res):
+        for t in track.instances:
+            self._instancerepo.storeInstance(t)
+    
         
 

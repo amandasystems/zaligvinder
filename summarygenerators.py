@@ -79,11 +79,35 @@ def calculateErrorsOld(res):
 
     return errors
 
+def updateReferenceResult (track,res):
+    name,instances = track.name,track.instances
+    for i,inst in enumerate(instances):
+        if inst.expected != None:
+            toolResults = [r[i] for r in res.values ()]
+            tts = [r for r in toolResults if r.result == True]
+            ffs = [r for r in toolResults if r.result == False]
+            unk = [r for r in toolResults if r.result == None]
+            ctts = len(tts)
+            cffs = len(ffs)
+            cunk = len(unk)
+            if ctts > 0 or cffs > 0:
+                #Someone made a conclusion
+                if ctts > cffs:
+                    #More True vote
+                    inst.expected = True
+                    
+                elif cffs > ctts:
+                    #More False vote
+                    inst.expected = False
+
+                
+                    
+        
+
 def terminalResult (track,res):
     name,files = track.name,track.instances
     print ("Track: " + str(track))
     table = []
-    ref = correctReferenceList (track,res)
     errors = calculateErrors(res)
 
     for n in res.keys():
@@ -110,20 +134,6 @@ def cactusPlot (track,res):
     plt.legend (loc='upper left')
     plt.savefig ("{0}-cactus.png".format(name))
     plt.close()
-
-def correctReferenceList (track,res):
-    name,files = track.name,track.instances
-    ref = []
-    for elem in zip (*res.values()):
-        sat = sum([1 for i in elem  if i.result ])
-        nsat = sum([1 for i in elem if i.result == False])
-        if sat > 0 and sat > nsat:
-            ref.append(True)
-        elif nsat > 0 and nsat > sat:
-            ref.append(False)
-        else:
-            ref.append(None)
-    return ref
 
 class JSONOutputter:
     def __init__(self,loc = "hh"):

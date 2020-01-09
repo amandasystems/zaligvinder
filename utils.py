@@ -11,10 +11,11 @@ class Result:
         self.model = model
         
 class TrackInstance:
-    def __init__ (self,name,filepath):
+    def __init__ (self,name,filepath,exp  = None):
         self.name = name
         self.filepath = filepath
-
+        self.expected = exp
+        
 class Track:
     def __init__ (self,trackname,instances = [],bname = None):
         self.name = trackname

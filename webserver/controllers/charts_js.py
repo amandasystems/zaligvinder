@@ -695,7 +695,7 @@ class ChartControllerJS:
 
         htmlout= '''<div class="content-container"><div class="content-area">'''
         htmlout+=self.getResultsTable(params)
-        htmlout+= self.getUniquelyClassifiedInstances(params)
+        #htmlout+= self.getUniquelyClassifiedInstances(params)
         htmlout+=self.placeCardUnit([names[0]])
         htmlout+=self.placeCardUnit(names[1:3])
         htmlout+=self.placeCardUnit(names[3:])

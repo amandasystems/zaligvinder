@@ -151,8 +151,8 @@ class ResultRepository:
         query = '''SELECT Result.* FROM Result,TrackInstanceMap WHERE Result.solver = ? and Result.instanceid = TrackInstanceMap.instance and TrackInstanceMap.track = ? ORDER BY time ASC '''
         rows = self._db.executeRet (query,(solver,track))
 
-        for t in rows:
-            print(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2]).result)
+        #for t in rows:
+        #    print(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2]).result)
 
 
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
@@ -173,7 +173,7 @@ class ResultRepository:
     def getAllResults (self):
             query = '''SELECT * FROM Result ORDER BY time ASC '''
             rows = self._db.executeRet (query)
-            print (rows)
+            #print (rows)
             return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
     
     def getTrackResults (self,trackid):

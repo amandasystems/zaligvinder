@@ -89,6 +89,68 @@ class BaseView(webserver.views.TextView.TextView):
            background-color: hsl(198, 58%, 78%);
            border-color: hsl(198, 58%, 78%);
        }
+       .ct-legend .ct-series-5:before {
+           background-color: #CD3517;
+           border-color: #CD3517;
+       }
+              .ct-legend .ct-series-6:before {
+           background-color: #798893;
+           border-color: #798893;
+       }
+              .ct-legend .ct-series-7:before {
+           background-color: #495A67;
+           border-color: #495A67;
+       }
+              .ct-legend .ct-series-8:before {
+           background-color: #FFCCB5;
+           border-color: #FFCCB5;
+       }
+              .ct-legend .ct-series-9:before {
+           background-color: #C1CDD4;
+           border-color: #C1CDD4;
+       }
+              .ct-legend .ct-series-10:before {
+           background-color: #FF8142;
+           border-color: #FF8142;
+       }
+              .ct-legend .ct-series-11:before {
+           background-color: #6FEAD9;
+           border-color: #6FEAD9;
+       }
+              .ct-legend .ct-series-12:before {
+           back<ound-color: #00D4B8;
+           border-color: #00D4B8;
+       }
+
+                     .ct-legend .ct-series-13:before {
+           back<ound-color: #48960C ;
+           border-color: #48960C;
+       }
+
+       .ct-legend .ct-series-14:before {
+           back<ound-color: #85C81A;
+           border-color: #85C81A;
+       }
+
+       .ct-legend .ct-series-15:before {
+           back<ound-color: #FF5500;
+           border-color: #FF5500;
+       }
+
+       .ct-legend .ct-series-16:before {
+           back<ound-color: #80746D;
+           border-color: #80746D;
+       }
+
+       .ct-legend .ct-series-17:before {
+           back<ound-color: #314351;
+           border-color: #314351;
+       }
+
+       .ct-legend .ct-series-18:before {
+           back<ound-color: #C1CDD4;
+           border-color: #C1CDD4;
+       }
 
         .ct-series-a .ct-point, .ct-series-a .ct-line, .ct-series-a .ct-bar, .ct-series-a .ct-slice-donut {
           stroke: hsl(198, 100%, 24%); }
@@ -139,28 +201,28 @@ class BaseView(webserver.views.TextView.TextView):
           fill: hsl(14, 83%, 84%); }
 
         .ct-series-i .ct-point, .ct-series-i .ct-line, .ct-series-i .ct-bar, .ct-series-i .ct-slice-donut {
-          stroke: #f05b4f; }
+          stroke: #FFCCB5; }
 
         .ct-series-i .ct-slice-pie, .ct-series-i .ct-slice-donut-solid, .ct-series-i .ct-area {
-          fill: #f05b4f; }
+          fill: #FFCCB5; }
 
         .ct-series-j .ct-point, .ct-series-j .ct-line, .ct-series-j .ct-bar, .ct-series-j .ct-slice-donut {
-          stroke: #dda458; }
+          stroke: #C1CDD4; }
 
         .ct-series-j .ct-slice-pie, .ct-series-j .ct-slice-donut-solid, .ct-series-j .ct-area {
-          fill: #dda458; }
+          fill: #C1CDD4; }
 
         .ct-series-k .ct-point, .ct-series-k .ct-line, .ct-series-k .ct-bar, .ct-series-k .ct-slice-donut {
-          stroke: #eacf7d; }
+          stroke: #FF8142; }
 
         .ct-series-k .ct-slice-pie, .ct-series-k .ct-slice-donut-solid, .ct-series-k .ct-area {
-          fill: #eacf7d; }
+          fill: #FF8142; }
 
         .ct-series-l .ct-point, .ct-series-l .ct-line, .ct-series-l .ct-bar, .ct-series-l .ct-slice-donut {
-          stroke: #86797d; }
+          stroke: #6FEAD9; }
 
         .ct-series-l .ct-slice-pie, .ct-series-l .ct-slice-donut-solid, .ct-series-l .ct-area {
-          fill: #86797d; }
+          fill: #6FEAD9; }
     </style>
         </head>'''
         sendto.write (bytes(top,"utf8"))
@@ -224,11 +286,17 @@ class BenchmarkTrackView(BaseView):
     def genNavigation (self,sendto):
         sendto.write (bytes('''
     <header class="header-1">
-        <div class="branding">
+        <div class="branding"> <span class="nav-text nav-link" style="font-size:18px;"><clr-icon shape="shield-check" style="font-size:22px; color:#00968B;"></clr-icon>SaligVinder</span>
       </div><div class="header-nav" [clr-nav-level]="1">''','utf8'))
+        #sendto.write (bytes(
+        #    "\n".join (['''<a href="{}" class="active nav-link nav-text">{}</a>'''.format (tup[1],tup[0]) for tup in self._bmarks ]),
+        #    "utf8"))
+        
         sendto.write (bytes(
-            "\n".join (['''<a href="{}" class="active nav-link nav-text">{}</a>'''.format (tup[1],tup[0]) for tup in self._bmarks ]),
+            "\n".join (['''<a href="{}" class="{} nav-link nav-text">{}</a>'''.format (tup[1],tup[2],tup[0]) for tup in [("Hi","/",""),("Benchmark Summary","/becnhmarks/","active"),("Comparison","/comp/","")]]),
             "utf8"))
+
+
         sendto.write (bytes("</div></header>","utf8"))
 
         #sendto.write (bytes ('''<nav class="subnav">

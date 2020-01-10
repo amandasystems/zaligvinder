@@ -6,7 +6,6 @@ import timer
 import utils
 import subprocess
 
-tool = utils.findProgram ("WOORPJESMTBINARY","woorpjeSMT")
 
 def run (eqfile,timeout,heuristicNo,smtSolverNo,heuristic_param_name,param,ploc,wd):
     tool = ploc.findProgram ("woorpjeSMT")
@@ -16,7 +15,7 @@ def run (eqfile,timeout,heuristicNo,smtSolverNo,heuristic_param_name,param,ploc,
         try:
             time = timer.Timer ()
             smtmodel = os.path.join (wd,"model.smt")
-            p = subprocess.run([tool,,'--smtmodel',smtmodel,'--solver', '4' ,'-S',str(smtSolverNo),'--smttimeout', '15', '--levisheuristics',str(heuristicNo),str(heuristic_param_name),str(param), eqfile],  stdout=subprocess.PIPE, encoding='ascii', universal_newlines = True,timeout=timeout)
+            p = subprocess.run([tool,'--smtmodel',smtmodel,'--solver', '4' ,'-S',str(smtSolverNo),'--smttimeout', '15', '--levisheuristics',str(heuristicNo),str(heuristic_param_name),str(param), eqfile],  stdout=subprocess.PIPE, encoding='ascii', universal_newlines = True,timeout=timeout)
             time.stop ()
             output = p.stdout.splitlines()
 
@@ -43,10 +42,10 @@ def run (eqfile,timeout,heuristicNo,smtSolverNo,heuristic_param_name,param,ploc,
         raise "woorpje Not in Path"
 
 def runVariableTermRatio (eqfile,timeout,solver,ratio,ploc,wd):
-    return run (eqfile,timeout,0,solver,"--VarTerminalRation",ratio,wd)
+    return run (eqfile,timeout,0,solver,"--VarTerminalRation",ratio,ploc,wd)
 
 def runWaitingListLimitReached (eqfile,timeout,solver,ratio,ploc,wd):
-    return run (eqfile,timeout,1,solver,"--WaitingLimit",ratio,wd)
+    return run (eqfile,timeout,1,solver,"--WaitingLimit",ratio,ploc,wd)
 
 def runEquationGrowth (eqfile,timeout,solver,ratio,ploc,wd):
     return run (eqfile,timeout,2,solver,"--growth",ratio,ploc,wd)
@@ -78,8 +77,8 @@ class RunProxy:
         self._smtsolver = smtsolver
         self._param = param
 
-    def __call__ (self,eq,timeout,ploc):
-        return self._func (eq,timeout,smtsolvers[self._smtsolver],self._param,ploc)
+    def __call__ (self,eq,timeout,ploc,wd):
+        return self._func (eq,timeout,smtsolvers[self._smtsolver],self._param,ploc,wd)
             
 
 def makeRunner (func,smtsolver,param):

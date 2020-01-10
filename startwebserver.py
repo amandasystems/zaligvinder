@@ -15,8 +15,8 @@ class Server:
         self._rcontroller = webserver.controllers.ResultController (self._results)
         self._ccontroller = webserver.controllers.ChartController (self._results)
         self._fcontroller = webserver.controllers.FileControl ()
-        #self._ccontrollerJS = webserver.controllers.ChartControllerJS (self._results)
-        self._ccontrollerJS = webserver.controllers.dbpText.DBPTest (self._results)
+        self._ccontrollerJS = webserver.controllers.ChartControllerJS (self._results)
+        #self._ccontrollerJS = webserver.controllers.dbpText.DBPTest (self._results)
         
         app = webserver.app.App ()
         app.addEndpoint (webserver.routing.RegexMatch("files/(?P<path>.+)"),self._fcontroller.findFile)

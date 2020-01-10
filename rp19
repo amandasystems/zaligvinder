@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from runners.multi import TheRunner as testrunner
+from runners.base import TheRunner as testrunner
 import utils
 import storage
 import voting.majority as voting
@@ -9,6 +9,7 @@ import tools.z3str3
 import tools.cvc4
 import tools.woorpjeSMT
 import tools.trau
+import tools.woorpje_heuristics
 import tools.dummy
 
 
@@ -37,17 +38,18 @@ tracks = (models.woorpje.track02.getTrackData ("Woorpje") +
     #'norn' :  tools.norn.run,
     #'woorpje' :  tools.woorpjeSMT.run
 #}
+smtsolvers = ["cvc4"]
 
 solvers = {}
-for s in [tools.z3seq,
+#for s in [tools.z3seq,
           #tools.z3str3,
           #tools.cvc4,
-          tools.woorpjeSMT,
+#          tools.woorpjeSMT,
           #tools.trau,
           #tools.dummy
-]:
-    s.addRunner (solvers)
-
+#]:
+#    s.addRunner (solvers)
+tools.woorpje_heuristics.addRunners ("variableTermRatio",smtsolvers,3.14,solvers)
 
 summaries = [summarygenerators.terminalResult
 ]

@@ -269,8 +269,8 @@ class BenchmarkTrackView(BaseView):
         self._ctrackid = ctrackid
         self._table = charts.OverviewTable (["/summary/{}/{}?bgroup={}".format(s,ctrackid,benchmark) for s in solvers])
         
-        self._distribution = charts.Distribution ("/chart/distribution/{}".format(ctrackid))
-        self._pie = charts.Pie ("/chart/distribution/{}".format(ctrackid))
+        self._distribution = charts.Distribution ("/chart/distribution/{}?bgroup={}".format(ctrackid,benchmark))
+        self._pie = charts.Pie ("/chart/distribution/{}?bgroup={}".format(ctrackid,benchmark))
         self._cactusunk = charts.Cactus ("Cactus with Unknown and Errors",
                                          "/chart/cactus?track={}&bgroup={}".format(ctrackid,benchmark),
                                          "cactus_unk"

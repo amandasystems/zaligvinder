@@ -39,27 +39,7 @@ class ChartController:
             rdata[solv] = list
         return webserver.views.jsonview.JSONView (rdata)
         
-
-    def generateDistribution (self,params):
-        rdata = {}
-        if "solver" in params:
-            solvers = params["solver"]
-        else:
-            solvers = self._result.getSolvers ()
-        group = params["bgroup"][0]
-        track = int(params["track"][0])
-        print ("DistributioN")
-        for solv in solvers:
-            smtcalls,timeouted,satis,unk,nsatis,errors,time,total = self._result.getSummaryForSolver (solv) if track != 0 else self._result.getSummaryForSolverGroup (solv,group) 
-            
-            rdata[solv] = {"satis" : satis,
-                           "unk" : unk,
-                           "nsatis" : nsatis
-            }
-            
-            
-        return webserver.views.jsonview.JSONView (rdata)
-        
+    
     def generateTrackDistribution (self,params):
         rdata = {}
         if "solver" in params:
@@ -69,7 +49,7 @@ class ChartController:
         group = params["bgroup"][0]
         track = int(params["track"][0])
         for solv in solvers:
-            smtcalls,timeouted,satis,unk,nsatis,errors,time,total = self._result.getSummaryForSolver (solv) if track != 0 else self._result.getSummaryForSolverGroup (solv,group) 
+            smtcalls,timeouted,satis,unk,nsatis,errors,time,total = self._result.getSummaryForSolverTrack (solv,track) if track != 0 else self._result.getSummaryForSolverGroup (solv,group) 
             #smtcalls,timeouted,satis,unk,nsatis,errors,time,total = self._result.getSummaryForSolverTrack (solv,params["track"])
             
             rdata[solv] = {"satis" : satis,

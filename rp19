@@ -24,7 +24,7 @@ import startwebserver
 
 import summarygenerators
 
-tracks = (models.woorpje.track01.getTrackData ("Woorpje") +
+tracks = (models.woorpje.getTrackData ("Woorpje") +
           #models.kaluza.getTrackData () +
           #models.stringfuzz.getTrackData () +
           #models.z3_regression.getTrackData()+
@@ -41,15 +41,15 @@ tracks = (models.woorpje.track01.getTrackData ("Woorpje") +
 smtsolvers = ["cvc4"]
 
 solvers = {}
-#for s in [tools.z3seq,
+for s in [tools.z3seq,
           #tools.z3str3,
           #tools.cvc4,
-#          tools.woorpjeSMT,
+          tools.woorpjeSMT,
           #tools.trau,
           #tools.dummy
-#]:
-#    s.addRunner (solvers)
-tools.woorpje_heuristics.addRunners ("variableTermRatio",smtsolvers,3.14,solvers)
+]:
+    s.addRunner (solvers)
+#tools.woorpje_heuristics.addRunners ("variableTermRatio",smtsolvers,3.14,solvers)
 
 summaries = [summarygenerators.terminalResult
 ]

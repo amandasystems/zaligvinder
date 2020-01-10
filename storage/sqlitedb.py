@@ -10,7 +10,6 @@ class DB:
     def execute (self,query,inptuples = None):
         c = self.conn.cursor()
         if inptuples:
-            print (inptuples)
             c.execute (query,inptuples)
         else:
             c.execute (query)

@@ -224,20 +224,20 @@ class BenchmarkTrackView(BaseView):
     def genNavigation (self,sendto):
         sendto.write (bytes('''<header class="header-1">
         <div class="branding">
-      </div><div class="header-nav">''','utf8'))
+        </div><div class="header-nav">''','utf8'))
         sendto.write (bytes(
             "\n".join (['''<a href="{}" class="active nav-link nav-text">{}</a>'''.format (tup[1],tup[0]) for tup in self._bmarks ]),
             "utf8"))
         sendto.write (bytes("</div></header>","utf8"))
-
+        
         sendto.write (bytes ('''<nav class="subnav">
         <ul class="nav">''',"utf8"))
-       
+        
         sendto.write (bytes("\n".join (['''<li class="nav-item">
-            <a class="nav-link" href="{}">{}</a></li>'''.format(tup[1],tup[0]) for tup in self._tracks ]),"utf8"))
+        <a class="nav-link" href="{}">{}</a></li>'''.format(tup[1],tup[0]) for tup in self._tracks ]),"utf8"))
         
         sendto.write(bytes('''</ul></nav>''',"utf8"))
-
+        
     def genOverviewTable (self,sendto):
         sendto.write (bytes(self._table.html(),"utf8"))        
 

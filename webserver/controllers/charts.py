@@ -15,7 +15,7 @@ class ChartController:
             solvers = params["solver"]
         else:
             solvers = self._result.getSolvers ()
-        group = params["bgroup"]
+        group = params["bgroup"][0]
         if "nounk" not in params:
             results_for_solver_func=self._result.getResultForSolverGroup
             results_for_solver_track_func=self._result.getResultForSolverTrack
@@ -24,7 +24,7 @@ class ChartController:
             results_for_solver_track_func=self._result.getResultForSolverTrackNoUnk
             
         for solv in solvers:
-            res = results_for_solver_func (solv,bgroup) if "track" not in params else results_for_solver_track_func (solv,params["track"][0]) 
+            res = results_for_solver_func (solv,group) if "track" not in params else results_for_solver_track_func (solv,params["track"][0]) 
             list = []
             s = 0
             for i,data in enumerate(res):

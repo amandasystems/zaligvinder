@@ -222,21 +222,75 @@ class BenchmarkTrackView(BaseView):
         )
         
     def genNavigation (self,sendto):
-        sendto.write (bytes('''<header class="header-1">
+        sendto.write (bytes('''
+    <header class="header-1">
         <div class="branding">
-      </div><div class="header-nav">''','utf8'))
+      </div><div class="header-nav" [clr-nav-level]="1">''','utf8'))
         sendto.write (bytes(
             "\n".join (['''<a href="{}" class="active nav-link nav-text">{}</a>'''.format (tup[1],tup[0]) for tup in self._bmarks ]),
             "utf8"))
         sendto.write (bytes("</div></header>","utf8"))
 
-        sendto.write (bytes ('''<nav class="subnav">
-        <ul class="nav">''',"utf8"))
+        #sendto.write (bytes ('''<nav class="subnav">
+        #<ul class="nav">''',"utf8"))
        
-        sendto.write (bytes("\n".join (['''<li class="nav-item">
-            <a class="nav-link" href="{}">{}</a></li>'''.format(tup[1],tup[0]) for tup in self._tracks ]),"utf8"))
+        #sendto.write (bytes("\n".join (['''<li class="nav-item">
+        #    <a class="nav-link" href="{}">{}</a></li>'''.format(tup[1],tup[0]) for tup in self._tracks ]),"utf8"))
         
-        sendto.write(bytes('''</ul></nav>''',"utf8"))
+        #sendto.write(bytes('''</ul></nav>''',"utf8"))
+
+    def genSideNavigation(self,sendto):
+        sendto.write (bytes('''
+        <nav class="sidenav" [clr-nav-level]="2">
+          <section class="sidenav-content">''',"utf8"))
+
+        for i,(bgroup,link) in enumerate(self._bmarks):
+            active = ""
+            if bgroup == self._curBenchmark and None == self._ctrack:
+              active="active"
+
+            sendto.write (bytes('''<section class="nav-group collapsible">
+            <input id="tab'''+str(i)+'''" type="checkbox">
+            <label for="tab'''+str(i)+'''">'''+str(bgroup)+'''</label>
+            <ul class="nav-list">
+            <li><a class="nav-link '''+active+'''" href="'''+str(link)+'''"> Summary</a></li>''',"utf8"))
+
+            for (bname,link) in self._tracks[bgroup]:
+              active = ""
+              if bgroup == self._curBenchmark and bname == self._ctrack:
+                active="active"
+            
+              sendto.write (bytes('''<li><a class="nav-link '''+active+'''" href="'''+str(link)+'''">'''+str(bname)+'''</a></li>''',"utf8"))
+
+
+
+          #sendto.write (bytes("\n".join (['''<li><a class="nav-link" href="{}">{}</a></li>'''.format(tup[1],tup[0]) for tup in self._tracks[bgroup] ]),"utf8"))
+            sendto.write (bytes('''</ul></section>''',"utf8"))
+        sendto.write (bytes('''</section></nav>''',"utf8"))
+
+
+
+
+
+      #sendto.write (bytes(
+      #    "\n".join (['''<a href="{}" class="active nav-link nav-text">{}</a>'''.format (tup[1],tup[0]) for tup in self._bmarks ]),
+      #    "utf8"))
+
+
+
+
+      #<a class="nav-link">bla</a>
+      #  <section class="nav-group collapsible">
+      #    <input id="tab2" type="checkbox">
+      #    <label for="tab2">Patterns</label>
+      #    <ul class="nav-list">
+      #      <li><a class="nav-link active" href="/color"> Color Palette</a></li>
+      #    </ul>
+      #  </section>
+      #  </section>
+      #</nav>
+
+
 
     def genOverviewTable (self,sendto):
         sendto.write (bytes(self._table.html(),"utf8"))        
@@ -254,12 +308,19 @@ class BenchmarkTrackView(BaseView):
     def send_content (self,sendto):
         sendto.write (bytes(self.genJavascript (),"utf8"))
         self.genNavigation (sendto)
-        sendto.write (bytes('''<h1 clrfocusonviewinit="" style="padding-left:25px">Overview for {} on {}</h1>'''.format (self._ctrack,self._curBenchmark),"utf8"))
         sendto.write (bytes('''<div class="content-container"><div class="content-area">''',"utf8"))
+        if self._ctrack != None:
+          sendto.write (bytes('''<h1 clrfocusonviewinit="" style="padding-left:25px">Overview for {} on {}</h1>'''.format (self._ctrack,self._curBenchmark),"utf8"))
+        else:
+          sendto.write (bytes('''<h1 clrfocusonviewinit="" style="padding-left:25px">Summary data for {}</h1>'''.format (self._curBenchmark),"utf8"))
+        
+
         self.genOverviewTable (sendto)
         sendto.write (bytes(self._distribution.html(),"utf8"))
         sendto.write (bytes(self._pie.html(),"utf8"))
         sendto.write (bytes(self._cactusunk.html(),"utf8"))
         sendto.write (bytes(self._cactusnunk.html(),"utf8"))
+        sendto.write (bytes('''</div>''',"utf8"))
+        self.genSideNavigation (sendto)
         sendto.write (bytes('''</div></div>''',"utf8"))
         

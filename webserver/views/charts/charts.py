@@ -113,7 +113,7 @@ class Pie:
             
             var card = document.createElement ("div");
             card.setAttribute ("class","card card-block");
-            card.setAttribute ("style","min-width:300px");
+            card.setAttribute ("style","min-width:350px");
             card.appendChild ( head);
             card.appendChild ( chart);
             var col = document.createElement ("div");

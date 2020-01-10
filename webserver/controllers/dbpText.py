@@ -13,17 +13,24 @@ class DBPTest:
         else:
             activeGroup = list(data.keys())[0]
 
-        tracks = data[activeGroup]
+        #tracks = data[activeGroup]
         ctrack = int(params.get("track",[1])[0])
-        trackname = "UNKNOWN"
+        trackname = None
         for tid,name in data[activeGroup]:
             print (tid,ctrack)
             if tid == ctrack:
                 trackname = name
                 break
+
+        tracksmap = dict()
+        for bgroup in data:
+            if bgroup not in tracksmap: 
+                tracksmap[bgroup] = []
+                tracksmap[bgroup] = [(tup[1],"/?bgroup={}&track={}".format(bgroup,tup[0])) for tup in data[bgroup]]
+
         return webserver.views.charts.base.BenchmarkTrackView (
             [(n,"/?bgroup={}".format(n)) for n in benchmarks],
-             [(tup[1],"/?bgroup={}&track={}".format(activeGroup,tup[0])) for tup in tracks],
+             tracksmap,
              activeGroup,
              trackname,
              ctrack

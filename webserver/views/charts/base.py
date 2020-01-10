@@ -169,7 +169,7 @@ class BaseView(webserver.views.TextView.TextView):
     def message (self,sendto):
         self.writeTop (sendto)
         sendto.write (bytes('''<body onload="getTableData();" >''',"utf8"))
-        sendto.write (bytes('''<script src="/files/libs/chartist/dist/chartist.min.js"></script>
+        sendto.write (bytes(f'''<script src="/files/libs/chartist/dist/chartist.min.js"></script>
         <script src="/files/libs/chartist/chartist-plugin-legend.js"></script>
         <script src="files/js/helper.js"></script> 
         <div class="main-container">''',"utf8"))
@@ -177,23 +177,28 @@ class BaseView(webserver.views.TextView.TextView):
         console.log (data)
 	var tableRef = document.getElementById("overview_table").getElementsByTagName("tbody")[0];
 	var row = tableRef.insertRow ();
-	var cell = row.insertCell (0).innerHtml = data.Summary.solver;
-        console.log (data.Summary.solver);
-        console.log (tableRef);
-        console.log (row);
+	row.insertCell (0).innerHTML = data.Summary.solver;
+        row.insertCell (1).innerHTML = data.Summary.satisfied;
+        row.insertCell (2).innerHTML = data.Summary["not satisfied"];
+        row.insertCell (3).innerHTML = data.Summary.Unknown;
+        row.insertCell (4).innerHTML = "--";
+        row.insertCell (5).innerHTML = data.Summary.timeouted;
+        row.insertCell (6).innerHTML = data.Summary.instances;
+        row.insertCell (7).innerHTML = data.Summary.time;
+        
+        
         }
-
         function addSolversToOverViewTable (solvers) {
 	var length = solvers.length;
-	for (var i = 0; i< length; i++) {
-	JSONGet ("/summary/woorpje/1",addSummaryDataTable)
-	}
+	for (var i = 0; i< length; i++) {''' 
+        top2 = 'JSONGet ("/summary/"+solvers[i]+"/{}",addSummaryDataTable)'.format(self._ctrackid)
+        top3 = '''
         }
-        
+        }
         function getTableData () {
 	getSolvers (addSolversToOverViewTable)
         }</script>'''
-        sendto.write (bytes(top,"utf8"))
+        sendto.write (bytes(top+top2+top3,"utf8"))
         self.send_content (sendto)
         sendto.write (bytes("</div></body></html>","utf8"))
         

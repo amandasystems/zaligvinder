@@ -185,7 +185,11 @@ class BaseView(webserver.views.TextView.TextView):
         }
         }
         function getTableData () {
-	  getSolvers (addSolversToOverViewTable)
+	  getSolvers (addSolversToOverViewTable);
+          setupDistChart ();
+          setupPieChart ();
+          setupCactuscactus_unk ();
+          setupCactuscactus_nunk ();
         }</script>'''
         sendto.write (bytes(top+top2+top3,"utf8"))
         self.send_content (sendto)
@@ -206,6 +210,16 @@ class BenchmarkTrackView(BaseView):
         self._ctrack = trackname
         self._ctrackid = ctrackid
         self._table = charts.OverviewTable ()
+        self._distribution = charts.Distribution (ctrackid)
+        self._pie = charts.Pie (ctrackid)
+        self._cactusunk = charts.Cactus ("Cactus with Unknown and Errors",
+                                         "/chart/cactus?track={}&bgroup={}".format(ctrackid,benchmark),
+                                         "cactus_unk"
+        )
+        self._cactusnunk = charts.Cactus ("Cactus without Unknown and Errors",
+                                         "/chart/cactus?track={}&bgroup={}&nounk=tt".format(ctrackid,benchmark),
+                                         "cactus_nunk"
+        )
         
     def genNavigation (self,sendto):
         sendto.write (bytes('''<header class="header-1">
@@ -228,7 +242,14 @@ class BenchmarkTrackView(BaseView):
         sendto.write (bytes(self._table.html(),"utf8"))        
 
     def genJavascript (self):
-        return self._table.javascript ()
+        return "".join ([self._table.javascript (),
+                         self._distribution.javascript (),
+                         self._pie.javascript (),
+                         self._cactusunk.javascript (),
+                         self._cactusnunk.javascript (),
+                         
+        ])
+        
         
     def send_content (self,sendto):
         sendto.write (bytes(self.genJavascript (),"utf8"))
@@ -236,5 +257,9 @@ class BenchmarkTrackView(BaseView):
         sendto.write (bytes('''<h1 clrfocusonviewinit="" style="padding-left:25px">Overview for {} on {}</h1>'''.format (self._ctrack,self._curBenchmark),"utf8"))
         sendto.write (bytes('''<div class="content-container"><div class="content-area">''',"utf8"))
         self.genOverviewTable (sendto)
+        sendto.write (bytes(self._distribution.html(),"utf8"))
+        sendto.write (bytes(self._pie.html(),"utf8"))
+        sendto.write (bytes(self._cactusunk.html(),"utf8"))
+        sendto.write (bytes(self._cactusnunk.html(),"utf8"))
         sendto.write (bytes('''</div></div>''',"utf8"))
         

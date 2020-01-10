@@ -15,9 +15,16 @@ class ChartController:
             solvers = params["solver"]
         else:
             solvers = self._result.getSolvers ()
-        print (solvers)
+        group = params["bgroup"]
+        if "nounk" not in params:
+            results_for_solver_func=self._result.getResultForSolverGroup
+            results_for_solver_track_func=self._result.getResultForSolverTrack
+        else:
+            results_for_solver_func=self._result.getResultForSolverGroupNoUnk
+            results_for_solver_track_func=self._result.getResultForSolverTrackNoUnk
+            
         for solv in solvers:
-            res = self._result.getResultForSolver (solv)
+            res = results_for_solver_func (solv,bgroup) if "track" not in params else results_for_solver_track_func (solv,params["track"][0]) 
             list = []
             s = 0
             for i,data in enumerate(res):
@@ -28,27 +35,8 @@ class ChartController:
                               "y" : s
                               })
             rdata[solv] = list
-        if "format" not in params:
-            return webserver.views.jsonview.JSONView (rdata)
-        else:
-            form = params["format"][0]
-            if form == "png":
-                from matplotlib.figure import Figure
-                from io import BytesIO
-                fig = Figure()
-                ax = fig.subplots()
-                for p in rdata.keys():
-                    print (p)
-                    data = [i["y"] for i in rdata[p]]
-                    ax.scatter (range(0,len(data)),data,label = p)
-                    ax.legend()
-                    # Save it to a temporary buffer.
-                    buf = BytesIO()
-                fig.savefig(buf, format="png")
-                return webserver.views.PNGView.PNGView (buf)
-            else:
-                return webserver.views.TextView.ErrorText ("Unknown format")
-
+        return webserver.views.jsonview.JSONView (rdata)
+        
 
     def generateDistribution (self,params):
         rdata = {}
@@ -59,6 +47,24 @@ class ChartController:
         
         for solv in solvers:
             smtcalls,timeouted,satis,unk,nsatis,errors,time,total = self._result.getSummaryForSolver (solv)
+            
+            rdata[solv] = {"satis" : satis,
+                           "unk" : unk,
+                           "nsatis" : nsatis
+            }
+            
+            
+        return webserver.views.jsonview.JSONView (rdata)
+        
+    def generateTrackDistribution (self,params):
+        rdata = {}
+        if "solver" in params:
+            solvers = params["solver"]
+        else:
+            solvers = self._result.getSolvers ()
+        
+        for solv in solvers:
+            smtcalls,timeouted,satis,unk,nsatis,errors,time,total = self._result.getSummaryForSolverTrack (solv,params["track"])
             
             rdata[solv] = {"satis" : satis,
                            "unk" : unk,

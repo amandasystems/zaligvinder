@@ -27,7 +27,7 @@ def run (eqfile,timeout,heuristicNo,smtSolverNo,heuristic_param_name,param,ploc,
             if p.returncode == 0:
                 with open(smtmodel) as f:
                     model = f.read()
-                    return utils.Result(True,time.getTime(),False,SMTSolverCalls,output,model)
+                    return utils.Result(True,time.getTime(),False,SMTSolverCalls,"\n".join(output),model)
             elif p.returncode == 10 or p.returncode == 20:
                 return utils.Result(None,time.getTime (),False,SMTSolverCalls)
             elif p.returncode == 1:

@@ -1,4 +1,7 @@
 import webserver.views.TextView
+import webserver.views.charts.charts as charts
+
+
 
 class BaseView(webserver.views.TextView.TextView):
     def __init__ (self):
@@ -173,21 +176,7 @@ class BaseView(webserver.views.TextView.TextView):
         <script src="/files/libs/chartist/chartist-plugin-legend.js"></script>
         <script src="files/js/helper.js"></script> 
         <div class="main-container">''',"utf8"))
-        top = '''<script>function addSummaryDataTable (data) {
-        console.log (data)
-	var tableRef = document.getElementById("overview_table").getElementsByTagName("tbody")[0];
-	var row = tableRef.insertRow ();
-	row.insertCell (0).innerHTML = data.Summary.solver;
-        row.insertCell (1).innerHTML = data.Summary.satisfied;
-        row.insertCell (2).innerHTML = data.Summary["not satisfied"];
-        row.insertCell (3).innerHTML = data.Summary.Unknown;
-        row.insertCell (4).innerHTML = "--";
-        row.insertCell (5).innerHTML = data.Summary.timeouted;
-        row.insertCell (6).innerHTML = data.Summary.instances;
-        row.insertCell (7).innerHTML = data.Summary.time;
-        
-        
-        }
+        top = '''<script>
         function addSolversToOverViewTable (solvers) {
 	var length = solvers.length;
 	for (var i = 0; i< length; i++) {''' 
@@ -196,7 +185,7 @@ class BaseView(webserver.views.TextView.TextView):
         }
         }
         function getTableData () {
-	getSolvers (addSolversToOverViewTable)
+	  getSolvers (addSolversToOverViewTable)
         }</script>'''
         sendto.write (bytes(top+top2+top3,"utf8"))
         self.send_content (sendto)
@@ -216,6 +205,7 @@ class BenchmarkTrackView(BaseView):
         self._tracks = tracks
         self._ctrack = trackname
         self._ctrackid = ctrackid
+        self._table = charts.OverviewTable ()
         
     def genNavigation (self,sendto):
         sendto.write (bytes('''<header class="header-1">
@@ -235,30 +225,16 @@ class BenchmarkTrackView(BaseView):
         sendto.write(bytes('''</ul></nav>''',"utf8"))
 
     def genOverviewTable (self,sendto):
-        
-        sendto.write (bytes('''<div class="clr-row"><div class="clr-col"><table class="table" id="overview_table" >
-        <thead>
-        <tr>
-            <th>Tool name</th>
-            <th>Declared satisfiable</th>
-            <th>Declared unsatisfiable</th>
-            <th>Declared unknown</th>
-            <th>Error</th>
-            <th>Timeout</th>
-            <th>Total instances</th>
-            <th>Total time</th>
-            <!--<th>Total time w/o Timeout</th>-->
-        </tr>
-    </thead>
-    <tbody>''',"utf8"))
-        sendto.write (bytes('''</tbody></table></div></div>''',"utf8"))
-        
+        sendto.write (bytes(self._table.html(),"utf8"))        
+
+    def genJavascript (self):
+        return self._table.javascript ()
         
     def send_content (self,sendto):
+        sendto.write (bytes(self.genJavascript (),"utf8"))
         self.genNavigation (sendto)
         sendto.write (bytes('''<h1 clrfocusonviewinit="" style="padding-left:25px">Overview for {} on {}</h1>'''.format (self._ctrack,self._curBenchmark),"utf8"))
         sendto.write (bytes('''<div class="content-container"><div class="content-area">''',"utf8"))
         self.genOverviewTable (sendto)
-        
         sendto.write (bytes('''</div></div>''',"utf8"))
         

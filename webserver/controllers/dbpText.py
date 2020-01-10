@@ -6,6 +6,7 @@ class DBPTest:
         self._result = result
         
     def cdl_test (self,params):
+        solvers = self._result.getSolvers ()
         data = self._result.getTrackInfo ()
         benchmarks = data.keys()
         if "bgroup" in params:
@@ -26,13 +27,14 @@ class DBPTest:
         for bgroup in data:
             if bgroup not in tracksmap: 
                 tracksmap[bgroup] = []
-                tracksmap[bgroup] = [(tup[1],"/?bgroup={}&track={}".format(bgroup,tup[0])) for tup in data[bgroup]]
+                tracksmap[bgroup] = [("Summary","/?bgroup={}&track={}".format(bgroup,0))]+[(tup[1],"/?bgroup={}&track={}".format(bgroup,tup[0])) for tup in data[bgroup]]
 
         return webserver.views.charts.base.BenchmarkTrackView (
             [(n,"/?bgroup={}".format(n)) for n in benchmarks],
-             tracksmap,
-             activeGroup,
-             trackname,
-             ctrack
+            tracksmap,
+            activeGroup,
+            trackname,
+            ctrack,
+            solvers
         )
             

@@ -28,8 +28,10 @@ class ResultController:
         print (params)
         
         s = params["solver"]
-        track = params["track"]
-        smtcalls,timeouted,satis,unk,nsatis,errors,time,instances = self._results.getSummaryForSolverTrack (s,track)
+        track = int(params["track"])
+        bgroup = params.get("bgroup",[""])[0]
+        print ("PPPP",track,bgroup)
+        smtcalls,timeouted,satis,unk,nsatis,errors,time,instances = self._results.getSummaryForSolverTrack (s,track) if track != 0 else self._results.getSummaryForSolverGroup (s,bgroup)
         res["Summary"] = {
             'solver' : s,
             'smtcalls' : smtcalls,

@@ -238,6 +238,7 @@ class ResultRepository:
         return (smtcalls,timeouted,satis,unk,nsatis,errors,time,total) 
 
     def getSummaryForSolverGroup (self,solver,group):
+        print ("HHH")
         query = '''SELECT SUM(Result.smtcalls), SUM(Result.timeouted), SUM(Result.time),COUNT(*) FROM Result,TrackInstanceMap,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? '''
             
         rows = self._db.executeRet (query, (solver,group,))

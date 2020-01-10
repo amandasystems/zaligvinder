@@ -238,22 +238,16 @@ class BaseView(webserver.views.TextView.TextView):
         <script src="/files/libs/chartist/chartist-plugin-legend.js"></script>
         <script src="files/js/helper.js"></script> 
         <div class="main-container">''',"utf8"))
-        top = '''<script>
-        function addSolversToOverViewTable (solvers) {
-	var length = solvers.length;
-	for (var i = 0; i< length; i++) {''' 
-        top2 = 'JSONGet ("/summary/"+solvers[i]+"/{}",addSummaryDataTable)'.format(self._ctrackid)
         top3 = '''
-        }
-        }
+        <script>
         function getTableData () {
-	  getSolvers (addSolversToOverViewTable);
+          addSolversToOverViewTable ();
           setupDistChart ();
           setupPieChart ();
           setupCactuscactus_unk ();
           setupCactuscactus_nunk ();
         }</script>'''
-        sendto.write (bytes(top+top2+top3,"utf8"))
+        sendto.write (bytes(top3,"utf8"))
         self.send_content (sendto)
         sendto.write (bytes("</div></body></html>","utf8"))
         
@@ -264,16 +258,19 @@ class BenchmarkTrackView(BaseView):
                  tracks,
                  benchmark,
                  trackname,
-                 ctrackid
+                 ctrackid,
+                 solvers = []
     ):
+        
         self._bmarks = benchmarks
         self._curBenchmark = benchmark
         self._tracks = tracks
         self._ctrack = trackname
         self._ctrackid = ctrackid
-        self._table = charts.OverviewTable ()
-        self._distribution = charts.Distribution (ctrackid)
-        self._pie = charts.Pie (ctrackid)
+        self._table = charts.OverviewTable (["/summary/{}/{}?bgroup={}".format(s,ctrackid,benchmark) for s in solvers])
+        
+        self._distribution = charts.Distribution ("/chart/distribution/{}".format(ctrackid))
+        self._pie = charts.Pie ("/chart/distribution/{}".format(ctrackid))
         self._cactusunk = charts.Cactus ("Cactus with Unknown and Errors",
                                          "/chart/cactus?track={}&bgroup={}".format(ctrackid,benchmark),
                                          "cactus_unk"
@@ -320,9 +317,9 @@ class BenchmarkTrackView(BaseView):
             sendto.write (bytes('''<section class="nav-group collapsible">
             <input id="tab'''+str(i)+'''" type="checkbox">
             <label for="tab'''+str(i)+'''">'''+str(bgroup)+'''</label>
-            <ul class="nav-list">
-            <li><a class="nav-link '''+active+'''" href="'''+str(link)+'''"> Summary</a></li>''',"utf8"))
-
+            <ul class="nav-list">''',
+            "utf8"))
+            
             for (bname,link) in self._tracks[bgroup]:
               active = ""
               if bgroup == self._curBenchmark and bname == self._ctrack:

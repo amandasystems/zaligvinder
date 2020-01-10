@@ -1,9 +1,9 @@
 class OverviewTable:
-    def __init__(self):
-        pass
+    def __init__(self,urls):
+        self._urls = urls
     
     def javascript (self):
-        return '''<script>function addSummaryDataTable (data) {
+        tt = '''<script>function addSummaryDataTable (data) {
         var tableRef = document.getElementById("overview_table").getElementsByTagName("tbody")[0];
 	var row = tableRef.insertRow ();
 	row.insertCell (0).innerHTML = data.Summary.solver;
@@ -14,11 +14,10 @@ class OverviewTable:
         row.insertCell (5).innerHTML = data.Summary.timeouted;
         row.insertCell (6).innerHTML = data.Summary.instances;
         row.insertCell (7).innerHTML = data.Summary.time;
-        
-        
         }
-        </script>
-        '''
+        function addSolversToOverViewTable () {'''
+        
+        return tt + "".join (['JSONGet ("{}",addSummaryDataTable);'.format(url) for url in self._urls])+'}</script>' 
 
     def html (self):
         return '''<div class="clr-row"><div class="clr-col"><table class="table" id="overview_table" >
@@ -39,8 +38,8 @@ class OverviewTable:
 
 
 class Distribution:
-    def __init__(self,tid):
-        self._tid = tid
+    def __init__(self,url):
+        self._url = url
         
     def html (self):
         return  '''<div class="clr-row">  
@@ -80,14 +79,14 @@ var optionsdistr1 = { fullWidth: true,chartPadding: {right: 40}, plugins: [Chart
         }
         
         function setupDistChart() {
-          JSONGet ("'''+"/chart/distribution/{}".format(self._tid)+'''",addDataToChart)
+          JSONGet ("'''+"{}".format(self._url)+'''",addDataToChart)
         }
           </script>'''
 
 
 class Pie:
-    def __init__(self,tid):
-        self._tid = tid
+    def __init__(self,url):
+        self._url = url
 
     
     def html (self):
@@ -133,7 +132,7 @@ class Pie:
         }
         
         function setupPieChart() {
-          JSONGet ("'''+"/chart/distribution/{}".format(self._tid)+'''",addDataToPieChart)
+          JSONGet ("'''+"{}".format(self._url)+'''",addDataToPieChart)
         }
           </script>'''
         
@@ -176,3 +175,4 @@ class Cactus:
           '''+'''JSONGet ("{}",updateCactus{})'''.format(self._url,self._id)+";}</script>"
           
           
+    

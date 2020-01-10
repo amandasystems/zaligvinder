@@ -217,7 +217,6 @@ class ResultRepository:
         
     def getSummaryForSolver (self,solver):
         query = '''SELECT SUM(Result.smtcalls), SUM(Result.timeouted), SUM(Result.time),COUNT(*) FROM Result WHERE solver = ?'''
-            
         rows = self._db.executeRet (query, (solver,))
         smtcalls,timeouted,time,total = rows[0]
         assert(len(rows) == 1)

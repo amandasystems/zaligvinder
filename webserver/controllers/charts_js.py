@@ -8,7 +8,7 @@ import webserver.views.TextView
 class ChartControllerJS:
     def __init__(self,result):
         self._result = result
-
+        
     def generateCactusData(self,params,activeGroup,no_unk=False):
         if no_unk:
             results_for_solver_func=self._result.getResultForSolverGroup

@@ -10,14 +10,16 @@ class ResultController:
         print (params)
         
         s = params["solver"]
-        smtcalls,timeouted,satis,unk,nsatis,time,instances = self._results.getSummaryForSolver (s)
-        res[s] = {'smtcalls' : smtcalls,
-                  'timeouted' : timeouted,
-                  'satisfied' : satis,
-                  'not satisfied' :  nsatis,
-                  'Unknown' : unk,
-                  'time' : time,
-                  'instances' : instances
+        smtcalls,timeouted,satis,unk,nsatis,errors,time,instances = self._results.getSummaryForSolver (s)
+        res["Summary"] = {
+            'solver' : s,
+            'smtcalls' : smtcalls,
+            'timeouted' : timeouted,
+            'satisfied' : satis,
+            'not satisfied' :  nsatis,
+            'Unknown' : unk,
+            'time' : time,
+            'instances' : instances
             }
         return webserver.views.jsonview.JSONView (res)
 
@@ -27,14 +29,16 @@ class ResultController:
         
         s = params["solver"]
         track = params["track"]
-        smtcalls,timeouted,satis,unk,nsatis,time,instances = self._results.getSummaryForSolverTrack (s,track)
-        res[s] = {'smtcalls' : smtcalls,
-                  'timeouted' : timeouted,
-                  'satisfied' : satis,
-                  'not satisfied' :  nsatis,
-                  'Unknown' : unk,
-                  'time' : time,
-                  'instances' : instances
+        smtcalls,timeouted,satis,unk,nsatis,errors,time,instances = self._results.getSummaryForSolverTrack (s,track)
+        res["Summary"] = {
+            'solver' : s,
+            'smtcalls' : smtcalls,
+            'timeouted' : timeouted,
+            'satisfied' : satis,
+            'not satisfied' :  nsatis,
+            'Unknown' : unk,
+            'time' : time,
+            'instances' : instances
             }
         return webserver.views.jsonview.JSONView (res)
 

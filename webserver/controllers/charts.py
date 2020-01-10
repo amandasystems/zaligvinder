@@ -58,7 +58,7 @@ class ChartController:
             solvers = self._result.getSolvers ()
         
         for solv in solvers:
-            smtcalls,timeouted,satis,unk,nsatis,time,total = self._result.getSummaryForSolver (solv)
+            smtcalls,timeouted,satis,unk,nsatis,errors,time,total = self._result.getSummaryForSolver (solv)
             
             rdata[solv] = {"satis" : satis,
                            "unk" : unk,

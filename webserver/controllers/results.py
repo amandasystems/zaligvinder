@@ -7,7 +7,7 @@ class ResultController:
 
     def getSummaryForSolver (self,params):
         res = {}
-        print (params)
+        #print (params)
         
         s = params["solver"]
         smtcalls,timeouted,satis,unk,nsatis,errors,time,instances = self._results.getSummaryForSolver (s)
@@ -26,12 +26,11 @@ class ResultController:
 
     def getSummaryForSolverTrack (self,params):
         res = {}
-        print (params)
         
         s = params["solver"]
         track = int(params["track"])
         bgroup = params.get("bgroup",[""])[0]
-        print ("PPPP",track,bgroup)
+        #print ("PPPP",track,bgroup)
         smtcalls,timeouted,satis,unk,nsatis,errors,time,instances = self._results.getSummaryForSolverTrack (s,track) if track != 0 else self._results.getSummaryForSolverGroup (s,bgroup)
         res["Summary"] = {
             'solver' : s,
@@ -47,13 +46,12 @@ class ResultController:
         return webserver.views.jsonview.JSONView (res)
 
     def getRanks(self,params):
-        if "track" in params:
+        if "track" in params and int(params["track"]) != 0:
             data = self._results.getTrackInstancesClassification (params["track"])
         else:
             groups = list(self._results.getTrackInfo ().keys())
-            print(params["bgroup"])
-            if "bgroup" in params and params["bgroup"] in groups:
-                bgroup = params["bgroup"]
+            if "bgroup" in params and params["bgroup"][0] in groups:
+                bgroup = params["bgroup"][0]
             else:
                 bgroup =  groups[0]
             data = self._results.getGroupInstancesClassification (bgroup)
@@ -112,12 +110,12 @@ class ResultController:
                                                      for tt in instances])
     
     def getOutput (self,params):
-        print (params)
+        #print (params)
         instances = self._results.getOutputForSolverInstance (params["solver"],params["instance"])
         return webserver.views.TextView.TextView (instances)
 
     def getModel (self,params):
-        print (params)
+        #print (params)
         instances = self._results.getModelForSolverInstance (params["solver"],params["instance"])
         return webserver.views.TextView.TextView (instances)
     

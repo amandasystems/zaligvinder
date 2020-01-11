@@ -31,7 +31,7 @@ class Router:
         for name,callable in self._endpoints:
             parser,p = name.match (path)
             if parser:
-                print ("JJJ",params)
+                #print ("JJJ",params)
                 params.update(p)
                 return callable (params)
             

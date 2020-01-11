@@ -223,6 +223,28 @@ class BaseView(webserver.views.TextView.TextView):
 
         .ct-series-l .ct-slice-pie, .ct-series-l .ct-slice-donut-solid, .ct-series-l .ct-area {
           fill: #6FEAD9; }
+
+        [class^=".badge.badge-"], .badge[class*=" badge-"] {
+            background:#FAFAFA; 
+            color: #737373;
+        }
+
+
+        .badge,.badge.badge-1 {
+          background: #ffdc0B;
+          color: #313131;
+        }
+
+        .badge,.badge.badge-2 {
+          background: #A9B6BE;
+        }
+
+        .badge,.badge.badge-3 {
+          background: #C47D00;
+        }
+
+
+
     </style>
         </head>'''
         sendto.write (bytes(top,"utf8"))
@@ -242,6 +264,7 @@ class BaseView(webserver.views.TextView.TextView):
         <script>
         function getTableData () {
           addSolversToOverViewTable ();
+          addRankingTable();
           setupDistChart ();
           setupPieChart ();
           setupCactuscactus_unk ();
@@ -253,6 +276,108 @@ class BaseView(webserver.views.TextView.TextView):
         
 
 class BenchmarkTrackView(BaseView):
+    def __init__(self,
+                 benchmarks,
+                 tracks,
+                 benchmark,
+                 trackname,
+                 ctrackid,
+                 solvers = []
+    ):
+        
+        self._bmarks = benchmarks
+        self._curBenchmark = benchmark
+        self._tracks = tracks
+        self._ctrack = trackname
+        self._ctrackid = ctrackid
+        self._table = charts.OverviewTable (["/summary/{}/{}?bgroup={}".format(s,ctrackid,benchmark) for s in solvers])
+        self._rankingTable = charts.RankingTable ("/ranks/"+format(ctrackid)+"/?bgroup="+format(benchmark))
+        
+        self._distribution = charts.Distribution ("/chart/distribution/{}?bgroup={}".format(ctrackid,benchmark))
+        self._pie = charts.Pie ("/chart/distribution/{}?bgroup={}".format(ctrackid,benchmark))
+        self._cactusunk = charts.Cactus ("Cactus with Unknown and Errors",
+                                         "/chart/cactus?track={}&bgroup={}".format(ctrackid,benchmark),
+                                         "cactus_unk"
+        )
+        self._cactusnunk = charts.Cactus ("Cactus without Unknown and Errors",
+                                         "/chart/cactus?track={}&bgroup={}&nounk=tt".format(ctrackid,benchmark),
+                                         "cactus_nunk"
+        )
+        
+    def genNavigation (self,sendto):
+        sendto.write (bytes('''
+    <header class="header-1">
+        <div class="branding"> <span class="nav-text nav-link" style="font-size:18px;"><clr-icon shape="shield-check" style="font-size:22px; color:#00968B;"></clr-icon>ZaligVinder</span>
+      </div><div class="header-nav" [clr-nav-level]="1">''','utf8'))
+        sendto.write (bytes(
+            "\n".join (['''<a href="{}" class="{} nav-link nav-text">{}</a>'''.format (tup[1],tup[2],tup[0]) for tup in [("Hi","/",""),("Benchmark Summary","/becnhmarks/","active"),("Comparison","/comp/","")]]),
+            "utf8"))
+        sendto.write (bytes("</div></header>","utf8"))
+
+    def genSideNavigation(self,sendto):
+        sendto.write (bytes('''
+        <nav class="sidenav" [clr-nav-level]="2">
+          <section class="sidenav-content">''',"utf8"))
+
+        for i,(bgroup,link) in enumerate(self._bmarks):
+            active = ""
+            if bgroup == self._curBenchmark and None == self._ctrack:
+              active="active"
+
+            sendto.write (bytes('''<section class="nav-group collapsible">
+            <input id="tab'''+str(i)+'''" type="checkbox">
+            <label for="tab'''+str(i)+'''">'''+str(bgroup)+'''</label>
+            <ul class="nav-list">''',
+            "utf8"))
+            
+            for (bname,link) in self._tracks[bgroup]:
+              active = ""
+              if bgroup == self._curBenchmark and bname == self._ctrack:
+                active="active"
+              sendto.write (bytes('''<li><a class="nav-link '''+active+'''" href="'''+str(link)+'''">'''+str(bname)+'''</a></li>''',"utf8"))
+            sendto.write (bytes('''</ul></section>''',"utf8"))
+        sendto.write (bytes('''</section></nav>''',"utf8"))
+
+    def genOverviewTable (self,sendto):
+        sendto.write (bytes(self._table.html(),"utf8"))        
+
+
+    def genRankingTable (self,sendto):
+        sendto.write (bytes(self._rankingTable.html(),"utf8"))   
+
+    def genJavascript (self):
+        return "".join ([self._table.javascript (),
+                         self._rankingTable.javascript(),
+                         self._distribution.javascript (),
+                         self._pie.javascript (),
+                         self._cactusunk.javascript (),
+                         self._cactusnunk.javascript (),
+                         
+        ])
+        
+        
+    def send_content (self,sendto):
+        sendto.write (bytes(self.genJavascript (),"utf8"))
+        self.genNavigation (sendto)
+        sendto.write (bytes('''<div class="content-container"><div class="content-area">''',"utf8"))
+        if self._ctrack != None:
+          sendto.write (bytes('''<h1 clrfocusonviewinit="" style="padding-left:25px">Overview for {} on {}</h1>'''.format (self._ctrack,self._curBenchmark),"utf8"))
+        else:
+          sendto.write (bytes('''<h1 clrfocusonviewinit="" style="padding-left:25px">Summary data for {}</h1>'''.format (self._curBenchmark),"utf8"))
+        
+
+        self.genOverviewTable (sendto)
+
+        self.genRankingTable (sendto)
+        sendto.write (bytes(self._distribution.html(),"utf8"))
+        sendto.write (bytes(self._pie.html(),"utf8"))
+        sendto.write (bytes(self._cactusunk.html(),"utf8"))
+        sendto.write (bytes(self._cactusnunk.html(),"utf8"))
+        sendto.write (bytes('''</div>''',"utf8"))
+        self.genSideNavigation (sendto)
+        sendto.write (bytes('''</div></div>''',"utf8"))
+
+class BenchmarkComparisonView(BaseView):
     def __init__(self,
                  benchmarks,
                  tracks,
@@ -285,24 +410,10 @@ class BenchmarkTrackView(BaseView):
     <header class="header-1">
         <div class="branding"> <span class="nav-text nav-link" style="font-size:18px;"><clr-icon shape="shield-check" style="font-size:22px; color:#00968B;"></clr-icon>ZaligVinder</span>
       </div><div class="header-nav" [clr-nav-level]="1">''','utf8'))
-        #sendto.write (bytes(
-        #    "\n".join (['''<a href="{}" class="active nav-link nav-text">{}</a>'''.format (tup[1],tup[0]) for tup in self._bmarks ]),
-        #    "utf8"))
-        
         sendto.write (bytes(
             "\n".join (['''<a href="{}" class="{} nav-link nav-text">{}</a>'''.format (tup[1],tup[2],tup[0]) for tup in [("Hi","/",""),("Benchmark Summary","/becnhmarks/","active"),("Comparison","/comp/","")]]),
             "utf8"))
-
-
         sendto.write (bytes("</div></header>","utf8"))
-
-        #sendto.write (bytes ('''<nav class="subnav">
-        #<ul class="nav">''',"utf8"))
-       
-        #sendto.write (bytes("\n".join (['''<li class="nav-item">
-        #    <a class="nav-link" href="{}">{}</a></li>'''.format(tup[1],tup[0]) for tup in self._tracks ]),"utf8"))
-        
-        #sendto.write(bytes('''</ul></nav>''',"utf8"))
 
     def genSideNavigation(self,sendto):
         sendto.write (bytes('''
@@ -324,41 +435,12 @@ class BenchmarkTrackView(BaseView):
               active = ""
               if bgroup == self._curBenchmark and bname == self._ctrack:
                 active="active"
-            
               sendto.write (bytes('''<li><a class="nav-link '''+active+'''" href="'''+str(link)+'''">'''+str(bname)+'''</a></li>''',"utf8"))
-
-
-
-          #sendto.write (bytes("\n".join (['''<li><a class="nav-link" href="{}">{}</a></li>'''.format(tup[1],tup[0]) for tup in self._tracks[bgroup] ]),"utf8"))
             sendto.write (bytes('''</ul></section>''',"utf8"))
         sendto.write (bytes('''</section></nav>''',"utf8"))
 
-
-
-
-
-      #sendto.write (bytes(
-      #    "\n".join (['''<a href="{}" class="active nav-link nav-text">{}</a>'''.format (tup[1],tup[0]) for tup in self._bmarks ]),
-      #    "utf8"))
-
-
-
-
-      #<a class="nav-link">bla</a>
-      #  <section class="nav-group collapsible">
-      #    <input id="tab2" type="checkbox">
-      #    <label for="tab2">Patterns</label>
-      #    <ul class="nav-list">
-      #      <li><a class="nav-link active" href="/color"> Color Palette</a></li>
-      #    </ul>
-      #  </section>
-      #  </section>
-      #</nav>
-
-
-
     def genOverviewTable (self,sendto):
-        sendto.write (bytes(self._table.html(),"utf8"))        
+        sendto.write (bytes(self._table.html(),"utf8"))         
 
     def genJavascript (self):
         return "".join ([self._table.javascript (),
@@ -388,4 +470,4 @@ class BenchmarkTrackView(BaseView):
         sendto.write (bytes('''</div>''',"utf8"))
         self.genSideNavigation (sendto)
         sendto.write (bytes('''</div></div>''',"utf8"))
-        
+

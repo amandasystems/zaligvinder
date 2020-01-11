@@ -17,7 +17,7 @@ class ChartController:
             solvers = self._result.getSolvers ()
         group = params["bgroup"][0]
         track = int(params["track"][0])
-        print ("Chart",group,track)
+        #print ("Chart",group,track)
         if "nounk" not in params:
             results_for_solver_func=self._result.getResultForSolverGroup
             results_for_solver_track_func=self._result.getResultForSolverTrack
@@ -47,7 +47,14 @@ class ChartController:
         else:
             solvers = self._result.getSolvers ()
         group = params["bgroup"][0]
-        track = int(params["track"][0])
+        
+        if not isinstance(params["track"],list):
+            track = int(params["track"])
+        else:
+            track = int(params["track"][0])
+
+
+
         for solv in solvers:
             smtcalls,timeouted,satis,unk,nsatis,errors,time,total = self._result.getSummaryForSolverTrack (solv,track) if track != 0 else self._result.getSummaryForSolverGroup (solv,group) 
             #smtcalls,timeouted,satis,unk,nsatis,errors,time,total = self._result.getSummaryForSolverTrack (solv,params["track"])

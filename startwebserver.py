@@ -17,6 +17,8 @@ class Server:
         self._fcontroller = webserver.controllers.FileControl ()
         #self._ccontrollerJS = webserver.controllers.ChartControllerJS (self._results)
         self._ccontrollerJS = webserver.controllers.dbpText.DBPTest (self._results)
+
+
         
         app = webserver.app.App ()
         app.addEndpoint (webserver.routing.RegexMatch("files/(?P<path>.+)"),self._fcontroller.findFile)
@@ -35,9 +37,7 @@ class Server:
         app.addEndpoint (webserver.routing.ExactMatch("chart/cactus"),self._ccontroller.generateCactus)
         app.addEndpoint (webserver.routing.RegexMatch("chart/distribution/(?P<track>\d+)"),self._ccontroller.generateTrackDistribution)
         
-
-        app.addEndpoint (webserver.routing.RegexMatch("ranks/(?P<bgroup>[^/]+)"),self._rcontroller.getRanks)
-        app.addEndpoint (webserver.routing.RegexMatch("ranks/track/(?P<track>\d+)"),self._rcontroller.getRanks)
+        app.addEndpoint (webserver.routing.RegexMatch("ranks/(?P<track>\d+)"),self._rcontroller.getRanks)
         #app.addEndpoint (webserver.routing.RegexMatch("jschart/cactus"),self._ccontrollerJS.generateCactus)
         #app.addEndpoint (webserver.routing.RegexMatch("jschart/allcactus"),self._ccontrollerJS.generateCactusAllTracks)
         #app.addEndpoint (webserver.routing.RegexMatch("jschart/distribution"),self._ccontrollerJS.generateDistribution)  

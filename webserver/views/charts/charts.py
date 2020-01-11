@@ -17,7 +17,7 @@ class OverviewTable:
         }
         function addSolversToOverViewTable () {'''
         
-        return tt + "".join (['JSONGet ("{}",addSummaryDataTable);'.format(url) for url in self._urls])+'}</script>' 
+        return tt + "".join (['JSONGet ("{}",addSummaryDataTable);'.format(url) for url in self._urls])+'}</script>\n' 
 
     def html (self):
         return '''<div class="clr-row"><div class="clr-col"><table class="table" id="overview_table" >
@@ -32,6 +32,37 @@ class OverviewTable:
             <th>Total instances</th>
             <th>Total time</th>
             <!--<th>Total time w/o Timeout</th>-->
+        </tr>
+    </thead>
+    <tbody></tbody></table></div></div>'''
+
+
+class RankingTable:
+    def __init__(self,url):
+        self._url = url
+    
+    def javascript (self):
+        tt = '''
+        <script>function addRankingDataTable (data) {
+            var tableRef = document.getElementById("ranking_table").getElementsByTagName("tbody")[0];
+                for (var i in data){
+                    var row = tableRef.insertRow ();
+                    row.insertCell (0).innerHTML = '<span class="badge badge-'+String(parseInt(i)+1)+'">'+String(parseInt(i)+1)+'</span>';
+                    row.insertCell (1).innerHTML = data[i].solver;
+                    row.insertCell (2).innerHTML = data[i].points;
+                }
+            }
+            function addRankingTable () {'''
+        
+        return tt + "JSONGet (\""+format(self._url)+"\",addRankingDataTable);}</script>\n" 
+
+    def html (self):
+        return '''<div class="clr-row"><div class="clr-col"><table class="table" id="ranking_table" >
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Solver</th>
+            <th>Points</th>
         </tr>
     </thead>
     <tbody></tbody></table></div></div>'''

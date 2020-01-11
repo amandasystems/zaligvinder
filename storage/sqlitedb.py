@@ -10,7 +10,6 @@ class DB:
     def execute (self,query,inptuples = None):
         c = self.conn.cursor()
         if inptuples:
-            print (inptuples)
             c.execute (query,inptuples)
         else:
             c.execute (query)
@@ -191,6 +190,13 @@ class ResultRepository:
         rows = self._db.executeRet (query, (trackid,))
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
 
+    def getComparisonResultsForTrack(self,trackid,solvers):
+        placeholders= ', '.join("?" for s in solvers)
+        query = '''SELECT Result.solver, Result.instanceid, Result.smtcalls, Result.timeouted, Result.result, Result.time FROM Result,Track,TrackInstanceMap WHERE Result.solver IN (%s) AND Result.instanceid = TrackInstanceMap.instance AND TrackInstanceMap.track = ? ORDER BY Result.time ASC''' % placeholders
+    
+        rows = self._db.executeRet (query, (solvers,trackid,))
+        return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
+
     def getTrackInstancesClassification (self,trackid):
         query = '''SELECT Result.solver, Result.instanceid, Result.timeouted, Result.result, TrackInstance.expected,Result.time FROM Result,TrackInstance,TrackInstanceMap WHERE Result.instanceid = TrackInstanceMap.instance AND TrackInstanceMap.track = ? AND TrackInstance.id = Result.instanceid'''
         return self._prepareClassificationData(self._db.executeRet (query, (trackid,)))
@@ -254,7 +260,6 @@ class ResultRepository:
         return (smtcalls,timeouted,satis,unk,nsatis,errors,time,total) 
 
     def getSummaryForSolverGroup (self,solver,group):
-        print ("HHH")
         query = '''SELECT SUM(Result.smtcalls), SUM(Result.timeouted), SUM(Result.time),COUNT(*) FROM Result,TrackInstanceMap,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? '''
             
         rows = self._db.executeRet (query, (solver,group,))
@@ -295,8 +300,7 @@ class ResultRepository:
         
     def getSummaryForSolverTrack (self,solver,track):
         query = '''SELECT SUM(Result.smtcalls), SUM(Result.timeouted), SUM(Result.time),COUNT(*) FROM Result,TrackInstanceMap WHERE solver = ? AND TrackInstanceMap.track = ? AND TrackInstanceMap.instance = Result.instanceid'''
-       
-        rows = self._db.executeRet (query, (solver,track))
+        rows = self._db.executeRet (query, (solver,str(track)))
         assert(len(rows) == 1)                
         smtcalls,timeouted,time,total = rows[0]
 

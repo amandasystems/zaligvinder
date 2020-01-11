@@ -18,7 +18,7 @@ class DBPTest:
         ctrack = int(params.get("track",[1])[0])
         trackname = None
         for tid,name in data[activeGroup]:
-            print (tid,ctrack)
+            #print (tid,ctrack)
             if tid == ctrack:
                 trackname = name
                 break

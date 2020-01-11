@@ -283,7 +283,7 @@ class BenchmarkTrackView(BaseView):
     def genNavigation (self,sendto):
         sendto.write (bytes('''
     <header class="header-1">
-        <div class="branding"> <span class="nav-text nav-link" style="font-size:18px;"><clr-icon shape="shield-check" style="font-size:22px; color:#00968B;"></clr-icon>SaligVinder</span>
+        <div class="branding"> <span class="nav-text nav-link" style="font-size:18px;"><clr-icon shape="shield-check" style="font-size:22px; color:#00968B;"></clr-icon>ZaligVinder</span>
       </div><div class="header-nav" [clr-nav-level]="1">''','utf8'))
         #sendto.write (bytes(
         #    "\n".join (['''<a href="{}" class="active nav-link nav-text">{}</a>'''.format (tup[1],tup[0]) for tup in self._bmarks ]),

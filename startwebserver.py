@@ -35,11 +35,15 @@ class Server:
         app.addEndpoint (webserver.routing.ExactMatch("chart/cactus"),self._ccontroller.generateCactus)
         app.addEndpoint (webserver.routing.RegexMatch("chart/distribution/(?P<track>\d+)"),self._ccontroller.generateTrackDistribution)
         
+
+        app.addEndpoint (webserver.routing.RegexMatch("ranks/(?P<bgroup>[^/]+)"),self._rcontroller.getRanks)
+        app.addEndpoint (webserver.routing.RegexMatch("ranks/track/(?P<track>\d+)"),self._rcontroller.getRanks)
         #app.addEndpoint (webserver.routing.RegexMatch("jschart/cactus"),self._ccontrollerJS.generateCactus)
         #app.addEndpoint (webserver.routing.RegexMatch("jschart/allcactus"),self._ccontrollerJS.generateCactusAllTracks)
         #app.addEndpoint (webserver.routing.RegexMatch("jschart/distribution"),self._ccontrollerJS.generateDistribution)  
         #app.addEndpoint (webserver.routing.RegexMatch("jschart/pie"),self._ccontrollerJS.generatePie)
         app.addEndpoint (webserver.routing.RegexMatch(""),self._ccontrollerJS.cdl_test)
+
 
         
 

@@ -191,6 +191,24 @@ class ResultRepository:
         rows = self._db.executeRet (query, (trackid,))
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
 
+    def getTrackInstancesClassification (self,trackid):
+        query = '''SELECT Result.solver, Result.instanceid, Result.timeouted, Result.result, TrackInstance.expected,Result.time FROM Result,TrackInstance,TrackInstanceMap WHERE Result.instanceid = TrackInstanceMap.instance AND TrackInstanceMap.track = ? AND TrackInstance.id = Result.instanceid'''
+        return self._prepareClassificationData(self._db.executeRet (query, (trackid,)))
+
+    def getGroupInstancesClassification (self,broup):
+        query = '''SELECT Result.solver, Result.instanceid, Result.timeouted, Result.result, TrackInstance.expected,Result.time FROM Result,TrackInstance,TrackInstanceMap,Track WHERE Result.instanceid = TrackInstanceMap.instance AND TrackInstanceMap.track = Track.id AND Track.bgroup = ? AND TrackInstance.id = Result.instanceid'''
+        return self._prepareClassificationData(self._db.executeRet (query, (broup,)))
+
+    def _prepareClassificationData(self,rows):
+        data = dict()
+        for (solv,iid,to,res,exp,time) in rows:
+            if iid not in data:
+                data[iid] = []
+            error = res != None and exp != res
+            unk = not to and res == None
+            data[iid]+=[(solv,to,error,unk,time)]
+        return data
+
     # TODO: Remove Errors as soon as available and refactor
     def _getUniquelyClassifiedInstancesHelper(self,query,trackid=None):
         if trackid != None:

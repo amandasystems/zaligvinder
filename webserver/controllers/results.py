@@ -46,6 +46,51 @@ class ResultController:
             }
         return webserver.views.jsonview.JSONView (res)
 
+    def getRanks(self,params):
+        if "track" in params:
+            data = self._results.getTrackInstancesClassification (params["track"])
+        else:
+            groups = list(self._results.getTrackInfo ().keys())
+            if "bgroup" in params and params["bgroup"][0] in groups:
+                bgroup = params["bgroup"][0]
+            else:
+                bgroup =  groups[0]
+            data = self._results.getGroupInstancesClassification (bgroup)
+
+
+        summaryData = dict()
+        for iid in data:
+            sortedData = sorted(data[iid], key=lambda tup: tup[4])
+            print(sortedData)
+
+            for (solv,to,error,unk,time) in sortedData:
+                i = 0
+                if solv not in summaryData:
+                    summaryData[solv] = 0
+
+                # Points:
+                # Timeouted: -1 point
+                # Error: -5 Points
+                # Unknown: 1 point
+                # correct: 5 points / classification positon
+
+                # stupid inlining :/
+                if to:
+                    summaryData[solv]-=1
+                elif error:
+                    summaryData[solv]-=5
+                elif unk:
+                    summaryData[solv]+=1
+                else:
+                    i+=1
+                    summaryData[solv]+=(int(5/(i+1)))
+
+        return webserver.views.jsonview.JSONView ([{"solver" : solv,
+                                                    "points" : points,
+                                                }
+                                                   for solv, points in sorted(summaryData.items(), key=lambda item: item[1], reverse=True)])
+
+
     def getReferenceResult (self,params):
         ref = self._results.getReferenceForInstance (params["instance"])
         res = {'result' : ref.result,

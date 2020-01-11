@@ -51,8 +51,9 @@ class ResultController:
             data = self._results.getTrackInstancesClassification (params["track"])
         else:
             groups = list(self._results.getTrackInfo ().keys())
-            if "bgroup" in params and params["bgroup"][0] in groups:
-                bgroup = params["bgroup"][0]
+            print(params["bgroup"])
+            if "bgroup" in params and params["bgroup"] in groups:
+                bgroup = params["bgroup"]
             else:
                 bgroup =  groups[0]
             data = self._results.getGroupInstancesClassification (bgroup)
@@ -61,8 +62,6 @@ class ResultController:
         summaryData = dict()
         for iid in data:
             sortedData = sorted(data[iid], key=lambda tup: tup[4])
-            print(sortedData)
-
             for (solv,to,error,unk,time) in sortedData:
                 i = 0
                 if solv not in summaryData:

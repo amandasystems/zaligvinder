@@ -17,6 +17,7 @@ class ResultController:
             'timeouted' : timeouted,
             'satisfied' : satis,
             'not satisfied' :  nsatis,
+            'error' : errors,
             'Unknown' : unk,
             'time' : time,
             'instances' : instances
@@ -38,6 +39,7 @@ class ResultController:
             'timeouted' : timeouted,
             'satisfied' : satis,
             'not satisfied' :  nsatis,
+            'error': errors,
             'Unknown' : unk,
             'time' : time,
             'instances' : instances

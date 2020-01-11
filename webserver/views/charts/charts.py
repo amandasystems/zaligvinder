@@ -10,7 +10,7 @@ class OverviewTable:
         row.insertCell (1).innerHTML = data.Summary.satisfied;
         row.insertCell (2).innerHTML = data.Summary["not satisfied"];
         row.insertCell (3).innerHTML = data.Summary.Unknown;
-        row.insertCell (4).innerHTML = "--";
+        row.insertCell (4).innerHTML = data.Summary.error;
         row.insertCell (5).innerHTML = data.Summary.timeouted;
         row.insertCell (6).innerHTML = data.Summary.instances;
         row.insertCell (7).innerHTML = data.Summary.time;

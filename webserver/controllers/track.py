@@ -21,3 +21,11 @@ class TracksController:
         result = [constr(t) for t  in res]
         return webserver.views.jsonview.JSONView (result)
 
+    def getAllTrackIds(self,params):
+        ids = self._track.getAllTrackIds ()
+        return webserver.views.jsonview.JSONView ([{"id" : tt[0]} for tt in ids])
+
+    def getAllGroups(self,params):
+        ids = self._track.getAllGroups ()
+        return webserver.views.jsonview.JSONView ([{"id" : tt[0]} for tt in ids])
+

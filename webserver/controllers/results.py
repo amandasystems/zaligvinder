@@ -138,3 +138,60 @@ class ResultController:
         
     def getSolvers (self,params):
         return webserver.views.jsonview.JSONView (self._results.getSolvers ())
+
+    def getInstanceIdsForTrack(self,params):
+        if "track" in params:
+            assert(len(params) == 1)
+            instances = self._results.getInstanceIdsForTrack (params["track"])
+            return webserver.views.jsonview.JSONView ([{"id" : tt[0]} for tt in instances])
+        else:
+            return webserver.views.jsonview.JSONView ({"Error" : "Missing parameter"})
+
+    def getInstanceIdsForGroup(self,params):
+        if "bgroup" in params:
+            assert(len(params) == 1)
+            instances = self._results.getInstanceIdsForGroup (params["bgroup"])
+            return webserver.views.jsonview.JSONView ([{"id" : tt[0]} for tt in instances])
+        else:
+            return webserver.views.jsonview.JSONView ({"Error" : "Missing parameter"})
+
+    def getTrackInfo(self,params):
+        return webserver.views.jsonview.JSONView (self._results.getTrackInfo ()) 
+
+    def getResultForSolvers(self,params):
+        if "solvers" in params and "instance" in params:
+            iid = params["instance"]
+            results = self._results.getInstanceResultForSolvers(iid,params["solvers"])
+            data = dict()
+            data[iid] = dict()
+            resultSet = False
+            expectedResult = None
+            classifications = []
+
+            for tt in results:
+                if expectedResult == None:
+                    expectedResult = tt[2]      
+                    data[iid]["expected"] = expectedResult
+                error = 1 if expectedResult != tt[3].result and tt[3].result != None else 0
+                data[iid][tt[0]] = { "smtcalls" : tt[3].smtcalls,
+                                     "timeouted" : tt[3].timeouted,
+                                     "result" : tt[3].result,
+                                     "time" : tt[3].time,
+                                     "error" : error,
+                                     "unique_answer" : 0}
+                if tt[3].result != None and error == 0:
+                    classifications+=[tt[0]]
+            if len(classifications) == 1:
+                data[iid][classifications[0]]["unique_answer"] = 1
+            return webserver.views.jsonview.JSONView (data)
+        else:
+            return webserver.views.jsonview.JSONView ({"Error" : "Missing parameter"})
+
+
+
+
+
+
+
+
+

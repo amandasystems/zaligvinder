@@ -56,7 +56,7 @@ class TrackInstanceRepository:
         query = '''SELECT id FROM TrackInstance '''
         rows = self._db.executeRet (query,)
         return [self.loadTrackInstance (id) for id, in rows]
-    
+
 class TrackRepository:
     def __init__ (self,db,instancerepo):
         self._db = db
@@ -100,6 +100,14 @@ class TrackRepository:
         rows = self._db.executeRet (query)
         res = [self.loadTrack (i) for i, in rows]
         return res
+
+    def getAllTrackIds (self):
+        query = '''SELECT Track.id FROM Track'''
+        return self._db.executeRet(query,)
+
+    def getAllGroups (self):
+        query = '''SELECT DISTINCT Track.bgroup FROM Track'''
+        return self._db.executeRet(query,)
     
 
 class ResultRepository:
@@ -141,6 +149,15 @@ class ResultRepository:
                 data[bgroup] = []
             data[bgroup]+= [(tid,tname)]
         return data
+
+    def getInstanceIdsForTrack(self,trackid):
+        print(trackid)
+        query = '''SELECT DISTINCT TrackInstanceMap.instance  FROM TrackInstanceMap WHERE TrackInstanceMap.track = ?'''
+        return self._db.executeRet (query,(int(trackid),))
+
+    def getInstanceIdsForGroup(self,bgroup):
+        query = '''SELECT DISTINCT TrackInstanceMap.instance  FROM Track,TrackInstanceMap WHERE Track.bgroup = ? AND Track.id = TrackInstanceMap.track'''
+        return self._db.executeRet (query,(bgroup,))
 
     def getResultForSolver (self,solver):
         query = '''SELECT * FROM Result WHERE solver = ? ORDER BY time ASC '''
@@ -237,6 +254,14 @@ class ResultRepository:
     def getUniquelyClassifiedInstancesForTrack(self,trackid):
         query = '''SELECT Result.solver, Result.instanceid, Result.result FROM Result,TrackInstanceMap WHERE Result.instanceid = TrackInstanceMap.instance AND TrackInstanceMap.track = ? AND Result.result IS NOT NULL GROUP BY Result.instanceid,Result.result HAVING COUNT(Result.result) = 1'''
         return self._getUniquelyClassifiedInstancesHelper(query,str(trackid))
+
+
+    def getInstanceResultForSolvers(self,instanceid,solvers):
+        paramsStr = ', '.join("?" for s in solvers)
+        querylist = [instanceid] + solvers
+        query = '''SELECT Result.*,TrackInstance.expected FROM Result,TrackInstance WHERE Result.instanceid = ? AND Result.instanceid = TrackInstance.id AND Result.solver IN (%s) ORDER BY time ASC ''' % paramsStr
+        rows = self._db.executeRet (query,(querylist))
+        return [(t[0],t[1],t[8],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
         
     def getSummaryForSolver (self,solver):
         query = '''SELECT SUM(Result.smtcalls), SUM(Result.timeouted), SUM(Result.time),COUNT(*) FROM Result WHERE solver = ?'''

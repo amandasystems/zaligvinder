@@ -50,7 +50,7 @@ class Server:
 
         app.addEndpoint (webserver.routing.RegexMatch("comparison"),self._ccontrollerJS.cdl_comparison)
         app.addEndpoint (webserver.routing.RegexMatch(""),self._ccontrollerJS.cdl_test)
-
+        app.addEndpoint (webserver.routing.RegexMatch("becnhmarks"),self._ccontrollerJS.cdl_test)
 
         
 

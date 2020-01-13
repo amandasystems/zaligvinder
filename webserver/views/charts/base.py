@@ -258,7 +258,7 @@ class BaseView(webserver.views.TextView.TextView):
         sendto.write (bytes('''<body onload="getTableData();" >''',"utf8"))
         sendto.write (bytes(f'''<script src="/files/libs/chartist/dist/chartist.min.js"></script>
         <script src="/files/libs/chartist/chartist-plugin-legend.js"></script>
-        <script src="files/js/helper.js"></script> 
+        <script src="/files/js/helper.js"></script> 
         <div class="main-container">''',"utf8"))
         self.send_content (sendto)
         sendto.write (bytes("</div></body></html>","utf8"))

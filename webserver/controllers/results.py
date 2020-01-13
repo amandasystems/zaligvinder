@@ -195,7 +195,7 @@ class ResultController:
                                      "unique_answer" : 0}
                 if tt[4].result != None and error == 0:
                     classifications+=[tt[0]]
-            if len(classifications) == 1:
+            if len(classifications) == 1 and expectedResult == None:
                 data[iid][classifications[0]]["unique_answer"] = 1
 
 

@@ -243,6 +243,17 @@ class BaseView(webserver.views.TextView.TextView):
           background: #C47D00;
         }
 
+        .error_row {
+          background:#F5DBD9;color:#A32100;padding:5px;    
+        }
+
+        .unique_row {
+          background:#DFF0D0;color:#266900;padding:5px;
+        }
+        .unknown_row {
+            background:#E1F1F6;color:#004A70;padding:5px;
+        } 
+
 
 
     </style>

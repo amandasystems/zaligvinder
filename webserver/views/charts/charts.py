@@ -82,14 +82,15 @@ class ComparisonTable:
         var row = tableRef.insertRow ();
         var i = Object.keys(data)[0]
         if(data[i]["error"] == 1){
-            row.style = "background:#F5DBD9;color:#A32100;padding:5px;"    
+            row.classList.add("error_row");
         }
         else if(data[i]["unique"] == 1){
-            row.style = "background:#DFF0D0;color:#266900;padding:5px;"    
+            row.classList.add("unique_row");   
         }
         else if(data[i]["unknown"] == 1){
-            row.style = "background:#E1F1F6;color:#004A70;padding:5px;"    
-        }
+            row.classList.add("unknown_row");    
+        } 
+        row.classList.add("common_row");
         row.insertCell (0).innerHTML = data[i]["name"];'''
         tableColumn = 1
         for s in self._activeSolvers:
@@ -101,7 +102,32 @@ class ComparisonTable:
             tableColumn+=4
 
 
-        tt+='''}
+        tt+='''
+        }
+
+        function just_enable_rows (name) {
+            var table = document.getElementById("comparison_table")
+            var allCells = table.getElementsByClassName("common_row"); 
+            var cells = table.getElementsByClassName(name+"_row"); 
+
+            for (var i = 0; i < allCells.length; i++) { 
+                allCells[i].style = "display:none;"
+            }
+            for (var i = 0; i < cells.length; i++) { 
+                cells[i].style = ""
+            }
+        }
+
+        function open_close_menu() {
+            elem = document.getElementById("dropdown-filter-head")
+            if(elem.classList.contains('open')){
+               elem.classList.remove('open')
+            } else{
+              elem.classList.add('open')
+           }
+        }
+
+
         function addInstaceToComparisonTable () {
         ''' #function addInstaceToComparisonTable () { JSONGet ("/instances/solvers/1/?solvers=z3seq&solvers=z3str3&solvers=cvc4&solvers=trau",addComparisonDataTable); }</script>'''
         
@@ -122,7 +148,8 @@ class ComparisonTable:
         htmlout= '''
 
         <div class="clr-row">
-    <div class="clr-col-24 clr-col-sm-6">
+        <div class="clr-col"></div>
+    <div class="clr-col-sm-6">
         <div class="card">
             <div class="card-block">
                 <h4 class="card-title">Selected Solvers</h4>
@@ -141,7 +168,30 @@ class ComparisonTable:
         htmlout+='''</p></div>
                 </div>
             </div>
-        </div>'''
+        <div class="clr-col "></div>
+        </div>
+        <div class="clr-row clr-justify-content-between">
+        <div class="clr-col-16"></div>
+            <div class="clr-col-16">
+
+                <div class="dropdown bottom-right" id="dropdown-filter-head">
+                    <button class="dropdown-toggle" onclick="open_close_menu();">
+                        <clr-icon shape="filter-grid" size="24"></clr-icon>
+                        <clr-icon shape="caret down"></clr-icon>
+                    </button>
+                    <div class="dropdown-menu">
+                        <h4 class="dropdown-header">Select filter</h4>
+                        <div class="dropdown-item"><a onclick="just_enable_rows('unique')" href="javascript:void(0);">Only unique classified instances</a></div>
+                        <div class="dropdown-item"><a onclick="just_enable_rows('error')" href="javascript:void(0);">Only instances with errors</a></div>
+                        <div class="dropdown-item"><a onclick="just_enable_rows('unknown')" href="javascript:void(0);">Only undeclared instances</a></div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item"><a onclick="just_enable_rows('common')" href="javascript:void(0);">All instances</a></div>
+                    </div>
+                </div>
+            </div>        </div>
+
+
+        '''
 
         htmlout+= '''<div class="clr-row"><div class="clr-col">'''
 
@@ -164,7 +214,9 @@ class ComparisonTable:
 
 
         htmlout+='''</thead>
-    <tbody></tbody></table></div></div>'''
+    <tbody></tbody></table> 
+
+        </div></div>'''
         return htmlout
 
 class Distribution:

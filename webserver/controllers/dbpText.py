@@ -27,10 +27,10 @@ class DBPTest:
         for bgroup in data:
             if bgroup not in tracksmap: 
                 tracksmap[bgroup] = []
-                tracksmap[bgroup] = [("Summary","/?bgroup={}&track={}".format(bgroup,0))]+[(tup[1],"/?bgroup={}&track={}".format(bgroup,tup[0])) for tup in data[bgroup]]
+                tracksmap[bgroup] = [("Summary","?bgroup={}&track={}".format(bgroup,0))]+[(tup[1],"/?bgroup={}&track={}".format(bgroup,tup[0])) for tup in data[bgroup]]
 
         return webserver.views.charts.base.BenchmarkTrackView (
-            [(n,"/?bgroup={}".format(n)) for n in benchmarks],
+            [(n,"?bgroup={}".format(n)) for n in benchmarks],
             tracksmap,
             activeGroup,
             trackname,
@@ -66,7 +66,7 @@ class DBPTest:
         for bgroup in data:
             if bgroup not in tracksmap: 
                 tracksmap[bgroup] = []
-                tracksmap[bgroup] = [("Summary","/?bgroup={}&track={}".format(bgroup,0))]+[(tup[1],"/?bgroup={}&track={}".format(bgroup,tup[0])) for tup in data[bgroup]]
+                tracksmap[bgroup] = [("Summary","?bgroup={}&track={}".format(bgroup,0))]+[(tup[1],"?bgroup={}&track={}".format(bgroup,tup[0])) for tup in data[bgroup]]
 
         if ctrack != 0:
             instanceIds = self._result.getInstanceIdsForTrack(ctrack)
@@ -74,7 +74,7 @@ class DBPTest:
             instanceIds = self._result.getInstanceIdsForGroup(activeGroup)
 
         return webserver.views.charts.base.BenchmarkComparisonView (
-            [(n,"/?bgroup={}".format(n)) for n in benchmarks],
+            [(n,"?bgroup={}".format(n)) for n in benchmarks],
             tracksmap,
             activeGroup,
             trackname,

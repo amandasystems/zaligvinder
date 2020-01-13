@@ -153,11 +153,14 @@ class ResultRepository:
     def getInstanceIdsForTrack(self,trackid):
         print(trackid)
         query = '''SELECT DISTINCT TrackInstanceMap.instance  FROM TrackInstanceMap WHERE TrackInstanceMap.track = ?'''
-        return self._db.executeRet (query,(int(trackid),))
+        rows = self._db.executeRet (query,(int(trackid),))
+        return [t[0] for t in rows] 
+
 
     def getInstanceIdsForGroup(self,bgroup):
         query = '''SELECT DISTINCT TrackInstanceMap.instance  FROM Track,TrackInstanceMap WHERE Track.bgroup = ? AND Track.id = TrackInstanceMap.track'''
-        return self._db.executeRet (query,(bgroup,))
+        rows = self._db.executeRet (query,(bgroup,))
+        return [t[0] for t in rows] 
 
     def getResultForSolver (self,solver):
         query = '''SELECT * FROM Result WHERE solver = ? ORDER BY time ASC '''
@@ -259,9 +262,9 @@ class ResultRepository:
     def getInstanceResultForSolvers(self,instanceid,solvers):
         paramsStr = ', '.join("?" for s in solvers)
         querylist = [instanceid] + solvers
-        query = '''SELECT Result.*,TrackInstance.expected FROM Result,TrackInstance WHERE Result.instanceid = ? AND Result.instanceid = TrackInstance.id AND Result.solver IN (%s) ORDER BY time ASC ''' % paramsStr
+        query = '''SELECT Result.*,TrackInstance.expected,TrackInstance.Name FROM Result,TrackInstance WHERE Result.instanceid = ? AND Result.instanceid = TrackInstance.id  AND Result.solver IN (%s) ORDER BY time ASC ''' % paramsStr
         rows = self._db.executeRet (query,(querylist))
-        return [(t[0],t[1],t[8],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
+        return [(t[0],t[1],t[8], t[9], utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
         
     def getSummaryForSolver (self,solver):
         query = '''SELECT SUM(Result.smtcalls), SUM(Result.timeouted), SUM(Result.time),COUNT(*) FROM Result WHERE solver = ?'''

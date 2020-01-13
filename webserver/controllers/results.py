@@ -158,6 +158,13 @@ class ResultController:
     def getTrackInfo(self,params):
         return webserver.views.jsonview.JSONView (self._results.getTrackInfo ()) 
 
+    def _mapResultToIcon(self,result):
+        iconMap = {0 : "times", 1 : "check", None : "unknown-status"}
+        if result in iconMap:
+            return iconMap[result]
+        else:
+            return "exclamation-triangle"
+
     def getResultForSolvers(self,params):
         if "solvers" in params and "instance" in params:
             iid = params["instance"]
@@ -166,23 +173,38 @@ class ResultController:
             data[iid] = dict()
             resultSet = False
             expectedResult = None
+            expectedResultSet = False
+            instanceName = ""
+            errorFound = 0
             classifications = []
 
             for tt in results:
-                if expectedResult == None:
-                    expectedResult = tt[2]      
-                    data[iid]["expected"] = expectedResult
-                error = 1 if expectedResult != tt[3].result and tt[3].result != None else 0
-                data[iid][tt[0]] = { "smtcalls" : tt[3].smtcalls,
-                                     "timeouted" : tt[3].timeouted,
-                                     "result" : tt[3].result,
-                                     "time" : tt[3].time,
+                if expectedResult == None and not expectedResultSet:   
+                    expectedResult = tt[2]   
+                    if expectedResult != None:
+                        expectedResultSet = True
+                    instanceName = tt[3]
+                error = 1 if expectedResult != tt[4].result and expectedResultSet and tt[4].result != None else 0
+                errorFound = 1 if error == 1 or errorFound == 1 else 0
+                data[iid][tt[0]] = { "smtcalls" : tt[4].smtcalls,
+                                     "timeouted" : tt[4].timeouted,
+                                     "result" : tt[4].result,
+                                     "icon" : self._mapResultToIcon(tt[4].result),
+                                     "time" : "%.2f" % tt[4].time,
                                      "error" : error,
                                      "unique_answer" : 0}
-                if tt[3].result != None and error == 0:
+                if tt[4].result != None and error == 0:
                     classifications+=[tt[0]]
             if len(classifications) == 1:
                 data[iid][classifications[0]]["unique_answer"] = 1
+
+
+            data[iid]["expected"] = expectedResult
+            data[iid]["unique"] = 1 if len(classifications) == 1 else 0
+            data[iid]["error"] = errorFound  
+            data[iid]["name"] = instanceName                      
+            data[iid]["unknown"] = 1 if len(classifications) == 0 else 0
+
             return webserver.views.jsonview.JSONView (data)
         else:
             return webserver.views.jsonview.JSONView ({"Error" : "Missing parameter"})

@@ -68,6 +68,105 @@ class RankingTable:
     <tbody></tbody></table></div></div>'''
 
 
+class ComparisonTable:
+    def __init__(self,urls,activeSolvers,solvers,params):
+        self._urls = urls
+        self._solvers = solvers
+        self._activeSolvers = activeSolvers
+        self._inactiveSolvers = list(set(solvers).difference(set(activeSolvers)))
+        self._curParams = params
+    
+    def javascript (self):
+        tt = '''<script>function addComparisonDataTable (data) {
+        var tableRef = document.getElementById("comparison_table").getElementsByTagName("tbody")[0];
+        var row = tableRef.insertRow ();
+        var i = Object.keys(data)[0]
+        if(data[i]["error"] == 1){
+            row.style = "background:#F5DBD9;color:#A32100;padding:5px;"    
+        }
+        else if(data[i]["unique"] == 1){
+            row.style = "background:#DFF0D0;color:#266900;padding:5px;"    
+        }
+        else if(data[i]["unknown"] == 1){
+            row.style = "background:#E1F1F6;color:#004A70;padding:5px;"    
+        }
+        row.insertCell (0).innerHTML = data[i]["name"];'''
+        tableColumn = 1
+        for s in self._activeSolvers:
+            tt+='''row.insertCell ('''+str(tableColumn)+''').innerHTML = "";
+                   row.insertCell ('''+str(tableColumn+1)+''').innerHTML = "<clr-icon shape='"+data[i][\''''+str(s)+'''\']['icon']+"'></clr-icon>";
+                   row.insertCell ('''+str(tableColumn+2)+''').innerHTML = data[i]["'''+str(s)+'''"]["time"];
+                   row.insertCell ('''+str(tableColumn+3)+''').innerHTML = "---";
+                   '''
+            tableColumn+=4
+
+
+        tt+='''}
+        function addInstaceToComparisonTable () {
+        ''' #function addInstaceToComparisonTable () { JSONGet ("/instances/solvers/1/?solvers=z3seq&solvers=z3str3&solvers=cvc4&solvers=trau",addComparisonDataTable); }</script>'''
+        
+        return tt + "".join (['JSONGet ("{}",addComparisonDataTable);'.format(url) for url in self._urls])+'}</script>\n' 
+
+    def _activateSolverUrl(self,solver):
+        head = ""#"/comparison/"
+        url = head + "?bgroup=" + self._curParams["bgroup"] + "&track=" + str(self._curParams["trackid"]) + ''.join("&solvers="+str(s) for s in (self._activeSolvers+[solver]))
+        return url
+
+    def _deactivateSolverUrl(self,solver):
+        head = ""#"/comparison/"
+        url = head + "?bgroup=" + self._curParams["bgroup"] + "&track=" + str(self._curParams["trackid"]) + ''.join("&solvers="+str(s) for s in set(self._activeSolvers).difference(set([solver])))
+        return url
+
+
+    def html (self):
+        htmlout= '''
+
+        <div class="clr-row">
+    <div class="clr-col-24 clr-col-sm-6">
+        <div class="card">
+            <div class="card-block">
+                <h4 class="card-title">Selected Solvers</h4>
+                <p class="card-text">Click a badge add a solver to the comparison.</p><p class="card-text">'''
+
+        for s in self._activeSolvers:
+            htmlout+='''<a href="'''+self._deactivateSolverUrl(s)+'''" class="label label-success ng-star-inserted clickable">
+                '''+str(s)+''' <clr-icon shape="close"> </clr-icon>
+            </a>'''
+
+        for s in self._inactiveSolvers:
+            htmlout+='''<a href="'''+str(self._activateSolverUrl(s))+'''" class="label clickable">
+                '''+str(s)+'''
+            </a>'''
+               
+        htmlout+='''</p></div>
+                </div>
+            </div>
+        </div>'''
+
+        htmlout+= '''<div class="clr-row"><div class="clr-col">'''
+
+        htmlout+='''<table class="table table-compact table-noborder" id="comparison_table" >
+        <thead>'''
+        htmlout+="<tr><th></th>"
+
+        for s in self._activeSolvers:
+            htmlout+="<th colspan='4'>"+str(s)+"</th>"
+            
+        htmlout+='''</tr>'''
+
+        htmlout+="<tr><th>Instance</th>"
+
+        for s in self._activeSolvers:
+            htmlout+="<th style='width:50px;'></th><th>Result</th><th>Time</th><th>Model</th>"
+        htmlout+='''</tr>'''
+
+
+
+
+        htmlout+='''</thead>
+    <tbody></tbody></table></div></div>'''
+        return htmlout
+
 class Distribution:
     def __init__(self,url):
         self._url = url

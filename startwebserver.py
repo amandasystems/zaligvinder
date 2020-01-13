@@ -48,8 +48,8 @@ class Server:
         #app.addEndpoint (webserver.routing.RegexMatch("jschart/distribution"),self._ccontrollerJS.generateDistribution)  
         #app.addEndpoint (webserver.routing.RegexMatch("jschart/pie"),self._ccontrollerJS.generatePie)
 
-        app.addEndpoint (webserver.routing.RegexMatch(""),self._ccontrollerJS.cdl_comparison)
-        app.addEndpoint (webserver.routing.RegexMatch("###"),self._ccontrollerJS.cdl_test)
+        app.addEndpoint (webserver.routing.RegexMatch("comparison"),self._ccontrollerJS.cdl_comparison)
+        app.addEndpoint (webserver.routing.RegexMatch(""),self._ccontrollerJS.cdl_test)
 
 
         

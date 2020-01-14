@@ -30,10 +30,11 @@ import startwebserver
 import summarygenerators
 
 tracks = (models.PyEx.getTrackData () +
-          models.pisa.getTrackData ("Pisa") +
-          models.nornbenchmarks.getTrackData ("Norn Benchmarks") +
-          #models.woorpje.track01.getTrackData ("Woorpje") +
-          #models.woorpje.track02.getTrackData ("Woorpje") +
+          #models.pisa.getTrackData ("Pisa") +
+          #models.nornbenchmarks.getTrackData ("Norn Benchmarks") +
+          #models.light.getTrackData("Trau Light")+
+	  #models.Leetcode.getTrackData() + 
+	  #models.woorpje.getTrackData ("Woorpje") +
           #models.kaluza.getTrackData () +
           #models.stringfuzz.getTrackData () +
           #models.z3_regression.getTrackData()+

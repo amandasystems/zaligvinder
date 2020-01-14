@@ -177,6 +177,7 @@ class ResultController:
             instanceName = ""
             errorFound = 0
             classifications = []
+            answers = [0,0]
 
             for tt in results:
                 if expectedResult == None and not expectedResultSet:   
@@ -195,12 +196,22 @@ class ResultController:
                                      "unique_answer" : 0}
                 if tt[4].result != None and error == 0:
                     classifications+=[tt[0]]
-            if len(classifications) == 1 and expectedResult == None:
+                    if tt[4].result == 1:
+                        answers[0]+=1
+                    else:
+                        answers[1]+=1
+
+            if len(classifications) == 1 and expectedResult != None and errorFound == 0:
                 data[iid][classifications[0]]["unique_answer"] = 1
+
+            if answers[0] == answers[1] and answers[0] > 0:
+                data[iid]["ambiguous_answer"] = 1
+            else: 
+                data[iid]["ambiguous_answer"] = 0
 
 
             data[iid]["expected"] = expectedResult
-            data[iid]["unique"] = 1 if len(classifications) == 1 else 0
+            data[iid]["unique"] = 1 if len(classifications) == 1 and errorFound == 0 else 0
             data[iid]["error"] = errorFound  
             data[iid]["name"] = instanceName                      
             data[iid]["unknown"] = 1 if len(classifications) == 0 else 0

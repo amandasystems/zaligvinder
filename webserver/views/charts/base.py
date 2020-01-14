@@ -253,6 +253,11 @@ class BaseView(webserver.views.TextView.TextView):
         .unknown_row {
             background:#E1F1F6;color:#004A70;padding:5px;
         } 
+        .ambiguous_row {
+            background:#FEECB5;color:#EFD603;padding:5px;
+        } 
+
+
 
 
 
@@ -273,6 +278,16 @@ class BaseView(webserver.views.TextView.TextView):
         <div class="main-container">''',"utf8"))
         self.send_content (sendto)
         sendto.write (bytes("</div></body></html>","utf8"))
+
+    def genNavigation (self,sendto,active):
+        sendto.write (bytes('''
+    <header class="header-1">
+        <div class="branding"> <span class="nav-text nav-link" style="font-size:18px;"><clr-icon shape="shield-check" style="font-size:22px; color:#00968B;"></clr-icon>ZaligVinder</span>
+      </div><div class="header-nav" [clr-nav-level]="1">''','utf8'))
+        sendto.write (bytes(
+            "\n".join (['''<a href="{}" class="{} nav-link nav-text">{}</a>'''.format (tup[1],tup[2],tup[0]) for tup in [("Getting Started","/",active[0]),("Benchmark Summary","/becnhmarks/",active[1]),("Tool Comparison","/comparison/",active[2])]]),
+            "utf8"))
+        sendto.write (bytes("</div></header>","utf8"))
         
 
 class BenchmarkTrackView(BaseView):
@@ -303,16 +318,6 @@ class BenchmarkTrackView(BaseView):
                                          "/chart/cactus?track={}&bgroup={}&nounk=tt".format(ctrackid,benchmark),
                                          "cactus_nunk"
         )
-        
-    def genNavigation (self,sendto):
-        sendto.write (bytes('''
-    <header class="header-1">
-        <div class="branding"> <span class="nav-text nav-link" style="font-size:18px;"><clr-icon shape="shield-check" style="font-size:22px; color:#00968B;"></clr-icon>ZaligVinder</span>
-      </div><div class="header-nav" [clr-nav-level]="1">''','utf8'))
-        sendto.write (bytes(
-            "\n".join (['''<a href="{}" class="{} nav-link nav-text">{}</a>'''.format (tup[1],tup[2],tup[0]) for tup in [("Hi","/",""),("Benchmark Summary","/becnhmarks/","active"),("Comparison","/comparison/","")]]),
-            "utf8"))
-        sendto.write (bytes("</div></header>","utf8"))
 
     def genSideNavigation(self,sendto):
         sendto.write (bytes('''
@@ -369,7 +374,7 @@ class BenchmarkTrackView(BaseView):
         }</script>'''
         sendto.write (bytes(top3,"utf8"))
         sendto.write (bytes(self.genJavascript (),"utf8"))
-        self.genNavigation (sendto)
+        self.genNavigation (sendto,["","active",""])
         sendto.write (bytes('''<div class="content-container"><div class="content-area">''',"utf8"))
         if self._ctrack != None:
           sendto.write (bytes('''<h1 clrfocusonviewinit="" style="padding-left:25px">Overview for {} on {}</h1>'''.format (self._ctrack,self._curBenchmark),"utf8"))
@@ -408,16 +413,6 @@ class BenchmarkComparisonView(BaseView):
         self._solverUrl= '&'.join("solvers="+str(s) for s in activeSolvers)
         #self._table = charts.ComparisonTable (["../instances/solvers/{}/?{}".format(i,solverUrl) for i in instances],activeSolvers,solvers,{"bgroup": benchmark, "trackid": ctrackid})
         self._table = charts.ComparisonTable (["/instances/solvers/{}/?{}".format(i,self._solverUrl) for i in instances],activeSolvers,solvers,{"bgroup": benchmark, "trackid": ctrackid})
-
-    def genNavigation (self,sendto):
-        sendto.write (bytes('''
-    <header class="header-1">
-        <div class="branding"> <span class="nav-text nav-link" style="font-size:18px;"><clr-icon shape="shield-check" style="font-size:22px; color:#00968B;"></clr-icon>ZaligVinder</span>
-      </div><div class="header-nav" [clr-nav-level]="1">''','utf8'))
-        sendto.write (bytes(
-            "\n".join (['''<a href="{}" class="{} nav-link nav-text">{}</a>'''.format (tup[1],tup[2],tup[0]) for tup in [("Hi","/",""),("Benchmark Summary","/becnhmarks/",""),("Comparison","/comparison/","active")]]),
-            "utf8"))
-        sendto.write (bytes("</div></header>","utf8"))
 
     def genSideNavigation(self,sendto):
         sendto.write (bytes('''
@@ -461,7 +456,7 @@ class BenchmarkComparisonView(BaseView):
         }</script>'''
         sendto.write (bytes(top3,"utf8"))
         sendto.write (bytes(self.genJavascript (),"utf8"))
-        self.genNavigation (sendto)
+        self.genNavigation (sendto,["","","active"])
         sendto.write (bytes('''<div class="content-container"><div class="content-area">''',"utf8"))
         if self._ctrack != None:
           sendto.write (bytes('''<h1 clrfocusonviewinit="" style="padding-left:25px">Overview for {} on {}</h1>'''.format (self._ctrack,self._curBenchmark),"utf8"))
@@ -473,4 +468,50 @@ class BenchmarkComparisonView(BaseView):
         sendto.write (bytes('''</div>''',"utf8"))
         self.genSideNavigation (sendto)
         sendto.write (bytes('''</div></div>''',"utf8"))
+
+
+class EntryView(BaseView):
+    def __init__(self,
+                 benchmarks,
+                 tracks,
+                 solvers = [],
+    ):
+        
+        self._bmarks = benchmarks
+        self._tracks = tracks
+        self._solvers = solvers
+        
+    def genEntryText(self,sendto):
+      tt = '''<div class="clr-row clr-justify-content-centerr">
+                <div class="clr-col-4">                
+                <div class="card">
+                       <div class="card-header">
+                          Welcome
+                      </div>
+                        <div class="card-block">
+                            <p class="card-text">'''
+      tt+=str(len(self._solvers))+" solvers on "+str(len(self._tracks))+" tracks in "+str(len(self._bmarks))+" benchmark sets."
+
+
+      tt+='''
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>'''
+
+      sendto.write (bytes(tt,"utf8"))
+
+        
+    def send_content (self,sendto):
+        self.genNavigation (sendto,["active","",""])
+        sendto.write (bytes('''<div class="content-container"><div class="content-area">''',"utf8"))
+        sendto.write (bytes('''<h1 clrfocusonviewinit="" style="padding-left:25px">Hi!</h1>''',"utf8"))
+
+        self.genEntryText (sendto)
+        sendto.write (bytes('''</div>''',"utf8"))
+        #self.genSideNavigation (sendto)
+        sendto.write (bytes('''</div></div>''',"utf8"))
+
+
 

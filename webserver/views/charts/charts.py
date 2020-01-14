@@ -80,7 +80,7 @@ class ComparisonTable:
         tt = '''<script>function addComparisonDataTable (data) {
         var tableRef = document.getElementById("comparison_table").getElementsByTagName("tbody")[0];
         var row = tableRef.insertRow ();
-        var i = Object.keys(data)[0]
+        var i = Object.keys(data)[0];
         if(data[i]["error"] == 1){
             row.classList.add("error_row");
         }
@@ -90,15 +90,27 @@ class ComparisonTable:
         else if(data[i]["unknown"] == 1){
             row.classList.add("unknown_row");    
         } 
+        else if (data[i]["ambiguous_answer)"] == 1){
+            row.classList.add("ambiguous_row");    
+        } 
+
         row.classList.add("common_row");
         row.insertCell (0).innerHTML = data[i]["name"];'''
         tableColumn = 1
         for s in self._activeSolvers:
-            tt+='''row.insertCell ('''+str(tableColumn)+''').innerHTML = "";
-                   row.insertCell ('''+str(tableColumn+1)+''').innerHTML = "<clr-icon shape='"+data[i][\''''+str(s)+'''\']['icon']+"'></clr-icon>";
-                   row.insertCell ('''+str(tableColumn+2)+''').innerHTML = data[i]["'''+str(s)+'''"]["time"];
-                   row.insertCell ('''+str(tableColumn+3)+''').innerHTML = "---";
-                   '''
+            tt+='''
+        var indicator'''+str(s)+''' = "";
+        if (data[i][\''''+str(s)+'''\']['error'] == 1 || data[i][\''''+str(s)+'''\']['unique_answer'] == 1){
+            indicator'''+str(s)+''' = "-circle'  class='is-solid'";
+        } 
+
+
+       row.insertCell ('''+str(tableColumn)+''').innerHTML = "";
+       row.insertCell ('''+str(tableColumn+1)+''').innerHTML = "<clr-icon shape='"+data[i][\''''+str(s)+'''\']['icon']+indicator'''+str(s)+'''+"'></clr-icon>";
+       row.insertCell ('''+str(tableColumn+2)+''').innerHTML = data[i]["'''+str(s)+'''"]["time"];
+       row.insertCell ('''+str(tableColumn+3)+''').innerHTML = "---";
+       '''
+
             tableColumn+=4
 
 
@@ -153,7 +165,7 @@ class ComparisonTable:
         <div class="card">
             <div class="card-block">
                 <h4 class="card-title">Selected Solvers</h4>
-                <p class="card-text">Click a badge add a solver to the comparison.</p><p class="card-text">'''
+                <p class="card-text">Click a badge to add a solver to the comparison.</p><p class="card-text">'''
 
         for s in self._activeSolvers:
             htmlout+='''<a href="'''+self._deactivateSolverUrl(s)+'''" class="label label-success ng-star-inserted clickable">
@@ -184,6 +196,7 @@ class ComparisonTable:
                         <div class="dropdown-item"><a onclick="just_enable_rows('unique')" href="javascript:void(0);">Only unique classified instances</a></div>
                         <div class="dropdown-item"><a onclick="just_enable_rows('error')" href="javascript:void(0);">Only instances with errors</a></div>
                         <div class="dropdown-item"><a onclick="just_enable_rows('unknown')" href="javascript:void(0);">Only undeclared instances</a></div>
+                        <div class="dropdown-item"><a onclick="just_enable_rows('ambiguous')" href="javascript:void(0);">Only ambiguous declared instances</a></div>
                         <div class="dropdown-divider"></div>
                         <div class="dropdown-item"><a onclick="just_enable_rows('common')" href="javascript:void(0);">All instances</a></div>
                     </div>

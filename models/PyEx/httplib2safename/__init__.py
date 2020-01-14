@@ -9,4 +9,4 @@ def getTrackData (bname = None):
             if name.endswith (".smt2") and not name.startswith("."):
                 filest.append(utils.TrackInstance(name,os.path.join (root,name)))
 
-    return [utils.Track("httplib2safename",filest)]
+    return [utils.Track("httplib2safename",filest,bname)]

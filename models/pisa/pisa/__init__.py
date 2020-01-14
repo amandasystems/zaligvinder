@@ -9,4 +9,4 @@ def getTrackData (bname = None):
             if name.endswith (".smt2") and not name.startswith("."):
                 filest.append(utils.TrackInstance(name,os.path.join (root,name)))
 
-    return [utils.Track("pisa",filest)]
+    return [utils.Track("pisa",filest,bname)]

@@ -9,4 +9,4 @@ def getTrackData (bname = None):
             if name.endswith (".smt2") and not name.startswith("."):
                 filest.append(utils.TrackInstance(name,os.path.join (root,name)))
 
-    return [utils.Track("ChunkSplit",filest)]
+    return [utils.Track("ChunkSplit",filest,bname)]

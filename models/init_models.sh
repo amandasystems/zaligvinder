@@ -54,11 +54,10 @@ echo '        for name in files:' >> $dir/__init__.py
 echo '            if name.endswith (".smt2") and not name.startswith("."):' >> $dir/__init__.py
 echo '                filest.append(utils.TrackInstance(name,os.path.join (root,name)))' >> $dir/__init__.py
 echo '' >> $dir/__init__.py                
-echo '    return [utils.Track("'${dir}'",filest)]' >> $dir/__init__.py
+echo '    return [utils.Track("'${dir}'",filest,bname)]' >> $dir/__init__.py
 done
 
 # generate outer __init__.py
-
 rm ./__init__.py
 touch ./__init__.py
 

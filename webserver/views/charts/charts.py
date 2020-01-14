@@ -95,9 +95,23 @@ class ComparisonTable:
         } 
 
         row.classList.add("common_row");
-        row.insertCell (0).innerHTML = data[i]["name"];'''
+        row.insertCell (0).innerHTML = "<clr-icon shape=\\"file\\" onclick=\\"show_model(\'\',\'"+i+"\',\'"+data[i][\'name\']+"\',\'Instance "+data[i][\'name\']+"\', \'/instances/"+i+"/model.smt\');\\"></clr-icon> "+data[i]["name"];   
+        //row.insertCell (0).innerHTML = data[i]["name"];
+        '''
         tableColumn = 1
         for s in self._activeSolvers:
+
+            tt+='''
+                var model'''+str(s)+''' = "";
+                if (data[i][\''''+str(s)+'''\']['result'] == 1){
+                    model'''+str(s)+''' = "<clr-icon shape=\\"list\\" onclick=\\"show_model(\''''+str(s)+'''\',\'"+i+"\',\'"+data[i][\'name\']+"\',\'Model for "+data[i][\'name\']+" of '''+str(s)+'''\', \'/results/'''+str(s)+'''/"+i+"/model\');\\"></clr-icon>";
+                } else {
+                    model'''+str(s)+''' = "<clr-icon shape='no-access' style='color:#948981;'></clr-icon>";
+                }
+            '''
+
+
+
             tt+='''
         var indicator'''+str(s)+''' = "";
         if (data[i][\''''+str(s)+'''\']['error'] == 1 || data[i][\''''+str(s)+'''\']['unique_answer'] == 1){
@@ -108,7 +122,7 @@ class ComparisonTable:
        row.insertCell ('''+str(tableColumn)+''').innerHTML = "";
        row.insertCell ('''+str(tableColumn+1)+''').innerHTML = "<clr-icon shape='"+data[i][\''''+str(s)+'''\']['icon']+indicator'''+str(s)+'''+"'></clr-icon>";
        row.insertCell ('''+str(tableColumn+2)+''').innerHTML = data[i]["'''+str(s)+'''"]["time"];
-       row.insertCell ('''+str(tableColumn+3)+''').innerHTML = "---";
+       row.insertCell ('''+str(tableColumn+3)+''').innerHTML = model'''+str(s)+''';
        '''
 
             tableColumn+=4
@@ -139,6 +153,24 @@ class ComparisonTable:
            }
         }
 
+        function show_model(solver,instanceId,instanceName,titleText,url) {
+            var popup = document.getElementById("model-view");
+            popup.classList.toggle("hide_div");   
+            document.getElementById("model-background-crap").classList.toggle("hide_div"); 
+
+            var title = document.getElementById("model-box-title");
+            title.innerHTML = titleText;
+            TextGet (url,function(text) {
+                var code_block = document.getElementById("model-code-block");
+                code_block.innerHTML = text;
+            });
+        }
+
+        function hide_model() {
+            document.getElementById("model-view").classList.toggle("hide_div");  
+            document.getElementById("model-background-crap").classList.toggle("hide_div"); 
+        }
+
 
         function addInstaceToComparisonTable () {
         ''' #function addInstaceToComparisonTable () { JSONGet ("/instances/solvers/1/?solvers=z3seq&solvers=z3str3&solvers=cvc4&solvers=trau",addComparisonDataTable); }</script>'''
@@ -158,6 +190,26 @@ class ComparisonTable:
 
     def html (self):
         htmlout= '''
+
+
+        <div class="modal hide_div" id="model-view">
+            <div class="modal-dialog" role="dialog" aria-hidden="true">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-label="Close" class="close" type="button">
+                            <clr-icon aria-hidden="true" shape="close" onclick="hide_model()"></clr-icon>
+                        </button>
+                        <h3 class="modal-title" id="model-box-title">I have a nice title</h3>
+                    </div>
+                    <div class="modal-body">
+                        <code id="model-code-block">Instance not available...</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="model-background-crap" class="modal-backdrop hide_div" aria-hidden="true"></div>
+
+
 
         <div class="clr-row">
         <div class="clr-col"></div>
@@ -193,12 +245,12 @@ class ComparisonTable:
                     </button>
                     <div class="dropdown-menu">
                         <h4 class="dropdown-header">Select filter</h4>
-                        <div class="dropdown-item"><a onclick="just_enable_rows('unique')" href="javascript:void(0);">Only unique classified instances</a></div>
-                        <div class="dropdown-item"><a onclick="just_enable_rows('error')" href="javascript:void(0);">Only instances with errors</a></div>
-                        <div class="dropdown-item"><a onclick="just_enable_rows('unknown')" href="javascript:void(0);">Only undeclared instances</a></div>
-                        <div class="dropdown-item"><a onclick="just_enable_rows('ambiguous')" href="javascript:void(0);">Only ambiguous declared instances</a></div>
+                        <div class="dropdown-item"><a onclick="just_enable_rows('unique');open_close_menu();" href="javascript:void(0);">Only unique classified instances</a></div>
+                        <div class="dropdown-item"><a onclick="just_enable_rows('error');open_close_menu();" href="javascript:void(0);">Only instances with errors</a></div>
+                        <div class="dropdown-item"><a onclick="just_enable_rows('unknown');open_close_menu();" href="javascript:void(0);">Only undeclared instances</a></div>
+                        <div class="dropdown-item"><a onclick="just_enable_rows('ambiguous');open_close_menu();" href="javascript:void(0);">Only ambiguous declared instances</a></div>
                         <div class="dropdown-divider"></div>
-                        <div class="dropdown-item"><a onclick="just_enable_rows('common')" href="javascript:void(0);">All instances</a></div>
+                        <div class="dropdown-item"><a onclick="just_enable_rows('common');open_close_menu();" href="javascript:void(0);">All instances</a></div>
                     </div>
                 </div>
             </div>        </div>

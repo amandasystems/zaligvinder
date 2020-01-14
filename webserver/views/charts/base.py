@@ -257,6 +257,10 @@ class BaseView(webserver.views.TextView.TextView):
             background:#FEECB5;color:#EFD603;padding:5px;
         } 
 
+        .hide_div {
+          display:none;
+        }
+
 
 
 

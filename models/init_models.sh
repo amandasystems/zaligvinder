@@ -4,7 +4,11 @@ declare -a dirs
 i=1
 for d in */
 do
-    dirs[i++]="${d%/}"
+	if [[ ${d%/} =~ .*pycache.* ]]; then
+    	echo 'stupid cache'
+    else
+    	dirs[i++]="${d%/}"
+    fi
 done
 
 
@@ -33,7 +37,11 @@ declare -a dirs
 i=1
 for d in */
 do
-    dirs[i++]="${d%/}"
+	if [[ ${d%/} =~ .*pycache.* ]]; then
+    	echo 'stupid cache'
+    else
+    	dirs[i++]="${d%/}"
+    fi
 done
 
 

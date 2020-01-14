@@ -8,7 +8,6 @@ def getTrackData (bname = None):
     import models.PyEx.httplib2wwwauthenticate
     import models.PyEx.pipdistutilsscheme
     import models.PyEx.pipisurl
-    import models.PyEx.pycache
     import models.PyEx.pymongobsonencode
     import models.PyEx.pymongoloads
     import models.PyEx.pymongomongoclient
@@ -30,7 +29,6 @@ def getTrackData (bname = None):
     		  models.PyEx.httplib2wwwauthenticate,
     		  models.PyEx.pipdistutilsscheme,
     		  models.PyEx.pipisurl,
-    		  models.PyEx.pycache,
     		  models.PyEx.pymongobsonencode,
     		  models.PyEx.pymongoloads,
     		  models.PyEx.pymongomongoclient,

@@ -7,9 +7,36 @@ do
     dirs[i++]="${d%/}"
 done
 
+
+
+${VERSION//.}
+
+
 benchmarkName=${PWD##*/} 
 
 echo "There are ${#dirs[@]} dirs in the current path"
+
+# mv benchmarks
+for dir in "${dirs[@]}"
+do
+	tmpDir="${dir//-}"
+	tmpDir2="${tmpDir//_}"
+	tmpDir3="${tmpDir2//.}"
+
+if [ "$dir" != "$tmpDir3" ]; then
+	mv $dir $tmpDir3
+fi
+done 
+
+# redefine dirs
+declare -a dirs
+i=1
+for d in */
+do
+    dirs[i++]="${d%/}"
+done
+
+
 
 # create inner __init__.py
 for dir in "${dirs[@]}"

@@ -18,7 +18,24 @@ def run (eq,timeout,ploc,wd,solver="1",param="60"):
 
     tempd = tempfile.mkdtemp ()
     smtfile = os.path.join (tempd,"out.smt")
-    tools.woorpje2smt.run (eq,smtfile,ploc)
+    #tools.woorpje2smt.run (eq,smtfile,ploc)
+
+    # hack to insert (get-model), which is needed for cvc4 to output a model
+    f=open(eq,"r")
+    copy=open(smtfile,"w")
+
+    # set (set-logic ALL) if no logic was set
+    if "(set-logic" not in f[0]:
+        copy.write("(set-logic ALL)")
+
+    for l in f:
+        if "(get-model)" not in l:
+            copy.write(l)
+
+    copy.write("(get-model)")
+
+    f.close()
+    copy.close() 
 
     time = timer.Timer ()
     try:

@@ -24,11 +24,11 @@ def run (eq,timeout,ploc,wd,solver="1",param="60"):
     f=open(eq,"r")
     copy=open(smtfile,"w")
 
-    # set (set-logic ALL) if no logic was set
-    if "(set-logic" not in f[0]:
-        copy.write("(set-logic ALL)")
+    for i,l in enumerate(f):
+        # set (set-logic ALL) if no logic was set
+        if "(set-logic" not in f and i == 0:
+            copy.write("(set-logic ALL)")
 
-    for l in f:
         if "(get-model)" not in l:
             copy.write(l)
 

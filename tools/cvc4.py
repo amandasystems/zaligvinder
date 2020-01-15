@@ -23,17 +23,18 @@ def run (eq,timeout,ploc,wd,solver="1",param="60"):
     # hack to insert (get-model), which is needed for cvc4 to output a model
     f=open(eq,"r")
     copy=open(smtfile,"w")
-
-    # set (set-logic ALL) if no logic was set
-    if "(set-logic" not in f[0]:
-        copy.write("(set-logic ALL)")
-
+    
+    firstLine = True
     for l in f:
+        # set (set-logic ALL) if no logic was set
+        if "(set-logic" not in l and firstLine:
+            copy.write("(set-logic QF_S)\n")    
+            firstLine = False 
+        
         if "(get-model)" not in l:
             copy.write(l)
 
-    copy.write("(get-model)")
-
+    copy.write("\n(get-model)")
     f.close()
     copy.close() 
 

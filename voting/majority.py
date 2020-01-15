@@ -10,7 +10,6 @@ class MajorityVoter:
                 ctts = len(tts)
                 cffs = len(ffs)
                 cunk = len(unk)
-                print (ctts,cffs,cunk)
                 if ctts > 0 or cffs > 0:
                     #Someone made a conclusion
                     if ctts > cffs:

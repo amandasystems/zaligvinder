@@ -23,7 +23,6 @@ def run (eq,timeout,ploc,wd,solver="1",param="60"):
     # hack to insert (get-model), which is needed for cvc4 to output a model
     f=open(eq,"r")
     copy=open(smtfile,"w")
-    
     firstLine = True
     for l in f:
         # set (set-logic ALL) if no logic was set

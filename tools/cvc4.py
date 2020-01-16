@@ -28,7 +28,8 @@ def run (eq,timeout,ploc,wd,solver="1",param="60"):
         # set (set-logic ALL) if no logic was set
         if "(set-logic" not in l and firstLine:
             copy.write("(set-logic QF_S)\n")    
-            firstLine = False 
+        
+        firstLine = False 
         
         if "(get-model)" not in l:
             copy.write(l)

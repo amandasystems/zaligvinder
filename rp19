@@ -47,10 +47,10 @@ tracks = (models.PyEx.getTrackData () +
           []
 )
 #solvers = {
-#    'z3str3' : tools.z3str3.run,
-#    'z3seq' : tools.z3seq.run,
-#    'cvc4' : tools.cvc4.run,
-#    'trau' : toQols.trau.run
+    'z3str3' : tools.z3str3.run,
+    'z3seq' : tools.z3seq.run,
+    'cvc4' : tools.cvc4.run,
+    'trau' : toQols.trau.run
     #'norn' :  tools.norn.run,
     #'woorpje' :  tools.woorpjeSMT.run
 #}

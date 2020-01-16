@@ -26,6 +26,10 @@ import models.appscan
 import models.slothtests
 import models.light
 import models.Leetcode
+import models.cashewsuite
+import models.joacosuite
+import models.strangersuite
+import models.kauslersuite
 import startwebserver
 
 
@@ -44,6 +48,10 @@ tracks = (models.PyEx.getTrackData () +
           models.kaluza.getTrackData ("Kaluza") +
           models.stringfuzz.getTrackData ("StringFuzz Tests") +
           models.z3_regression.getTrackData("z3Str3 Regression Test")+
+          models.cashewsuite.getTrackData ("Cashew Suite") + 
+          models.joacosuite.getTrackData ("JOACO Suite") +
+          models.strangersuite.getTrackData ("Stranger Benchmarks") +
+          models.kauslersuite.getTrackData ("Kausler Suite") +
           []
 )
 #solvers = {

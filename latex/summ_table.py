@@ -9,17 +9,17 @@ class TableGenerator:
         self._groups = groups or [tup[0] for tup in list(self._track.getAllGroups ())]
         
     def genTableHeader (self):
-        fstr = "|".join(len(self._solvers)*[("*{{{}}}{{r}}".format (3))])
+        fstr = "|".join(len(self._solvers)*[("*{{{}}}{{r}}".format (4))])
         
         self._output.write ("\\begin{{tabular}}{{l {} }}\n".format(fstr))
         self._output.write ("\\toprule")
-        res = ["\multicolumn{{3}}{{c | }}{{{}}}".format (s) for s in self._solvers]
+        res = ["\multicolumn{{4}}{{c | }}{{{}}}".format (s) for s in self._solvers]
         self._output.write ("&"+"&".join (res))
         self._output.write ("\\\\ \n")
-        res = ["\\faCheck & \\faBomb & \\faClockO".format (s) for s in self._solvers]
+        res = ["\\faCheck & \\faTimes & \\faQuestion & \\faClockO".format (s) for s in self._solvers]
         self._output.write (" & "+"&".join (res) + " \\\\" )
         for i in range(0,len(self._solvers)):
-            self._output.write ("\cmidrule(lr){{{}-{}}}".format (1+i*3,1+(i+1)*3))
+            self._output.write ("\cmidrule(lr){{{}-{}}}".format (1+i*4,1+(i+1)*4))
     
         
     def getData (self):
@@ -30,7 +30,7 @@ class TableGenerator:
             lines = []
             for s in self._solvers:
                 res = self._res.getSummaryForSolverGroup (s,g)
-                lines.append ("{} & {} & {:.2f}".format(res[2],res[4],res[6]))
+                lines.append ("{} & {} &{} & {:.2f}".format(res[2],res[4],res[3],res[6]))
             self._output.write (g)
             self._output.write ("&"+"&".join (lines))
             self._output.write ("\\\\")

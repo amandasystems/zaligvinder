@@ -101,28 +101,30 @@ class ComparisonTable:
         tableColumn = 1
         for s in self._activeSolvers:
 
+            s_striped = str(s).replace("-", "")
+
             tt+='''
-                var model'''+str(s)+''' = "";
+                var model'''+s_striped+''' = "";
                 if (data[i][\''''+str(s)+'''\']['result'] == 1){
-                    model'''+str(s)+''' = "<clr-icon shape=\\"list\\" onclick=\\"show_model(\''''+str(s)+'''\',\'"+i+"\',\'"+data[i][\'name\']+"\',\'Model for "+data[i][\'name\']+" of '''+str(s)+'''\', \'/results/'''+str(s)+'''/"+i+"/model\');\\"></clr-icon>";
+                    model'''+s_striped+''' = "<clr-icon shape=\\"list\\" onclick=\\"show_model(\''''+str(s)+'''\',\'"+i+"\',\'"+data[i][\'name\']+"\',\'Model for "+data[i][\'name\']+" of '''+str(s)+'''\', \'/results/'''+str(s)+'''/"+i+"/model\');\\"></clr-icon>";
                 } else {
-                    model'''+str(s)+''' = "<clr-icon shape='no-access' style='color:#948981;'></clr-icon>";
+                    model'''+s_striped+''' = "<clr-icon shape='no-access' style='color:#948981;'></clr-icon>";
                 }
             '''
 
 
 
             tt+='''
-        var indicator'''+str(s)+''' = "";
+        var indicator'''+s_striped+''' = "";
         if (data[i][\''''+str(s)+'''\']['error'] == 1 || data[i][\''''+str(s)+'''\']['unique_answer'] == 1){
-            indicator'''+str(s)+''' = "-circle'  class='is-solid'";
+            indicator'''+s_striped+''' = "-circle'  class='is-solid'";
         } 
 
 
        row.insertCell ('''+str(tableColumn)+''').innerHTML = "";
-       row.insertCell ('''+str(tableColumn+1)+''').innerHTML = "<clr-icon shape='"+data[i][\''''+str(s)+'''\']['icon']+indicator'''+str(s)+'''+"'></clr-icon>";
+       row.insertCell ('''+str(tableColumn+1)+''').innerHTML = "<clr-icon shape='"+data[i][\''''+str(s)+'''\']['icon']+indicator'''+s_striped+'''+"'></clr-icon>";
        row.insertCell ('''+str(tableColumn+2)+''').innerHTML = data[i]["'''+str(s)+'''"]["time"];
-       row.insertCell ('''+str(tableColumn+3)+''').innerHTML = model'''+str(s)+''';
+       row.insertCell ('''+str(tableColumn+3)+''').innerHTML = model'''+s_striped+''';
        '''
 
             tableColumn+=4

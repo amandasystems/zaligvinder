@@ -496,7 +496,7 @@ class EntryView(BaseView):
                       </div>
                         <div class="card-block">
                             <p class="card-text">'''
-      tt+=str(len(self._solvers))+" solvers on "+str(len(self._tracks))+" tracks in "+str(len(self._bmarks))+" benchmark sets."
+      tt+="Your current setup features "+str(len(self._solvers))+" solvers on "+str(len(self._tracks))+" tracks in "+str(len(self._bmarks))+" benchmark sets."
 
 
       tt+='''
@@ -505,6 +505,94 @@ class EntryView(BaseView):
                     </div>
                 </div>
             </div>'''
+
+      tt= '''<div class="clr-row clr-justify-content-centerr">
+                <div class="clr-col">                
+                <div class="card">
+                       <div class="card-header">
+                          A short guide for ZaligVinder.
+                      </div>
+                        <div class="card-block">
+                            <p class="card-text">
+
+                              On the upper end of this web app you can choose between three categories which will be explained briefly here
+
+<ol class="list">
+<li><h3>Getting Started.</h3>
+This is the current page. It shows you nothing more than this small guide.
+</li>
+
+<li><h3>Benchmark Summary.</h3>
+This pages prints you a useful summary for all of your benchmark sets and tracks.
+
+The sub navigation on the right hand side allows you to choose a specific track or the summary for a whole set of benchmarks. You may have to scroll down to view other tracks.
+
+
+
+Each page offers you an overview table of grouped instances.
+
+The table holds the tool name, how many instances are declared as satisfiable resp. unsatisfiable, unknown instances (the solver terminates without a result before getting killed by the timeout limit), misclassification of an instance (error - currently done by a majority vote between all results of the solvers), timed out instances, the total amount within a track/set of benchmarks, and the overall solving time.
+
+The second table shows a ranking of each solver participating on a track. The grading is easily modifiable and currently is done as follows: 
+
+<ol class="list">
+<li>Instance declared correctly: solver count / position of the solver within all correctly classified solvers</li>
+  The fastest correctly classifying solver gets most of the points.</li>
+<li>Unknown declared instance before time out kills the solver: +1 Point.</li>
+<li>Timeout: -1 Point.</li>
+<li> Error: - solver count Points.</li></ol>
+
+The first diagram shows a distribution for each solver distinguishing between satisfiable/unsatisfiable and timed out resp. unknown instances.
+
+The next set of diagrams show the same distribution as before as a pie diagram. This makes an easier identification possible in some cases.
+
+A cactus diagram follows. In these kind of plots all instances are sorted by their solving time and listed ascending as a point within a line diagram. The first cactus plot lists all instances of a track / benchmark set. It gives an intuition of how quick a solver classifies all instances over time. The structure of a cactus plot automatically holds all timed out instances in the end. 
+
+Excluding the unknowns an errors gives an intuition of how quick a solver comes up with the correct answers.
+
+By clicking on a label of the graph, the user is able to active/deactivate a specific solver.
+</li>
+<li><h3>Tool Comparison</h3>
+This page offers you the opportunity to compare different solvers per instances; finding out what instances caused a good or a bad behaviour. 
+
+The navigation between different tracks and benchmark summaries is again done using the side navigation as explained previously.
+
+The top box allows you to choose between the available solvers by clicking on a label. Solvers highlighted in green are part of the current comparison. You can disable them by simply clicking the x. White labelled solvers are not part of the comparison. Active them again by a click.
+
+The comparison table holds the following elements:
+<ol class="list">
+<li>The instance name - corresponding to the input file. Click on the file icon to view the instance.</li>
+<li>For each solver (listed in the first row of the table):
+<ol class="list"><li>A Result classified by an icon. <clr-icon shape="check"></clr-icon> means the solver classified the instance as satisfiable, <clr-icon shape="times"></clr-icon> unsatisfiable and <clr-icon shape="unknown-status"></clr-icon> as unknown or timed out.</li>
+<li>Time to solve the instance</li>
+<li>The model. If a model is available click on the icon <clr-icon shape="list"></clr-icon>. The absense of a model is indicated by <clr-icon shape="no-access"></clr-icon>.</li></ol>
+</li></ol>
+The filter icon on the right hand side gives you the following options:
+<ol class="list">
+<li> Show unique classfied instances, that is if there is only on solver within the current view which classified the instance. The corresponding solver is marked by <clr-icon shape="check-circle" class="is-solid"></clr-icon> resp. <clr-icon shape="times-circle" class="is-solid">.</li>
+
+<li>Show instances with errors, where only wrongly classified instances given the technique are displayed. The column of the wrong solver is marked again with <clr-icon shape="check-circle" class="is-solid"></clr-icon> resp. <clr-icon shape="times-circle" class="is-solid"></clr-icon></li>
+
+<li>Show undeclared instances lists all instances where no solver found a solution.</li>
+
+<li>Only ambiguous answers is showing only instances where an error classification was not possible. This could for instance happen if we do not know the correct answer of an instance and the solvers are not agreeing.</li>
+</li></ol>
+
+
+
+
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>'''
+
+
+
+
+
+            
 
       sendto.write (bytes(tt,"utf8"))
 

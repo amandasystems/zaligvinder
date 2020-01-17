@@ -59,9 +59,19 @@ class Server:
 
     def startServer (self):
         self._app.run ()
-
+        
+        
 
 if __name__ == "__main__":
     import sys
-    db = storage.sqlitedb.DB (sys.argv[1])
+    if (len(sys.argv) >= 2):
+        db = storage.sqlitedb.DB (sys.argv[1])   
+    else:
+        import os
+        import ui
+        
+        uii =  ui.SelectDB (os.path.dirname(os.path.realpath(__file__)))
+        ui.init (uii)
+        db = uii.db
     Server (db).startServer()
+        

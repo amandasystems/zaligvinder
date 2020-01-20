@@ -203,7 +203,29 @@ class ResultRepository:
             rows = self._db.executeRet (query)
             #print (rows)
             return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
+
+
+    # faster classification
+    def get2ComparisonTrackResultsFasterClassified(self,trackid,solver1,solver2):
+        query = '''SELECT Result.solver, Result.instanceid, Result.timeouted, Result.result, TrackInstance.expected,Result.time FROM Result,TrackInstance,TrackInstanceMap WHERE Result.instanceid = TrackInstanceMap.instance AND TrackInstanceMap.track = ? AND TrackInstance.id = Result.instanceid AND Result.solver = ?'''
+        dataSolver1 = self._prepareClassificationData(self._db.executeRet (query, (trackid,solver1)))
+        dataSolver2 = self._prepareClassificationData(self._db.executeRet (query, (trackid,solver2)))
     
+        data = dict()
+        for iid in dataSolver1:
+            assert(len(dataSolver1[iid]) == 1 and len(dataSolver2[iid]) == 1)
+
+            if dataSolver1[iid][0][2] or dataSolver2[iid][0][2]:
+                continue
+
+            if dataSolver1[iid][0][4] < dataSolver2[iid][0][4]:
+                data[iid] = [dataSolver1[iid][0]]
+            else: 
+                data[iid] = [dataSolver2[iid][0]]
+
+
+        return data
+
     def getTrackResults (self,trackid):
         query = '''SELECT Result.solver, Result.instanceid, Result.smtcalls, Result.timeouted, Result.result, Result.time FROM Result,Track,TrackInstanceMap WHERE Result.instanceid = TrackInstanceMap.instance AND TrackInstanceMap.track = ? ORDER BY Result.time ASC'''
     

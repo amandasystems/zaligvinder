@@ -52,6 +52,7 @@ class Server:
         app.addEndpoint (webserver.routing.RegexMatch(""),self._ccontrollerJS.cdl_entry)
         app.addEndpoint (webserver.routing.RegexMatch("becnhmarks"),self._ccontrollerJS.cdl_test)
 
+        #app.addEndpoint (webserver.routing.RegexMatch("z3/(?P<track>\d+)"),self._rcontroller.getFasterClassifiedInstancesForTrack)
         
 
 

@@ -69,161 +69,26 @@ class BaseView(webserver.views.TextView.TextView):
            display: block;
            margin: 0;
        }
-       .ct-legend .ct-series-0:before {
-           background-color: hsl(198, 100%, 24%);
-           border-color: hsl(198, 100%, 24%);
-       }
-       .ct-legend .ct-series-1:before {
-           background-color: hsl(198, 0%, 27%);
-           border-color: hsl(198, 0%, 27%);
-       }
-       .ct-legend .ct-series-2:before {
-           background-color: hsl(282, 43%, 54%);
-           border-color: hsl(282, 43%, 54%);
-       }
-       .ct-legend .ct-series-3:before {
-           background-color: hsl(198, 54%, 92%);
-           border-color: hsl(198, 54%, 92%);
-       }
-       .ct-legend .ct-series-4:before {
-           background-color: hsl(198, 58%, 78%);
-           border-color: hsl(198, 58%, 78%);
-       }
-       .ct-legend .ct-series-5:before {
-           background-color: #CD3517;
-           border-color: #CD3517;
-       }
-              .ct-legend .ct-series-6:before {
-           background-color: #798893;
-           border-color: #798893;
-       }
-              .ct-legend .ct-series-7:before {
-           background-color: #495A67;
-           border-color: #495A67;
-       }
-              .ct-legend .ct-series-8:before {
-           background-color: #FFCCB5;
-           border-color: #FFCCB5;
-       }
-              .ct-legend .ct-series-9:before {
-           background-color: #C1CDD4;
-           border-color: #C1CDD4;
-       }
-              .ct-legend .ct-series-10:before {
-           background-color: #FF8142;
-           border-color: #FF8142;
-       }
-              .ct-legend .ct-series-11:before {
-           background-color: #6FEAD9;
-           border-color: #6FEAD9;
-       }
-              .ct-legend .ct-series-12:before {
-           back<ound-color: #00D4B8;
-           border-color: #00D4B8;
-       }
 
-                     .ct-legend .ct-series-13:before {
-           back<ound-color: #48960C ;
-           border-color: #48960C;
-       }
+      '''
 
-       .ct-legend .ct-series-14:before {
-           back<ound-color: #85C81A;
-           border-color: #85C81A;
-       }
+        #colors = [ "#0065AB" ,"#007E7A", "#A6D8E7", "#CD3517","#FF8142","#85C81A","#1D5100","#8939AD","#4D007A","#00D4B8","#25333D","#007E7A","#0F1E82","#4E56B8","#798893","#49AFD9",]
+        colors = ["#25333D","#0065AB","#8939AD","#007E7A","#318700","#CD3517","#80746D","#FF9A69"]
 
-       .ct-legend .ct-series-15:before {
-           back<ound-color: #FF5500;
-           border-color: #FF5500;
-       }
+        for i,c in enumerate(colors):
+          top+='''.ct-legend .ct-series-'''+str(i)+''':before {
+                     background-color: '''+c+''';
+                     border-color: '''+c+''';
+                 }'''
+          nextChar = chr(ord('a') + i)
+          top+='''.ct-series-'''+nextChar+''' .ct-point, .ct-series-'''+nextChar+''' .ct-line, .ct-series-'''+nextChar+''' .ct-bar, .ct-series-'''+nextChar+''' .ct-slice-donut {
+            stroke: '''+c+'''; }
 
-       .ct-legend .ct-series-16:before {
-           back<ound-color: #80746D;
-           border-color: #80746D;
-       }
+          .ct-series-'''+nextChar+''' .ct-slice-pie, .ct-series-'''+nextChar+''' .ct-slice-donut-solid, .ct-series-'''+nextChar+''' .ct-area {
+            fill: '''+c+'''; }'''
 
-       .ct-legend .ct-series-17:before {
-           back<ound-color: #314351;
-           border-color: #314351;
-       }
 
-       .ct-legend .ct-series-18:before {
-           back<ound-color: #C1CDD4;
-           border-color: #C1CDD4;
-       }
-
-        .ct-series-a .ct-point, .ct-series-a .ct-line, .ct-series-a .ct-bar, .ct-series-a .ct-slice-donut {
-          stroke: hsl(198, 100%, 24%); }
-
-        .ct-series-a .ct-slice-pie, .ct-series-a .ct-slice-donut-solid, .ct-series-a .ct-area {
-          fill: hsl(198, 100%, 24%); }
-
-        .ct-series-b .ct-point, .ct-series-b .ct-line, .ct-series-b .ct-bar, .ct-series-b .ct-slice-donut {
-          stroke: hsl(198, 0%, 27%); }
-
-        .ct-series-b .ct-slice-pie, .ct-series-b .ct-slice-donut-solid, .ct-series-b .ct-area {
-          fill: hsl(198, 0%, 27%); }
-
-        .ct-series-c .ct-point, .ct-series-c .ct-line, .ct-series-c .ct-bar, .ct-series-c .ct-slice-donut {
-          stroke: hsl(282, 43%, 54%); }
-
-        .ct-series-c .ct-slice-pie, .ct-series-c .ct-slice-donut-solid, .ct-series-c .ct-area {
-          fill: hsl(282, 43%, 54%); }
-
-        .ct-series-d .ct-point, .ct-series-d .ct-line, .ct-series-d .ct-bar, .ct-series-d .ct-slice-donut {
-          stroke: hsl(198, 54%, 92%); }
-
-        .ct-series-d .ct-slice-pie, .ct-series-d .ct-slice-donut-solid, .ct-series-d .ct-area {
-          fill: hsl(198, 54%, 92%); }
-
-        .ct-series-e .ct-point, .ct-series-e .ct-line, .ct-series-e .ct-bar, .ct-series-e .ct-slice-donut {
-          stroke: hsl(198, 58%, 78%); }
-
-        .ct-series-e .ct-slice-pie, .ct-series-e .ct-slice-donut-solid, .ct-series-e .ct-area {
-          fill: hsl(198, 58%, 78%); }
-
-        .ct-series-f .ct-point, .ct-series-f .ct-line, .ct-series-f .ct-bar, .ct-series-f .ct-slice-donut {
-          stroke: hsl(198, 0%, 45%); }
-
-        .ct-series-f .ct-slice-pie, .ct-series-f .ct-slice-donut-solid, .ct-series-f .ct-area {
-          fill: hsl(198, 0%, 45%); }
-
-        .ct-series-g .ct-point, .ct-series-g .ct-line, .ct-series-g .ct-bar, .ct-series-g .ct-slice-donut {
-          stroke: hsl(14, 91%, 55%); }
-
-        .ct-series-g .ct-slice-pie, .ct-series-g .ct-slice-donut-solid, .ct-series-g .ct-area {
-          fill: hsl(14, 91%, 55%); }
-
-        .ct-series-h .ct-point, .ct-series-h .ct-line, .ct-series-h .ct-bar, .ct-series-h .ct-slice-donut {
-          stroke: hsl(14, 83%, 84%); }
-
-        .ct-series-h .ct-slice-pie, .ct-series-h .ct-slice-donut-solid, .ct-series-h .ct-area {
-          fill: hsl(14, 83%, 84%); }
-
-        .ct-series-i .ct-point, .ct-series-i .ct-line, .ct-series-i .ct-bar, .ct-series-i .ct-slice-donut {
-          stroke: #FFCCB5; }
-
-        .ct-series-i .ct-slice-pie, .ct-series-i .ct-slice-donut-solid, .ct-series-i .ct-area {
-          fill: #FFCCB5; }
-
-        .ct-series-j .ct-point, .ct-series-j .ct-line, .ct-series-j .ct-bar, .ct-series-j .ct-slice-donut {
-          stroke: #C1CDD4; }
-
-        .ct-series-j .ct-slice-pie, .ct-series-j .ct-slice-donut-solid, .ct-series-j .ct-area {
-          fill: #C1CDD4; }
-
-        .ct-series-k .ct-point, .ct-series-k .ct-line, .ct-series-k .ct-bar, .ct-series-k .ct-slice-donut {
-          stroke: #FF8142; }
-
-        .ct-series-k .ct-slice-pie, .ct-series-k .ct-slice-donut-solid, .ct-series-k .ct-area {
-          fill: #FF8142; }
-
-        .ct-series-l .ct-point, .ct-series-l .ct-line, .ct-series-l .ct-bar, .ct-series-l .ct-slice-donut {
-          stroke: #6FEAD9; }
-
-        .ct-series-l .ct-slice-pie, .ct-series-l .ct-slice-donut-solid, .ct-series-l .ct-area {
-          fill: #6FEAD9; }
-
+        top+='''
         [class^=".badge.badge-"], .badge[class*=" badge-"] {
             background:#FAFAFA; 
             color: #737373;
@@ -606,6 +471,4 @@ The filter icon on the right hand side gives you the following options:
         sendto.write (bytes('''</div>''',"utf8"))
         #self.genSideNavigation (sendto)
         sendto.write (bytes('''</div></div>''',"utf8"))
-
-
 

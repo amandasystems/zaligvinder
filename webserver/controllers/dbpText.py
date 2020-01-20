@@ -5,7 +5,6 @@ class DBPTest:
     def __init__(self,result):
         self._result = result
 
-
     def cdl_entry(self,params):
         solvers = self._result.getSolvers ()
         data = self._result.getTrackInfo ()

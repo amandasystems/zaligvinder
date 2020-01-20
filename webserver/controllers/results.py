@@ -222,6 +222,40 @@ class ResultController:
 
 
 
+    def getFasterClassifiedInstancesForTrack(self,params):
+        if "solvers" in params and "track" in params and len(params["solvers"]) == 2:
+            solver1 = params["solvers"][0]
+            solver2 = params["solvers"][1]
+            #trackid = params["track"][0]
+
+
+            groups = self._results.getTrackInfo ()
+
+            for bgroup in groups: 
+                print("Benchmark set " + str(bgroup))
+                for (trackid,tname) in groups[bgroup]:
+                    print("Track " + str(tname))
+                    data = self._results.get2ComparisonTrackResultsFasterClassified(trackid,solver1,solver2)
+
+                    for iid in data:
+                        print(data[iid])
+
+                    print("-----------------------")
+
+                print("++++++++++++++++++++++++++++")
+
+
+
+
+
+
+            return webserver.views.jsonview.JSONView ("")
+        else:
+            return webserver.views.jsonview.JSONView ({"Error" : "Missing parameter"})
+
+
+
+
 
 
 

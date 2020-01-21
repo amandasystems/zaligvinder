@@ -44,11 +44,11 @@ def run (eq,timeout,ploc,wd):
         out = "Error in " + eq + ": " + str(e)
         return utils.Result(None,timeout,False,1,out)
 
-    if "NOT IMPLEMENTED YET!" in out:
-        out = "Error in " + eq + ": " + out
-   
-   
-    time.stop()
+    time.stop()    
+
+    if "NOT IMPLEMENTED YET!" in out and not time >= timeout:
+        out = "Error in " + eq + ": " + out    
+        
     shutil.rmtree (tempd)
     if "unsat" in out:
         return utils.Result(False,time.getTime (),False,1,out)

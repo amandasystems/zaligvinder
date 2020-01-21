@@ -104,8 +104,12 @@ class ComparisonTable:
             s_striped = str(s).replace("-", "")
 
             tt+='''
-                var model'''+s_striped+''' = "";
-                if (data[i][\''''+str(s)+'''\']['result'] == 1){
+                var model'''+s_striped+''' = "";                
+                var programError'''+s_striped+''' = data[i][\''''+str(s)+'''\']['programError'];
+
+                if (programError'''+s_striped+''' == 1){
+                    model'''+s_striped+''' = "<clr-icon shape=\\"error-standard\\" class=\\"is-solid\\" onclick=\\"show_model(\''''+str(s)+'''\',\'"+i+"\',\'"+data[i][\'name\']+"\',\'Output for "+data[i][\'name\']+" of '''+str(s)+'''\', \'/results/'''+str(s)+'''/"+i+"/output\');\\"></clr-icon>";
+                } else if (data[i][\''''+str(s)+'''\']['result'] == 1){
                     model'''+s_striped+''' = "<clr-icon shape=\\"list\\" onclick=\\"show_model(\''''+str(s)+'''\',\'"+i+"\',\'"+data[i][\'name\']+"\',\'Model for "+data[i][\'name\']+" of '''+str(s)+'''\', \'/results/'''+str(s)+'''/"+i+"/model\');\\"></clr-icon>";
                 } else {
                     model'''+s_striped+''' = "<clr-icon shape='no-access' style='color:#948981;'></clr-icon>";
@@ -116,7 +120,7 @@ class ComparisonTable:
 
             tt+='''
         var indicator'''+s_striped+''' = "";
-        if (data[i][\''''+str(s)+'''\']['error'] == 1 || data[i][\''''+str(s)+'''\']['unique_answer'] == 1){
+        if ((data[i][\''''+str(s)+'''\']['error'] == 1 || data[i][\''''+str(s)+'''\']['unique_answer'] == 1) && programError'''+s_striped+''' == 0){
             indicator'''+s_striped+''' = "-circle'  class='is-solid'";
         } 
 

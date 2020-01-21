@@ -34,9 +34,14 @@ def run (eq,timeout,ploc,wd):
         out = subprocess.check_output ([path,"smt.string_solver=seq","dump_models=true",smtfile],timeout=timeout).decode().strip()
     except subprocess.TimeoutExpired:
         return utils.Result(None,timeout,True,1)
-    except subprocess.CalledProcessError:
-        return utils.Result(None,timeout,False,1)
-    time.stop()
+    except subprocess.CalledProcessError as e:
+        out = "Error in " + eq + ": " + str(e)
+        return utils.Result(None,timeout,False,1,out)
+
+    time.stop()    
+
+    if "NOT IMPLEMENTED YET!" in out and not time >= timeout:
+        out = "Error in " + eq + ": " + out    
     shutil.rmtree (tempd)
     if "unsat" in out:
         return utils.Result(False,time.getTime (),False,1,out)

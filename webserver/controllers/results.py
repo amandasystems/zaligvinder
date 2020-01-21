@@ -186,6 +186,8 @@ class ResultController:
                         expectedResultSet = True
                     instanceName = tt[3]
                 error = 1 if expectedResult != tt[4].result and expectedResultSet and tt[4].result != None else 0
+                programError = 1 if "Error" in tt[5] else 0
+
                 errorFound = 1 if error == 1 or errorFound == 1 else 0
                 data[iid][tt[0]] = { "smtcalls" : tt[4].smtcalls,
                                      "timeouted" : tt[4].timeouted,
@@ -193,7 +195,8 @@ class ResultController:
                                      "icon" : self._mapResultToIcon(tt[4].result),
                                      "time" : "%.2f" % tt[4].time,
                                      "error" : error,
-                                     "unique_answer" : 0}
+                                     "unique_answer" : 0,
+                                     "programError" : programError}
                 if tt[4].result != None and error == 0:
                     classifications+=[tt[0]]
                     if tt[4].result == 1:

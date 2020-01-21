@@ -77,6 +77,10 @@ class ComparisonTable:
         self._curParams = params
     
     def javascript (self):
+
+        # tool error string
+        toolErrorStr = ("".join (['''data[i]['{}']['programError'] == 1 ||'''.format (s) for s in self._activeSolvers]))[:-2]
+
         tt = '''<script>function addComparisonDataTable (data) {
         var tableRef = document.getElementById("comparison_table").getElementsByTagName("tbody")[0];
         var row = tableRef.insertRow ();
@@ -93,6 +97,10 @@ class ComparisonTable:
         else if (data[i]["ambiguous_answer)"] == 1){
             row.classList.add("ambiguous_row");    
         } 
+
+        if ('''+toolErrorStr+'''){
+            row.classList.add("toolError_row");    
+        }
 
         row.classList.add("common_row");
         row.insertCell (0).innerHTML = "<clr-icon shape=\\"file\\" onclick=\\"show_model(\'\',\'"+i+"\',\'"+data[i][\'name\']+"\',\'Instance "+data[i][\'name\']+"\', \'/instances/"+i+"/model.smt\');\\"></clr-icon> "+data[i]["name"];   
@@ -255,6 +263,7 @@ class ComparisonTable:
                         <div class="dropdown-item"><a onclick="just_enable_rows('error');open_close_menu();" href="javascript:void(0);">Only instances with errors</a></div>
                         <div class="dropdown-item"><a onclick="just_enable_rows('unknown');open_close_menu();" href="javascript:void(0);">Only undeclared instances</a></div>
                         <div class="dropdown-item"><a onclick="just_enable_rows('ambiguous');open_close_menu();" href="javascript:void(0);">Only ambiguous declared instances</a></div>
+                        <div class="dropdown-item"><a onclick="just_enable_rows('toolError');open_close_menu();" href="javascript:void(0);">Only instances where a tool terminated unexpectedly</a></div>
                         <div class="dropdown-divider"></div>
                         <div class="dropdown-item"><a onclick="just_enable_rows('common');open_close_menu();" href="javascript:void(0);">All instances</a></div>
                     </div>

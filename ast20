@@ -87,20 +87,20 @@ solvers_woorpje = {}
 #tools.woorpje_heuristics.addRunners ("variableTermRatio",smtsolvers,3.14,solvers)
 
 tools.woorpje_heuristics.addRunners ("variableTermRatio",smtsolvers,3.14,solvers_woorpje)
-tools.woorpje_heuristics.addRunners ("variableTermRatio",smtsolvers,0.15,solvers_woorpje)
-tools.woorpje_heuristics.addRunners ("variableTermRatio",smtsolvers,1.12358,solvers_woorpje)
+#tools.woorpje_heuristics.addRunners ("variableTermRatio",smtsolvers,0.15,solvers_woorpje)
+#tools.woorpje_heuristics.addRunners ("variableTermRatio",smtsolvers,1.12358,solvers_woorpje)
 
-tools.woorpje_heuristics.addRunners ("waitingListLimit",smtsolvers,314,solvers_woorpje)
+#tools.woorpje_heuristics.addRunners ("waitingListLimit",smtsolvers,314,solvers_woorpje)
 tools.woorpje_heuristics.addRunners ("waitingListLimit",smtsolvers,15,solvers_woorpje)
-tools.woorpje_heuristics.addRunners ("waitingListLimit",smtsolvers,1123,solvers_woorpje)
+#tools.woorpje_heuristics.addRunners ("waitingListLimit",smtsolvers,1123,solvers_woorpje)
 
-tools.woorpje_heuristics.addRunners ("equationGrowth",smtsolvers,0.15,solvers_woorpje)
+#tools.woorpje_heuristics.addRunners ("equationGrowth",smtsolvers,0.15,solvers_woorpje)
 tools.woorpje_heuristics.addRunners ("equationGrowth",smtsolvers,1.075,solvers_woorpje)
-tools.woorpje_heuristics.addRunners ("equationGrowth",smtsolvers,2.0,solvers_woorpje)
+#tools.woorpje_heuristics.addRunners ("equationGrowth",smtsolvers,2.0,solvers_woorpje)
 
-tools.woorpje_heuristics.addRunners ("equationLength",smtsolvers,2,solvers_woorpje)
+#tools.woorpje_heuristics.addRunners ("equationLength",smtsolvers,2,solvers_woorpje)
 tools.woorpje_heuristics.addRunners ("equationLength",smtsolvers,20,solvers_woorpje)
-tools.woorpje_heuristics.addRunners ("equationLength",smtsolvers,400,solvers_woorpje)
+#tools.woorpje_heuristics.addRunners ("equationLength",smtsolvers,400,solvers_woorpje)
 
 tools.woorpje_heuristics.addRunners ("none",smtsolvers,5,solvers_woorpje)
 

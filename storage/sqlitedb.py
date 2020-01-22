@@ -130,6 +130,16 @@ class ResultRepository:
         rows = self._db.executeRet (query)
         return [t[0] for  t in rows]
 
+    def getSolversForTrack (self,trackid):
+        query = '''SELECT DISTINCT solver  FROM Result,TrackInstanceMap WHERE Result.instanceid = TrackInstanceMap.instance AND TrackInstanceMap.track = ?'''
+        rows = self._db.executeRet (query,(trackid,))
+        return [t[0] for  t in rows]
+
+    def getSolversForGroup (self,bgroup):
+        query = '''SELECT DISTINCT solver  FROM Result,TrackInstanceMap,Track WHERE Result.instanceid = TrackInstanceMap.instance AND TrackInstanceMap.track = Track.id AND Track.bgroup = ?'''
+        rows = self._db.executeRet (query,(bgroup,))
+        return [t[0] for  t in rows]
+
     def getTrackIds (self):
         query = '''SELECT DISTINCT track  FROM TrackInstanceMap'''
         rows = self._db.executeRet (query)

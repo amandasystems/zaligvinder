@@ -17,7 +17,7 @@ class DBPTest:
         return webserver.views.charts.base.EntryView (benchmarks,tracks,solvers)
         
     def cdl_test (self,params):
-        solvers = self._result.getSolvers ()
+        #solvers = self._result.getSolvers ()
         data = self._result.getTrackInfo ()
         benchmarks = data.keys()
         if "bgroup" in params:
@@ -33,6 +33,13 @@ class DBPTest:
             if tid == ctrack:
                 trackname = name
                 break
+
+
+        if trackname != None:
+            solvers = self._result.getSolversForTrack(ctrack)
+        else:
+            solvers = self._result.getSolversForGroup(activeGroup)
+
 
         tracksmap = dict()
         for bgroup in data:
@@ -50,7 +57,7 @@ class DBPTest:
         )
 
     def cdl_comparison (self,params):
-        solvers = self._result.getSolvers ()
+        #solvers = self._result.getSolvers ()
         data = self._result.getTrackInfo ()
         benchmarks = data.keys()
         if "bgroup" in params:
@@ -58,10 +65,6 @@ class DBPTest:
         else:
             activeGroup = list(data.keys())[0]
 
-        if "solvers" in params:
-            activeSolvers = params["solvers"]
-        else: 
-            activeSolvers = [solvers[0]]
 
 
         #tracks = data[activeGroup]
@@ -72,6 +75,19 @@ class DBPTest:
             if tid == ctrack:
                 trackname = name
                 break
+
+        if trackname != None:
+            solvers = self._result.getSolversForTrack(ctrack)
+        else:
+            solvers = self._result.getSolversForGroup(activeGroup)
+
+
+
+        if "solvers" in params:
+            activeSolvers = params["solvers"]
+        else: 
+            activeSolvers = [solvers[0]]
+
 
         tracksmap = dict()
         for bgroup in data:

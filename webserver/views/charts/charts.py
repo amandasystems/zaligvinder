@@ -368,7 +368,7 @@ class Pie:
             head.setAttribute ("class","card-title");
             head.innerHTML = "Pie Chart for " + snames[i];
             var chart = document.createElement ("div")
-            chartname = snames[i]+"pie";
+            chartname = snames[i].split('.').join("")+"pie";
             chart.setAttribute ("class","ct-chart");
             chart.setAttribute ("id",chartname);
             

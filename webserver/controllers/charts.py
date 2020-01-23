@@ -11,12 +11,20 @@ class ChartController:
 
     def generateCactus(self,params):
         rdata = {}
+
+        group = params["bgroup"][0]
+        track = int(params["track"][0])
+
         if "solver" in params:
             solvers = params["solver"]
         else:
-            solvers = self._result.getSolvers ()
-        group = params["bgroup"][0]
-        track = int(params["track"][0])
+            #solvers = self._result.getSolvers ()
+            if track != 0:
+                solvers = self._result.getSolversForTrack(track)
+            else:
+                solvers = self._result.getSolversForGroup(group)
+
+
         #print ("Chart",group,track)
         if "nounk" not in params:
             results_for_solver_func=self._result.getResultForSolverGroup
@@ -42,10 +50,7 @@ class ChartController:
     
     def generateTrackDistribution (self,params):
         rdata = {}
-        if "solver" in params:
-            solvers = params["solver"]
-        else:
-            solvers = self._result.getSolvers ()
+
         group = params["bgroup"][0]
         
         if not isinstance(params["track"],list):
@@ -53,6 +58,15 @@ class ChartController:
         else:
             track = int(params["track"][0])
 
+
+        if "solver" in params:
+            solvers = params["solver"]
+        else:
+            #solvers = self._result.getSolvers ()
+            if track != 0:
+                solvers = self._result.getSolversForTrack(track)
+            else:
+                solvers = self._result.getSolversForGroup(group)
 
 
         for solv in solvers:

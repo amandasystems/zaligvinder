@@ -19,7 +19,7 @@ class ResultController:
             'not satisfied' :  nsatis,
             'error' : errors,
             'Unknown' : unk,
-            'time' : time,
+            'time' : "%.2f" % time,
             'instances' : instances
             }
         return webserver.views.jsonview.JSONView (res)
@@ -40,7 +40,7 @@ class ResultController:
             'not satisfied' :  nsatis,
             'error': errors,
             'Unknown' : unk,
-            'time' : time,
+            'time' : "%.2f" % time,
             'instances' : instances
             }
         return webserver.views.jsonview.JSONView (res)
@@ -105,7 +105,7 @@ class ResultController:
                                                         "smtcalls" : tt[2].smtcalls,
                                                         "timeouted" : tt[2].timeouted,
                                                         "result" : tt[2].result,
-                                                        "time" : tt[2].time}
+                                                        "time" : "%.2f" % tt[2].time}
                                                     }
                                                      for tt in instances])
     
@@ -130,7 +130,7 @@ class ResultController:
                                                             "smtcalls" : tt[2].smtcalls,
                                                             "timeouted" : tt[2].timeouted,
                                                             "result" : tt[2].result,
-                                                        "time" : tt[2].time}
+                                                        "time" : "%.2f" % tt[2].time}
                                                     }
                                                        for tt in instances])
         else:

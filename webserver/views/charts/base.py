@@ -70,17 +70,12 @@ class BaseView(webserver.views.TextView.TextView):
            margin: 0;
        }
 
-       svg.ct-chart-bar, svg.ct-chart-line{
-        overflow: visible;
-      }
-      .ct-label.ct-label.ct-horizontal.ct-end {
-        position: relative;
-        justify-content: flex-end;
-        text-align: right;
-        transform-origin: 100% 0;
-        transform: translate(-100%) rotate(-45deg);
-        white-space:nowrap;
-      }
+    .ct-label.ct-horizontal.ct-end {
+       font-size: 10px !important;
+       white-space:nowrap;
+       writing-mode:vertical-rl; 
+       transform:  translateX(-50%) translateY(10%);
+     }
 
       '''
 
@@ -443,7 +438,8 @@ The comparison table holds the following elements:
 <li>For each solver (listed in the first row of the table):
 <ol class="list"><li>A Result classified by an icon. <clr-icon shape="check"></clr-icon> means the solver classified the instance as satisfiable, <clr-icon shape="times"></clr-icon> unsatisfiable and <clr-icon shape="unknown-status"></clr-icon> as unknown or timed out.</li>
 <li>Time to solve the instance</li>
-<li>The model. If a model is available click on the icon <clr-icon shape="list"></clr-icon>. The absense of a model is indicated by <clr-icon shape="no-access"></clr-icon>.</li></ol>
+<li>The model. If a model is available click on the icon <clr-icon shape="list"></clr-icon>. The absense of a model is indicated by <clr-icon shape="no-access"></clr-icon>. Whenever a solver terminated unexpectedly we indicate this behaviour by <clr-icon shape="error-standard" class="is-solid"></clr-icon>. Click on the icon to view the solvers output.
+</li></ol>
 </li></ol>
 The filter icon on the right hand side gives you the following options:
 <ol class="list">
@@ -452,6 +448,8 @@ The filter icon on the right hand side gives you the following options:
 <li>Show instances with errors, where only wrongly classified instances given the technique are displayed. The column of the wrong solver is marked again with <clr-icon shape="check-circle" class="is-solid"></clr-icon> resp. <clr-icon shape="times-circle" class="is-solid"></clr-icon></li>
 
 <li>Show undeclared instances lists all instances where no solver found a solution.</li>
+
+<li>Show only instances, where the solver terminated unexpectedly.</li>
 
 <li>Only ambiguous answers is showing only instances where an error classification was not possible. This could for instance happen if we do not know the correct answer of an instance and the solvers are not agreeing.</li>
 </li></ol>

@@ -5,6 +5,7 @@ class ConfigureTableGeneration:
     def __init__(self,res,track):
         self._res = res
         self._track = track
+        self._techniques = ["LaTeX","Markdown"]
     
     def start (self,*args):
         groups = [tup[0] for tup in list(self._track.getAllGroups ())]
@@ -16,7 +17,7 @@ class ConfigureTableGeneration:
         
         G = npyscreen.Form(name='Select Benchmarks Groups')
         selgroup = G.add(npyscreen.MultiSelect, 
-               name='Select Benchmark Grouos',
+               name='Select Benchmark Groups',
                values = groups,
                scroll_exit = True  # Let the user move out of the widget by pressing the down arrow instead of tab.  Try it without
          #to see the difference.
@@ -30,13 +31,24 @@ class ConfigureTableGeneration:
                scroll_exit = True  # Let the user move out of the widget by pressing the down arrow instead of tab.  Try it without
                                                     # to see the difference.
         )
+
+        I = npyscreen.Form(name='Select Output Format')
+        
+        seltable = I.add(npyscreen.TitleSelectOne, 
+               name='Table Technique',
+               values = self._techniques,
+               scroll_exit = True  # Let the user move out of the widget by pressing the down arrow instead of tab.  Try it without
+                                                    # to see the difference.
+        )
         
         
         F.edit ()
         G.edit ()
         H.edit ()
+        I.edit ()
         self.groups = [selgroup.values[i] for i in selgroup.value]
         self.solvers = [selsolv.values[i] for i in selsolv.value]
+        self.tableStyle = [seltable.values[i] for i in seltable.value][0]
         self.loc = outputloc.value
         
         #self.db = storage.sqlitedb.DB (tt.values[tt.value[0]])

@@ -1,6 +1,7 @@
 import os
 import ui
 import latex.summ_table
+import markdown.summ_table
 import storage
         
 uii =  ui.SelectDB (os.path.dirname(os.path.realpath(__file__)))
@@ -14,7 +15,11 @@ finalui = ui.ConfigureTableGeneration (results,track)
 ui.init (finalui)
 
 
-print (finalui.groups,finalui.solvers,finalui.loc)
-table = latex.summ_table.TableGenerator (results,track,finalui.solvers,finalui.groups)
+print (finalui.groups,finalui.solvers,finalui.loc,finalui.tableStyle)
+
+if finalui.tableStyle == "Markdown":
+	table = markdown.summ_table.TableGenerator (results,track,finalui.solvers,finalui.groups)
+else:
+	table = latex.summ_table.TableGenerator (results,track,finalui.solvers,finalui.groups)
 with open(finalui.loc,'w') as f:
     table.generateTable (f)

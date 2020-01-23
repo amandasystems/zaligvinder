@@ -70,6 +70,18 @@ class BaseView(webserver.views.TextView.TextView):
            margin: 0;
        }
 
+       svg.ct-chart-bar, svg.ct-chart-line{
+        overflow: visible;
+      }
+      .ct-label.ct-label.ct-horizontal.ct-end {
+        position: relative;
+        justify-content: flex-end;
+        text-align: right;
+        transform-origin: 100% 0;
+        transform: translate(-100%) rotate(-45deg);
+        white-space:nowrap;
+      }
+
       '''
 
         #colors = [ "#0065AB" ,"#007E7A", "#A6D8E7", "#CD3517","#FF8142","#85C81A","#1D5100","#8939AD","#4D007A","#00D4B8","#25333D","#007E7A","#0F1E82","#4E56B8","#798893","#49AFD9",]

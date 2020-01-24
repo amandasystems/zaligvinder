@@ -335,7 +335,7 @@ class Distribution:
         ]
         };
         console.log(datadistr1)
-var optionsdistr1 = { fullWidth: true,chartPadding: {right: 40}, plugins: [Chartist.plugins.legend({})] };
+var optionsdistr1 = { fullWidth: true,chartPadding: {right: 40},  seriesBarDistance: 12, plugins: [Chartist.plugins.legend({})] };
         new Chartist.Bar("#distr1", datadistr1,optionsdistr1);
 
         }

@@ -3,9 +3,9 @@ A string solving benchmark framework
 :toc: left
 :stem:
 
-The increased interest in string solving in the recent years has made
+_The_ increased interest in string solving in the recent years has made
 it very hard to identify the right tool to address a particular user's purpose. Firstly, there is a multitude of string solving, each addressing essentially some subset of the general problem. Generally, the addressed fragments are relevant and well motivated, but 
-the lack of comparisons between the existing tools on an equal set of benchmarks, cannot go unnoticed, especially as a common framework to compare solvers seems to be missing. In this paper we gather a set of relevant benchmarks and introduce our new benchmarking framework ZaligVinder to address this purpose. 
+the lack of comparisons between the existing tools on an equal set of benchmarks cannot go unnoticed, especially as a common framework to compare solvers seems to be missing. In this paper we gather a set of relevant benchmarks and introduce our new benchmarking framework ZaligVinder to address this purpose. 
 
 
 == Setting up ZaligVinder
@@ -18,26 +18,27 @@ On the upper end of our web app you can choose between three categories which ar
 This is the current page. It shows you nothing more than this small guide.
 
 === Benchmark Summary
-This pages prints you a useful summary for all of your benchmark sets and tracks. 
+This pages displays a summary for all of your benchmark sets and tracks.
 
 The sub navigation on the right hand side allows you to choose a specific track or the summary for a whole set of benchmarks. You may have to scroll down to view other tracks.
 
 [.text-center]
 image::img/subnav.png[Sub navigation]
 
-Each page offers you an overview table of grouped instances. The table holds the tool name, how many instances are declared as satisfiable resp. unsatisfiable, unknown instances (the solver terminates without a result before getting killed by the timeout limit), misclassification of an instance (error - currently done by a majority vote between all results of the solvers), timed out instances, the total amount within a track/set of benchmarks, and the overall solving time. 
+Each page offers the user an overview table of grouped instances. The table holds the tool name, how many instances are declared as satisfiable resp. unsatisfiable, unknown instances (the solver terminates without a result before getting killed by the timeout limit), misclassification of an instance (error - currently done by a majority vote between all results of the solvers), timed out instances, the total amount within a track/set of benchmarks, and the overall solving time. 
 
 [.text-center]
 image::img/overview.png[Overview table]
 
 
 The second table shows a ranking of each solver participating on a track. The grading is easily modifiable and currently is done as follows:
-1. Instance declared correctly: solver count / position of the solver within all correctly classified solvers
-2. The fastest correctly classifying solver gets most of the points.
-3. Unknown declared instance before time out kills the solver: 
-	- +1 Point.
-	- Timeout: -1 Point.
-	- Error: - solver count Points.
+
+* Instance declared correctly: +(`#solver` / `#pos`) Points, meaning the fastest correctly classifying solver gets most of the points.
+* Unknown declared instance before timeout kills the solver: +1 Point.
+* Timeout: -1 Point.
+* Error: -`#solver` Points.
+
+where `#solver` is the amount of solvers being part of a benchmark set and `#pos` the position of the solver within all solvers who classified an instance correctly.
 
 [.text-center]
 image::img/ranks.png[Ranking table]
@@ -75,11 +76,12 @@ The top box allows you to choose between the available solvers by clicking on a 
 image::img/label.png[Tool selection]
 
 The comparison table holds the following elements:
-1. The instance name - corresponding to the input file. Click on the file icon to view the instance.
-2. For each solver (listed in the first row of the table):
-	- A Result classified by an icon.  means the solver classified the instance as satisfiable, unsatisfiable and  as unknown or timed out.
-	- Time to solve the instance
-	- The model. If a model is available click on the icon . The absense of a model is indicated by . Whenever a solver terminated unexpectedly we indicate this behaviour by . Click on the icon to view the solvers output.
+
+. The instance name - corresponding to the input file. Click on the file icon to view the instance.
+. For each solver (listed in the first row of the table):
+	* A Result classified by an icon.  means the solver classified the instance as satisfiable, unsatisfiable and  as unknown or timed out.
+	* Time to solve the instance
+	* The model. If a model is available click on the icon . The absense of a model is indicated by . Whenever a solver terminated unexpectedly we indicate this behaviour by . Click on the icon to view the solvers output.
 
 [.text-center]
 image::img/table.png[Table header]
@@ -89,23 +91,27 @@ The filter icon on the right hand side gives you the following options:
 [.text-center]
 image::img/filter.png[Filter view]
 
-1. Show unique classfied instances, that is if there is only on solver within the current view which classified the instance. The corresponding solver is marked by  resp. .
+[start=3]
+. Show unique classfied instances, that is if there is only on solver within the current view which classified the instance. The corresponding solver is marked by  resp. .
 
 [.text-center]
 image::img/uniquely.png[Uniquely classified instances]
 
-2. Show instances with errors, where only wrongly classified instances given the technique are displayed. The column of the wrong solver is marked again with  resp. 
+[start=4]
+. Show instances with errors, where only wrongly classified instances given the technique are displayed. The column of the wrong solver is marked again with  resp. 
 
 [.text-center]
 image::img/error.png[Errornous classified instances]
 
-3. Show undeclared instances lists all instances where no solver found a solution.
+[start=5]
+. Show undeclared instances lists all instances where no solver found a solution.
 
 [.text-center]
 image::img/undeclared.png[Undeclared instances]
 
-4. Show only instances, where the solver terminated unexpectedly.
-5. Only ambiguous answers is showing only instances where an error classification was not possible. This could for instance happen if we do not know the correct answer of an instance and the solvers are not agreeing.
+[start=6]
+. Show only instances, where the solver terminated unexpectedly.
+. Only ambiguous answers is showing only instances where an error classification was not possible. This could for instance happen if we do not know the correct answer of an instance and the solvers are not agreeing.
 
 
 == Availability

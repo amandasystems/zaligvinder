@@ -1,6 +1,6 @@
 import webserver.views.TextView
 import webserver.views.charts.charts as charts
-
+import random
 
 
 class BaseView(webserver.views.TextView.TextView):
@@ -70,18 +70,31 @@ class BaseView(webserver.views.TextView.TextView):
            margin: 0;
        }
 
-    .ct-label.ct-horizontal.ct-end {
+       .ct-label.ct-horizontal.ct-end {
+       text-align:center; display:inline; position:relative;
        font-size: 10px !important;
-       white-space:nowrap;
        writing-mode:vertical-rl; 
-       transform:  translateX(-50%) translateY(10%);
+       transform:  translateX(-0%) translateY(-666%);
      }
+
+
+#chart svg {
+  overflow: visible;
+}
 
       '''
 
         #colors = [ "#0065AB" ,"#007E7A", "#A6D8E7", "#CD3517","#FF8142","#85C81A","#1D5100","#8939AD","#4D007A","#00D4B8","#25333D","#007E7A","#0F1E82","#4E56B8","#798893","#49AFD9",]
         colors = ["#25333D","#0065AB","#8939AD","#007E7A","#318700","#CD3517","#80746D","#FF9A69","#00D4B8","#85C81A", #none_5_z3str3
                   "#AC75C6","#0F1E82","#A3EDF6","#FFB38F","#49AFD9",]
+
+        # extend the colors 
+        r = lambda: random.randint(0,255)
+        colorGen = lambda : '#%02X%02X%02X' % (r(),r(),r())
+        while len(colors) < 26:
+          newColor = colorGen()
+          if newColor not in colors:
+            colors+=[newColor]
 
         for i,c in enumerate(colors):
           top+='''.ct-legend .ct-series-'''+str(i)+''':before {

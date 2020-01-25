@@ -1,0 +1,367 @@
+= ZaligVinder:
+A string solving benchmark framework
+:toc: left
+:stem:
+
+_The_ increased interest in string solving in the recent years has made
+it very hard to identify the right tool to address a particular user's purpose. Firstly, there is a multitude of string solving, each addressing essentially some subset of the general problem. Generally, the addressed fragments are relevant and well motivated, but 
+the lack of comparisons between the existing tools on an equal set of benchmarks cannot go unnoticed, especially as a common framework to compare solvers seems to be missing. In this paper we gather a set of relevant benchmarks and introduce our new benchmarking framework ZaligVinder to address this purpose. 
+
+
+== Setting up ZaligVinder
+All steps to setup this benchmark framework are discribed in the coresponding paper. 
+
+== A short guide for the ZaligVinder WebApp
+On the upper end of our web app you can choose between three categories which are explained briefly.
+
+=== Getting Started
+This is the current page. It shows you nothing more than this small guide.
+
+=== Benchmark Summary
+This pages displays a summary for all of your benchmark sets and tracks.
+
+The sub navigation on the right hand side allows you to choose a specific track or the summary for a whole set of benchmarks. You may have to scroll down to view other tracks.
+
+[.text-center]
+image::img/subnav.png[Sub navigation]
+
+Each page offers the user an overview table of grouped instances. The table holds the tool name, how many instances are declared as satisfiable resp. unsatisfiable, unknown instances (the solver terminates without a result before getting killed by the timeout limit), misclassification of an instance (error - currently done by a majority vote between all results of the solvers), timed out instances, the total amount within a track/set of benchmarks, and the overall solving time. 
+
+[.text-center]
+image::img/overview.png[Overview table]
+
+
+The second table shows a ranking of each solver participating on a track. The grading is easily modifiable and currently is done as follows:
+
+* Instance declared correctly: +(`#solver` / `#pos`) Points, meaning the fastest correctly classifying solver gets most of the points.
+* Unknown declared instance before timeout kills the solver: +1 Point.
+* Timeout: -1 Point.
+* Error: -`#solver` Points.
+
+where `#solver` is the amount of solvers being part of a benchmark set and `#pos` the position of the solver within all solvers who classified an instance correctly.
+
+[.text-center]
+image::img/ranks.png[Ranking table]
+
+The first diagram shows a distribution for each solver distinguishing between satisfiable/unsatisfiable and timed out resp. unknown instances. 
+
+[.text-center]
+image::img/distribution.png[Distribution diagram]
+
+The next set of diagrams show the same distribution as before as a pie diagram. This makes an easier identification possible in some cases. 
+
+[.text-center]
+image::img/pie.png[Pie diagram]
+
+A cactus diagram follows. In these kind of plots all instances are sorted by their solving time and listed ascending as a point within a line diagram. 
+The first cactus plot lists all instances of a track / benchmark set. It gives an intuition of how quick a solver classifies all instances over time. The structure of a cactus plot automatically holds all timed out instances in the end. 
+
+[.text-center]
+image::img/cactus_unk.png[Cactus plot with unknowns and errors]
+
+Excluding the unknowns an errors gives an intuition of how quick a solver comes up with the correct answers. By clicking on a label of the graph, the user is able to active/deactivate a specific solver.
+
+[.text-center]
+image::img/cactus.png[Cactus plot w/o unknowns and errors]
+
+
+=== Tool Comparison
+This page offers you the opportunity to compare different solvers per instances; finding out what instances caused a good or a bad behaviour. 
+
+The navigation between different tracks and benchmark summaries is again done using the side navigation as explained previously. 
+
+The top box allows you to choose between the available solvers by clicking on a label. Solvers highlighted in green are part of the current comparison. You can disable them by simply clicking the x. White labelled solvers are not part of the comparison. Active them again by a click. 
+
+[.text-center]
+image::img/label.png[Tool selection]
+
+The comparison table holds the following elements:
+
+. The instance name - corresponding to the input file. Click on the file icon to view the instance.
+. For each solver (listed in the first row of the table):
+	* A Result classified by an icon.  means the solver classified the instance as satisfiable, unsatisfiable and  as unknown or timed out.
+	* Time to solve the instance
+	* The model. If a model is available click on the icon . The absense of a model is indicated by . Whenever a solver terminated unexpectedly we indicate this behaviour by . Click on the icon to view the solvers output.
+
+[.text-center]
+image::img/table.png[Table header]
+
+The filter icon on the right hand side gives you the following options:
+
+[.text-center]
+image::img/filter.png[Filter view]
+
+[start=3]
+. Show unique classfied instances, that is if there is only on solver within the current view which classified the instance. The corresponding solver is marked by  resp. .
+
+[.text-center]
+image::img/uniquely.png[Uniquely classified instances]
+
+[start=4]
+. Show instances with errors, where only wrongly classified instances given the technique are displayed. The column of the wrong solver is marked again with  resp. 
+
+[.text-center]
+image::img/error.png[Errornous classified instances]
+
+[start=5]
+. Show undeclared instances lists all instances where no solver found a solution.
+
+[.text-center]
+image::img/undeclared.png[Undeclared instances]
+
+[start=6]
+. Show only instances, where the solver terminated unexpectedly.
+. Only ambiguous answers is showing only instances where an error classification was not possible. This could for instance happen if we do not know the correct answer of an instance and the solvers are not agreeing.
+
+
+== Availability
+=== Binary
+We distribute the source of ZaligVinder https://git.zs.informatik.uni-kiel.de/dbp/wordbenchmarks[here].
+
+== A comparison on the collection of benchmarks
+Within the paper we gather sets of benchmarks from literature. They are a available https://git.zs.informatik.uni-kiel.de/dbp/wordbenchmarks/tree/comparison_start/models[here].
+
+In the following we give a small summary overview, of how four of the major string solvers, http://cvc4.cs.stanford.edu/web/[CVC4], https://github.com/Z3Prover/z3[Z3str], https://github.com/Z3Prover/z3[Z3Seq] and
+https://github.com/guluchen/z3/tree/new_trau[Trau], and our tool https://www.informatik.uni-kiel.de/~mku/woorpjeLevi/[Woorpje] (on it's restricted set of features) survived.
+
+
+=== Woorpje Word Equations
+
+We created a set of benchmarks to test the abilities of our tool Woorpje. It contains 5 tracks with instances containing mostly string constraints, but also linear length constrains. Running this set on their competitors revealed its difficulty. The set is generated using several hard involved examples developed in the theoretical study of word equations.
+
+|===
+|Tool name |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time
+|z3seq|539|165|105|1|105|809|3570.63
+|z3str3|448|175|186|11|163|809|5448.80
+|cvc4|539|163|107|0|107|809|3418.15
+|trau|563|208|38|25|38|809|1983.50
+|variableTermRatio_3.14_cvc4|610|164|35|2|35|809|1325.08
+|variableTermRatio_3.14_z3str3|568|162|79|1|78|809|2939.16
+|variableTermRatio_3.14_z3seq|614|164|31|3|31|809|1360.05
+|waitingListLimit_15_cvc4|613|161|35|3|35|809|1295.04
+|waitingListLimit_15_z3str3|570|160|79|2|79|809|2912.04
+|waitingListLimit_15_z3seq|613|161|35|4|35|809|1450.13
+|equationGrowth_1.075_cvc4|611|162|36|3|36|809|1404.98
+|equationGrowth_1.075_z3str3|583|161|65|3|63|809|2402.44
+|equationGrowth_1.075_z3seq|605|162|42|4|41|809|1659.15
+|equationLength_20_cvc4|609|164|36|3|36|809|1390.61
+|equationLength_20_z3str3|558|163|88|1|86|809|3194.53
+|equationLength_20_z3seq|614|163|32|4|32|809|1441.03
+|none_5_cvc4|603|161|45|5|44|809|1649.46
+|none_5_z3str3|605|161|43|5|40|809|1580.76
+|none_5_z3seq|606|161|42|5|41|809|1590.30
+|===
+
+=== PyEx
+
+Reynolds et al. used the tool PyEx - a symbolic executor for Python programs - to generate a set of 25,421 bench-
+marks. They used 19 target functions sampled from four popular Python packages to generate the resulting benchmark set.
+
+The benchmarks are available https://sites.google.com/site/z3strsolver/benchmarks[here].
+
+|===
+|Tool name |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time
+|z3seq|6481|1370|563|0|563|8414|26248.39
+|z3str3|1130|1735|5549|373|5077|8414|174072.27
+|cvc4|6291|1357|766|0|766|8414|32389.03
+|trau|7018|1384|12|0|12|8414|5367.56
+|===
+
+=== Pisa
+
+Zheng et al. [23] generated a set of benchmarks using constraints from real-world Java sanitizer methods which where used to evaluate the PISA system. It contains 12 complex instances including multiple different string operations like indexOf, substring as a result of the Sanitizer structure.
+
+The benchmarks are available https://sites.google.com/site/z3strsolver/benchmarks[here].
+
+|===
+|Tool name |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time
+|z3seq|8|4|0|0|0|12|0.50
+|z3str3|7|4|1|0|1|12|30.60
+|cvc4|8|4|0|0|0|12|2.06
+|trau|8|4|0|0|0|12|0.59
+|===
+
+=== Norn Benchmarks
+
+Abdulla et al. share a set of 5 tracks consisting of queries generated during verification of string-processing programs. Each formula is rather small compared to those in other sets of
+benchmarks , but makes heavy use of regular expressions containing Kleene stars. This makes it a challenging one for all solvers.
+
+The benchmarks are available http://user.it.uu.se/~jarst116/norn/[here].
+
+|===
+|Tool name |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time
+|z3seq|552|104|371|0|331|1027|13297.80
+|z3str3|217|89|721|2|658|1027|21677.49
+|cvc4|656|186|185|0|185|1027|5668.27
+|trau|214|180|633|74|0|1027|18960.72
+|===
+
+=== Trau Light
+
+Within this set of benchmarks generated by Abdulla et al. each instance holds multiple easy, mostly unsatisfiable formulae consisting only of string constraints. The set aims for testing the ability of declaring inputs as unsatisfiable, which is in general harder than finding a solution.
+
+Set taken from https://github.com/guluchen/z3/tree/master[here].
+
+|===
+|Tool name |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time
+|z3seq|4|94|2|0|2|100|64.53
+|z3str3|4|93|3|0|1|100|33.90
+|cvc4|3|94|3|0|3|100|93.07
+|trau|5|94|1|0|1|100|42.66
+|===
+
+=== Leetcode Strings
+
+An interesting set of benchmarks shared by the https://github.com/guluchen/z3/tree/master[Trau] developers. 
+
+|===
+|Tool name |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time
+|z3seq|881|1785|0|0|0|2666|96.82
+|z3str3|653|1790|223|5|69|2666|2282.71
+|cvc4|876|1785|5|0|0|2666|361.02
+|trau|881|1785|0|0|0|2666|305.80
+|===
+
+=== IBM Appscan
+
+Zheng et al. generated a second set of benchmarks using the output of security warnings generated by IBM Security AppScan Source Edition. They ran the tool on popular websites to obtain traces of program statements which where translated into SMT formulae. The traces reflect potentially vulnerable information flows and therefore represent common real-world constraints. The set consists of 8 instances containing string functions and disequality constraints over strings.
+
+The benchmarks are available https://sites.google.com/site/z3strsolver/benchmarks[here].
+
+|===
+|Tool name |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time
+|z3seq|7|0|1|0|1|8|31.68
+|z3str3|3|0|5|0|4|8|150.16
+|cvc4|7|0|1|0|1|8|43.57
+|trau|8|0|0|0|0|8|2.72
+|===
+
+=== Sloth Tests
+
+A nice set of benchmarks shared by the Sloth developers. This set is available in their https://github.com/uuverifiers/sloth/tree/master/tests[GIT].
+
+|===
+|Tool name |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time
+|z3seq|11|12|17|0|2|40|510.96
+|z3str3|9|10|21|0|9|40|630.67
+|cvc4|20|16|4|0|1|40|120.90
+|trau|11|13|16|2|0|40|480.80
+|===
+
+=== StringFuzz Tests
+
+Blotsky et al. introduced a tool called StringFuzz to generate and transform SMT-Lib Instances of string problems  implemented in Python. The authors share a set of benchmarks generated using their tool, which aims to address typical industrial instances, potentially challenging for solvers. The set contains 17 tracks ranging from instances containing pure string constraints to hard to solve regular expression constraints. They aim for generating instances which follow structures hard to handle by some solvers (e.g. tree-like instances).
+
+The benchmarks are available https://sites.google.com/site/z3strsolver/benchmarks[here].
+
+|===
+|Tool name |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time
+|z3seq|409|207|449|0|449|1065|14554.45
+|z3str3|591|224|250|0|245|1065|7997.74
+|cvc4|626|259|180|0|180|1065|5900.69
+|trau|511|328|226|12|225|1065|7452.32
+|===
+
+=== Kaluza
+
+Saxena et al. used their tool Kudzu, a symbolic execution framework for JavaScript, to generate more than 50,000 string solving problems. The instances were obtained by lowering JavaScript operations from real world AJAX web applications and are available on their http://webblaze.cs.berkeley.edu/2010/kaluza/[website]. The instances are build around string constraints, membership in regular languages (given as regular expressions), and inequalities involving length constraints on string variables. While the size of the formula varies per instance, the variety in the used string operations is rather small. The resulting set of benchmarks was translated by Liang et al. into the SMT-Lib format. It uses string, boolean and linear constraints together with a small amount of string operations.
+
+The benchmarks are available https://sites.google.com/site/z3strsolver/benchmarks[here].
+
+|===
+|Tool name |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time
+|z3seq|33438|11799|2047|0|2047|47284|66661.53
+|z3str3|32560|11831|2893|32|2643|47284|85791.92
+|cvc4|35162|12014|108|0|35|47284|19975.44
+|trau|34858|12014|412|0|412|47284|27302.20
+|===
+
+==== Kaluza restricted to the feature set of woorpje
+|===
+|Tool name |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time
+|z3seq|14793|0|0|0|0|14793|586.79
+|z3str3|14793|0|0|0|0|14793|587.84
+|cvc4|14793|0|0|0|0|14793|337.42
+|trau|14793|0|0|0|0|14793|600.29
+|variableTermRatio_3.14_cvc4|14793|0|0|0|0|14793|446.72
+|variableTermRatio_3.14_z3str3|14793|0|0|0|0|14793|583.30
+|variableTermRatio_3.14_z3seq|14793|0|0|0|0|14793|585.04
+|waitingListLimit_15_cvc4|14793|0|0|0|0|14793|420.44
+|waitingListLimit_15_z3str3|14793|0|0|0|0|14793|494.62
+|waitingListLimit_15_z3seq|14793|0|0|0|0|14793|491.02
+|equationGrowth_1.075_cvc4|14793|0|0|0|0|14793|419.84
+|equationGrowth_1.075_z3str3|14793|0|0|0|0|14793|495.73
+|equationGrowth_1.075_z3seq|14793|0|0|0|0|14793|492.37
+|equationLength_20_cvc4|14793|0|0|0|0|14793|420.57
+|equationLength_20_z3str3|14793|0|0|0|0|14793|495.39
+|equationLength_20_z3seq|14793|0|0|0|0|14793|488.30
+|none_5_cvc4|14793|0|0|0|0|14793|418.38
+|none_5_z3str3|14793|0|0|0|0|14793|474.82
+|none_5_z3seq|14793|0|0|0|0|14793|450.72
+|===
+
+=== Cashew Suite
+
+Brennan et al. used their tool called Cashew to normalise (in terms of their tool) 18,896 by Luu et al. extracted benchmarks from the Kaluza benchmark set. By constructing this subset the authors aimed to eliminate the redundancy in the original set. The set varies between easy and difficult string constraints, with Boolean constraints, without using string operations. 
+
+The benchmarks are available https://ieee-dataport.org/documents/benchmark-suite-integrated-approach-effective-injection-vulnerability-analysis-web[here].
+
+|===
+|Tool name |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time
+|z3seq|377|12|5|0|5|394|210.04
+|z3str3|360|12|22|0|22|394|674.42
+|cvc4|367|12|15|0|15|394|507.69
+|trau|376|12|6|0|6|394|226.18
+|===
+
+=== JOACO Suite
+
+In order to evaluate their tool JOACO, a tool to detect injection vulnerabilities, Thomé et al. created a set of 94 instances based on 11 open-source Java Web applications and security benchmarks used in literature. It displays a variety of instances containing string constraints, regular expressions and string operations.
+
+The benchmarks are available https://ieee-dataport.org/documents/benchmark-suite-integrated-approach-effective-injection-vulnerability-analysis-web[here].
+
+|===
+|Tool name |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time
+|z3seq|17|20|57|0|0|94|271.54
+|z3str3|17|20|57|0|0|94|6.19
+|cvc4|57|21|16|0|16|94|483.27
+|trau|16|21|57|1|0|94|1744.34
+|===
+
+=== Stranger Benchmarks
+
+Yu et al.  used this set of 4 real-world PHP web applications to evaluate their tool Stranger - a tool detecting and sanitizing vulnerabilities in PHP applications. Thomé et al. manually translated these instances into the SMT-Lib format. The result was a set containing string operations, regular expression membership constrains, and string constraints.
+
+The benchmarks are available https://ieee-dataport.org/documents/benchmark-suite-integrated-approach-effective-injection-vulnerability-analysis-web[here].
+
+|===
+|Tool name |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time
+|z3seq|4|0|0|0|0|4|32.78
+|z3str3|4|0|0|0|0|4|0.55
+|cvc4|0|0|4|0|4|4|120.00
+|trau|3|1|0|1|0|4|5.35
+|===
+
+=== Kausler Suite
+
+Kausler and Sherman generated a set of benchmarks to evaluate string constraint solvers in terms of symbolic execution. The set was brought down to 120 instances by Thomé et al. It contains constrains from 8 Java programs via dynamic symbolic execution, aiming for real word application. The set mostly contains Boolean and string constraints without string operations.
+
+The benchmarks are available https://ieee-dataport.org/documents/benchmark-suite-integrated-approach-effective-injection-vulnerability-analysis-web[here].
+
+|===
+|Tool name |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time
+|z3seq|119|0|1|0|1|120|89.72
+|z3str3|115|0|5|0|4|120|165.47
+|cvc4|120|0|0|0|0|120|40.78
+|trau|120|0|0|0|0|120|9.36
+|===
+
+
+
+== People involved
+- https://www.zs.informatik.uni-kiel.de/de/mitarbeiter/mitja-kulczynski[Mitja Kulczynski]
+- http://flmanea.blogspot.com/[Florin Manea]
+- https://www.zs.informatik.uni-kiel.de/de/mitarbeiter/nowotka[Dirk Nowotka]
+- https://www.boegstedpoulsen.dk[Danny Bøgsted Poulsem]
+
+

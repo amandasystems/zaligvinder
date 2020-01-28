@@ -44,7 +44,9 @@ def run (eq,timeout,ploc,wd,solver="1",param="60"):
     except subprocess.TimeoutExpired:
         return utils.Result(None,timeout,True,1)
     except subprocess.CalledProcessError:
-        return utils.Result(None,timeout,False,1)
+        time.stop()
+        out = "Error in " + eq + ": " + str(e)
+        return utils.Result(None,time.getTime(),False,1,out)
     time.stop ()
     shutil.rmtree (tempd)
     if "unsat" in out:

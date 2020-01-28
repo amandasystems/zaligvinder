@@ -35,8 +35,9 @@ def run (eq,timeout,ploc,wd):
     except subprocess.TimeoutExpired:
         return utils.Result(None,timeout,True,1)
     except subprocess.CalledProcessError as e:
+        time.stop()
         out = "Error in " + eq + ": " + str(e)
-        return utils.Result(None,timeout,False,1,out)
+        return utils.Result(None,time.getTime(),False,1,out)
 
     time.stop()    
 

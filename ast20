@@ -44,6 +44,10 @@ import startwebserver
 
 import summarygenerators
 
+woorpjetracks = models.woorpje.getTrackData ("Woorpje Word Equations") +  models.kaluza.getTrackData ("Kaluza") 
+
+
+
 tracks = (models.PyEx.getTrackData () +
           models.pisa.getTrackData ("Pisa") +
           models.nornbenchmarks.getTrackData ("Norn Benchmarks") +
@@ -51,9 +55,8 @@ tracks = (models.PyEx.getTrackData () +
           models.Leetcode.getTrackData ("Leetcode Strings") + 
           models.appscan.getTrackData ( "IBM Appscan") + 
           models.slothtests.getTrackData ("Sloth Tests") +
-          models.woorpje.getTrackData ("Woorpje Word Equations") +
-          models.kaluza.getTrackData ("Kaluza") +
           models.stringfuzz.getTrackData ("StringFuzz Tests") +
+          woorpjetracks +
           models.z3_regression.getTrackData("z3Str3 Regression Test")+
           models.cashewsuite.getTrackData ("Cashew Suite") + 
           models.joacosuite.getTrackData ("JOACO Suite") +
@@ -62,7 +65,6 @@ tracks = (models.PyEx.getTrackData () +
           []
 )
 
-tracks = (models.woorpje.track01.getTrackData("Woorpje Word Equations"))
 
 solvers = {}
 for s in [tools.z3seq,
@@ -74,12 +76,7 @@ for s in [tools.z3seq,
 
 # woorpje setup
 
-tracks_woorpje = (models.woorpje.getTrackData ("Woorpje Word Equations") +
-          models.kaluza.kaluzaWoorpje.getTrackData ("Kaluza") +
-          []
-)
-
-tracks_woorpje = (models.woorpje.track01.getTrackData("Woorpje Word Equations"))
+tracks_woorpje = woorpjetracks
 
 smtsolvers = ["cvc4","z3str3","z3seq"]
 solvers_woorpje = {}
@@ -117,3 +114,4 @@ testrunner().runTestSetup (tracks_woorpje,solvers_woorpje,voting.MajorityVoter()
 
 
 startwebserver.Server (store.getDB ()).startServer ()
+

@@ -192,6 +192,11 @@ class ResultRepository:
 
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
 
+    def getInstanceNameToId(self,instanceid):
+        query = '''SELECT TrackInstance.name FROM TrackInstance WHERE TrackInstance.id = ?'''
+        row = self._db.executeRet (query,(str(instanceid),))
+        return row[0][0]
+
     def getResultForSolverNoUnk (self,solver):
         query = '''SELECT * FROM Result,TrackInstance WHERE solver = ? and Result.result IS NOT NULL AND  Result.instanceid = TrackInstance.id AND TrackInstance.expected == Result.result ORDER BY time ASC '''
         rows = self._db.executeRet (query,(solver,))
@@ -228,10 +233,14 @@ class ResultRepository:
             if dataSolver1[iid][0][2] or dataSolver2[iid][0][2]:
                 continue
 
-            if dataSolver1[iid][0][4] < dataSolver2[iid][0][4]:
-                data[iid] = [dataSolver1[iid][0]]
-            else: 
-                data[iid] = [dataSolver2[iid][0]]
+
+
+
+
+            if dataSolver1[iid][0][4] > dataSolver2[iid][0][4]+1.0:
+                data[iid] = [dataSolver1[iid][0]] + [dataSolver2[iid][0]]
+            #else: 
+            #    data[iid] = [dataSolver2[iid][0]]
 
 
         return data

@@ -306,7 +306,25 @@ The first cactus plot lists all instances of a track / benchmark set. It gives a
 <a href="https://github.com/guluchen/z3/tree/new_trau">Trau</a>, and our tool <a href="https://www.informatik.uni-kiel.de/~mku/woorpjeLevi/">Woorpje</a> (on it&#8217;s restricted set of features) survived.</p>
 </div>
 </div>
-
+<div class="paragraph">
+<p>To obtain the below results we used a server having 64 Intel&#174; Xeon&#174; Gold 6242 CPU @ 2.80GHz and 1.5 TB RAM running Ubuntu Linux. We compiled the master of Z3s <a href="https://github.com/Z3Prover/z3.git">GIT</a> on commit c816d45a7def3f7ca18fa3e94f28f7450c183a05 for Z3str3 and Z3Seq.
+For Trau we used their <a href="https://github.com/guluchen/z3.git">GIT</a> version on commit ce850ac2751f2c3fc30e2e62ed26ffc6b9daa1f5. CVC4 was acquired as <a href="https://github.com/CVC4/CVC4/releases/download/1.7/cvc4-1.7-x86_64-linux-opt">binary</a>.</p>
+</div>
+<div class="paragraph">
+<p>In order to reproduce our results make sure to install the python3 libs <code>matplotlib</code>, <code>tabulate</code> and <code>npyscreen</code> by executing:</p>
+</div>
+<div class="paragraph">
+<p><code>pip3 install matplotlib tabulate npyscreen</code></p>
+</div>
+<div class="paragraph">
+<p>Afterwards setup the <code>toolconfig.json</code> file as described in the paper. To start the actual benchmark run, execute</p>
+</div>
+<div class="paragraph">
+<p><code>pytho3 ast20</code></p>
+</div>
+<div class="paragraph">
+<p>The script will create an SQLite Database file and produces a shell output.</p>
+</div>
 <div class="sect2">
 <h3 id="_woorpje_word_equations">Woorpje Word Equations</h3>
 <div class="paragraph">

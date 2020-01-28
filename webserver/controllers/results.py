@@ -234,22 +234,26 @@ class ResultController:
 
             groups = self._results.getTrackInfo ()
 
+            out = ""
+
             for bgroup in groups: 
-                print("Benchmark set " + str(bgroup))
+                out+= "=== "+str(bgroup)+"\n"
                 for (trackid,tname) in groups[bgroup]:
-                    print("Track " + str(tname))
+                    out+= "==== "+str(tname)+"\n"
                     data = self._results.get2ComparisonTrackResultsFasterClassified(trackid,solver1,solver2)
-
+                    out+='''|===\n|Instance |Timeout ''' + str(solver1) + ''' |Timeout ''' + str(solver2) + ''' | Time ''' + str(solver1) + ''' |Time ''' + str(solver2) + '''\n'''
                     for iid in data:
-                        print(data[iid])
+                        #(solv,to,error,unk,time) = data[iid][0]
+                        solver1Data = data[iid][0]
+                        solver2Data = data[iid][1]
 
-                    print("-----------------------")
+                        if solver1Data[0] ==  solver1:
+                            out+="|{}|{}|{}|{:.2f}|{:.2f}\n".format(self._results.getInstanceNameToId(iid),solver1Data[1],solver2Data[1],solver1Data[4],solver2Data[4])
 
-                print("++++++++++++++++++++++++++++")
+                    out+="|===\n\n"     
 
 
-
-
+            print(out)
 
 
             return webserver.views.jsonview.JSONView ("")

@@ -43,7 +43,7 @@ def run (eq,timeout,ploc,wd,solver="1",param="60"):
         out = subprocess.check_output ([path,"--lang","smt2","-m","--no-interactive","--no-interactive-prompt","--strings-exp",smtfile],timeout=timeout).decode().strip()
     except subprocess.TimeoutExpired:
         return utils.Result(None,timeout,True,1)
-    except subprocess.CalledProcessError:
+    except subprocess.CalledProcessError as e:
         time.stop()
         out = "Error in " + eq + ": " + str(e)
         return utils.Result(None,time.getTime(),False,1,out)

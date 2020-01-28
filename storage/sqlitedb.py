@@ -338,7 +338,7 @@ class ResultRepository:
         satisquery = ''' SELECT COUNT(*) FROM Result,TrackInstanceMap,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ?  AND Result.result = true'''
         satis = self._db.executeRet (satisquery, (solver,group,))[0][0]
 
-        unkquery = ''' SELECT COUNT(*) FROM Result,TrackInstanceMap,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? AND Result.result IS NULL'''
+        unkquery = ''' SELECT COUNT(*) FROM Result,TrackInstanceMap,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  AND Result.timeouted = false and TrackInstanceMap.track = Track.id and Track.bgroup = ? AND Result.result IS NULL'''
         unk = self._db.executeRet (unkquery, (solver,group,))[0][0]
 
         nsatisquery = ''' SELECT COUNT(*)  FROM Result,TrackInstanceMap,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? AND Result.result = false'''
@@ -347,6 +347,10 @@ class ResultRepository:
         errorquery = ''' SELECT COUNT(*) FROM Result,TrackInstance,TrackInstanceMap,Track WHERE Result.solver = ? AND Result.result IS NOT NULL AND Result.instanceid = TrackInstance.id AND TrackInstance.expected != Result.result AND TrackInstance.id = TrackInstanceMap.instance AND TrackInstanceMap.track = Track.id AND Track.bgroup = ?''' 
         errors = self._db.executeRet (errorquery, (solver,group,))[0][0]
         
+
+        print(timeouted+satis+unk+nsatis+errors)
+        
+
         return (smtcalls,timeouted,satis,unk,nsatis,errors,time,total) 
 
     def getOutputForSolverInstance (self,solver,instance):
@@ -376,7 +380,7 @@ class ResultRepository:
         satisquery = ''' SELECT COUNT(*) FROM Result,TrackInstanceMap WHERE Solver = ? AND Result.result = true AND TrackInstanceMap.track = ? AND TrackInstanceMap.instance = Result.instanceid'''
         satis = self._db.executeRet (satisquery, (solver,track))[0][0]
 
-        unkquery = ''' SELECT COUNT(*) FROM Result,TrackInstanceMap WHERE Solver = ? AND Result.result IS NULL AND TrackInstanceMap.track = ? AND TrackInstanceMap.instance = Result.instanceid'''
+        unkquery = ''' SELECT COUNT(*) FROM Result,TrackInstanceMap WHERE Solver = ? AND Result.result IS NULL AND Result.timeouted = false AND TrackInstanceMap.track = ? AND TrackInstanceMap.instance = Result.instanceid'''
         unk = self._db.executeRet (unkquery, (solver,track))[0][0]
 
         nsatisquery = ''' SELECT COUNT(*) FROM Result,TrackInstanceMap WHERE Solver = ? AND Result.result = false AND TrackInstanceMap.track = ? AND TrackInstanceMap.instance = Result.instanceid'''
@@ -384,6 +388,8 @@ class ResultRepository:
 
         errorquery = ''' SELECT COUNT(*) FROM Result,TrackInstance,TrackInstanceMap WHERE Result.solver = ? AND Result.result IS NOT NULL AND Result.instanceid = TrackInstance.id AND TrackInstance.expected != Result.result AND TrackInstance.id = TrackInstanceMap.instance AND TrackInstanceMap.track = ?''' 
         errors = self._db.executeRet (errorquery, (solver,track))[0][0]
+
+        #total = timeouted+satis+unk+nsatis+errors
         
         return (smtcalls,timeouted,satis,unk,nsatis,errors,time,total) 
 

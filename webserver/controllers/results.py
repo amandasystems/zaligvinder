@@ -232,28 +232,48 @@ class ResultController:
             #trackid = params["track"][0]
 
 
+
+
+
+
+            #bgroup = list(self._results.getTrackInfo ().keys())[0]
             groups = self._results.getTrackInfo ()
 
             out = ""
 
             for bgroup in groups: 
-                out+= "=== "+str(bgroup)+"\n"
+                out= "=== "+str(bgroup)+"\n"
                 for (trackid,tname) in groups[bgroup]:
                     out+= "==== "+str(tname)+"\n"
-                    data = self._results.get2ComparisonTrackResultsFasterClassified(trackid,solver1,solver2)
-                    out+='''|===\n|Instance |Timeout ''' + str(solver1) + ''' |Timeout ''' + str(solver2) + ''' | Time ''' + str(solver1) + ''' |Time ''' + str(solver2) + '''\n'''
+                    data = self._results.getArmsHack(trackid) #self._results.get2ComparisonTrackResultsFasterClassified(trackid,solver1,solver2)
+                    #out+='''|===\n|Instance |Timeout ''' + str(solver1) + ''' |Timeout ''' + str(solver2) + ''' | Time ''' + str(solver1) + ''' |Time ''' + str(solver2) + '''\n'''
+                    out+='''|===\n|Instance |Timeout z3str3-portfolio |Time z3str3-portfolio |Other Solver |Timeout |Time |Deepest Nesting |Block # |Variables #| Symbols # \n'''
                     for iid in data:
                         #(solv,to,error,unk,time) = data[iid][0]
                         solver1Data = data[iid][0]
                         solver2Data = data[iid][1]
+                        nesting = 0
+                        blocks = 0
+                        symbols = ""
+                        variables = ""
 
-                        if solver1Data[0] ==  solver1:
-                            out+="|{}|{}|{}|{:.2f}|{:.2f}\n".format(self._results.getInstanceNameToId(iid),solver1Data[1],solver2Data[1],solver1Data[4],solver2Data[4])
+                        # post processing 
+                        for (k,v) in data[iid][2]:
+                            if k == "deepest_nest":
+                                nesting = v
+                            elif k == "(":
+                                blocks = v
+                            elif k in ["Int","String","Bool"]:
+                                variables+=k+" ("+str(v)+"), "
+                            else:
+                                symbols+=k+" ("+str(v)+"), "
+
+
+                        #if solver1Data[0] ==  solver1:
+                        out+="|{}|{}|{:.2f}|{}|{}|{:.2f}|{}|{}|{}|{}\n".format(self._results.getInstanceNameToId(iid),solver1Data[1],solver1Data[4],solver2Data[0],solver2Data[1],solver2Data[4],nesting,blocks,variables,symbols)
 
                     out+="|===\n\n"     
-
-
-            print(out)
+                print(out)
 
 
             return webserver.views.jsonview.JSONView ("")

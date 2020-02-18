@@ -39,7 +39,7 @@ class Server:
         app.addEndpoint (webserver.routing.RegexMatch("results/(?P<solver>[^/]+)/(?P<instance>\d+)/model"),self._rcontroller.getModel)
         app.addEndpoint (webserver.routing.RegexMatch("summary/(?P<solver>[^/]+)"),self._rcontroller.getSummaryForSolver)
         app.addEndpoint (webserver.routing.RegexMatch("summary/(?P<solver>[^/]+)/(?P<track>\d+)"),self._rcontroller.getSummaryForSolverTrack)
-        app.addEndpoint (webserver.routing.ExactMatch("chart/cactus"),self._ccontroller.generateCactus)
+        app.addEndpoint (webserver.routing.RegexMatch("chart/cactus"),self._ccontroller.generateCactus)
         app.addEndpoint (webserver.routing.RegexMatch("chart/distribution/(?P<track>\d+)"),self._ccontroller.generateTrackDistribution)
         
         app.addEndpoint (webserver.routing.RegexMatch("ranks/(?P<track>\d+)"),self._rcontroller.getRanks)
@@ -48,11 +48,14 @@ class Server:
         #app.addEndpoint (webserver.routing.RegexMatch("jschart/distribution"),self._ccontrollerJS.generateDistribution)  
         #app.addEndpoint (webserver.routing.RegexMatch("jschart/pie"),self._ccontrollerJS.generatePie)
 
+        app.addEndpoint (webserver.routing.RegexMatch("download/cactus/groups"),self._ccontroller.downloadCactus)
+
+
         app.addEndpoint (webserver.routing.RegexMatch("comparison"),self._ccontrollerJS.cdl_comparison)
         app.addEndpoint (webserver.routing.RegexMatch(""),self._ccontrollerJS.cdl_entry)
         app.addEndpoint (webserver.routing.RegexMatch("becnhmarks"),self._ccontrollerJS.cdl_test)
 
-        app.addEndpoint (webserver.routing.RegexMatch("z3/(?P<track>\d+)"),self._rcontroller.getFasterClassifiedInstancesForTrack)
+        app.addEndpoint (webserver.routing.RegexMatch("z3"),self._rcontroller.getFasterClassifiedInstancesForTrack)
         
 
 

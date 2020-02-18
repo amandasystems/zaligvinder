@@ -1,4 +1,4 @@
-1
+import re
 import sqlite3
 import utils
 
@@ -234,16 +234,95 @@ class ResultRepository:
                 continue
 
 
-
-
-
-            if dataSolver1[iid][0][4] > dataSolver2[iid][0][4]+1.0:
+            if dataSolver1[iid][0][4] > dataSolver2[iid][0][4]+3.0:
                 data[iid] = [dataSolver1[iid][0]] + [dataSolver2[iid][0]]
             #else: 
             #    data[iid] = [dataSolver2[iid][0]]
-
-
         return data
+
+    # z3str3 ARM HACK
+    def getArmsHack(self,trackid):
+        query = '''SELECT Result.solver, Result.instanceid, Result.timeouted, Result.result, TrackInstance.expected,Result.time FROM Result,TrackInstance,TrackInstanceMap WHERE Result.instanceid = TrackInstanceMap.instance AND TrackInstanceMap.track = ? AND TrackInstance.id = Result.instanceid AND Result.solver = ?'''
+        dataPortfolio = self._prepareClassificationData(self._db.executeRet (query, (trackid,"z3str3-portfolio")))
+
+
+        solverData = []
+        time_gap = 3.0
+
+        keywords = ["and","assert","not",
+                    "str.++","str.len","str.<",
+                    "str.to.re","str.in.re",
+                    "str.<=","str.at","str.substr","str.prefixof","str.suffixof","str.contains","str.indexof","str.replace","str.is_digit","str.to.int","int.to.str",
+                    "Bool","String","Int","("]
+
+
+        for s in ["z3str2","z3seq","z3str3-length","z3str3-bv"]:
+            solverData+=[self._prepareClassificationData(self._db.executeRet (query, (trackid,s)))]
+
+
+        data = dict()
+
+
+        for iid in dataPortfolio:
+        
+            new_best = False
+            assert(len(dataPortfolio[iid]) == 1)
+
+            #(solv,time,error,unkown)
+            cur_port_data = [dataPortfolio[iid][0][0],dataPortfolio[iid][0][4],dataPortfolio[iid][0][2],dataPortfolio[iid][0][3]]
+
+            if not cur_port_data[2]:
+                best_data = cur_port_data.copy()
+            else: 
+                best_data = ["none",100.0,False,False]
+
+
+            for i,sd in enumerate(solverData):
+                if sd[iid][0][4]+time_gap < best_data[1] and not sd[iid][0][2]:
+                    best_data = [sd[iid][0][0],sd[iid][0][4],sd[iid][0][2],sd[iid][0][3]]
+                    new_best = True
+                    best_id = i
+
+            if new_best:
+                queryInstance = '''SELECT filepath FROM TrackInstance WHERE id = ?'''
+                filepath = self._db.executeRet (queryInstance, (iid,))[0][0]
+
+                distribution = self.classifyInstance(filepath[len("/home/mku/wordbenchmarks/"):],keywords)
+                distributionList = list(filter(lambda x: x[1] > 0, sorted(distribution.items(), key = lambda kv:(kv[1], kv[0]))))
+                data[iid] = [dataPortfolio[iid][0]] + [solverData[best_id][iid][0]] + [distributionList]
+ 
+        return data
+
+
+    def classifyInstance (self,instance,keywords):
+        keywordDistribution = dict()
+        for k in keywords:
+            keywordDistribution[k] = 0
+
+        deepest_nest = 0
+        current_nest = 0
+
+        f=open(instance,"r")
+        for l in f:
+            for k in keywords:
+                if k in l:
+                    keywordDistribution[k]+=l.count(k)
+
+                #check nesting
+                for a in l:
+                    if a == "(":
+                        current_nest+=1
+                    elif a == ")":
+                        if current_nest > deepest_nest:
+                            deepest_nest = current_nest
+                        current_nest=-1;
+
+        keywordDistribution["deepest_nest"] = deepest_nest; 
+
+        return keywordDistribution
+    ####
+
+
 
     def getTrackResults (self,trackid):
         query = '''SELECT Result.solver, Result.instanceid, Result.smtcalls, Result.timeouted, Result.result, Result.time FROM Result,Track,TrackInstanceMap WHERE Result.instanceid = TrackInstanceMap.instance AND TrackInstanceMap.track = ? ORDER BY Result.time ASC'''
@@ -346,12 +425,24 @@ class ResultRepository:
 
         errorquery = ''' SELECT COUNT(*) FROM Result,TrackInstance,TrackInstanceMap,Track WHERE Result.solver = ? AND Result.result IS NOT NULL AND Result.instanceid = TrackInstance.id AND TrackInstance.expected != Result.result AND TrackInstance.id = TrackInstanceMap.instance AND TrackInstanceMap.track = Track.id AND Track.bgroup = ?''' 
         errors = self._db.executeRet (errorquery, (solver,group,))[0][0]
-        
 
-        print(timeouted+satis+unk+nsatis+errors)
-        
 
         return (smtcalls,timeouted,satis,unk,nsatis,errors,time,total) 
+
+    def getSummaryForSolverGroupTotalTimeWOTimeout(self,solver,group):
+        (smtcalls,timeouted,satis,unk,nsatis,errors,time,total) = self.getSummaryForSolverGroup(solver,group)
+
+        #query = '''SELECT SUM(Result.time),COUNT(*) FROM Result,TrackInstanceMap,TrackInstance,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? AND Result.timeouted = false AND Result.instanceid = TrackInstance.id AND (TrackInstance.expected = Result.result OR Result.result = NULL)'''
+        query = '''SELECT SUM(Result.time),COUNT(*) FROM Result,TrackInstanceMap,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? AND Result.timeouted = false'''
+        row = self._db.executeRet (query, (solver,group,))
+        timeWO,totalWO = row[0]
+
+        if timeWO == None:
+            timeWO = 0.0
+
+
+        return (smtcalls,timeouted,satis,unk,nsatis,errors,time,total,timeWO,totalWO)
+
 
     def getOutputForSolverInstance (self,solver,instance):
         query = '''SELECT output  FROM Result WHERE solver = ? AND instanceid = ?'''

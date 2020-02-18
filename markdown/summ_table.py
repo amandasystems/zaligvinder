@@ -8,20 +8,61 @@ class TableGenerator:
         self._solvers = solvers or self._res.getSolvers ()
         self._groups = groups or [tup[0] for tup in list(self._track.getAllGroups ())]
 
+        ## quick hack
+        #self._groupTracks = self._res.getTrackInfo( )
+
+
+
     def getData (self):
         groups = self._groups
-        print (groups)
+        #print (groups)
         
-        for i,g in enumerate(groups):
-            lines = []
-            for s in self._solvers:
-                (smtcalls,timeouted,satis,unk,nsatis,errors,time,total) = self._res.getSummaryForSolverGroup (s,g)
-                lines.append ("|{}|{}|{}|{}|{}|{}|{}|{:.2f}\n".format(s,satis,nsatis,unk,errors,timeouted,total,time))
-            self._output.write ("=== "+g+"\n")
+        totalSumData = dict()
 
-            self._output.write ('''|===\n|Tool name |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time\n''')
+        for i,g in enumerate(groups):
+            self._output.write ("=== "+g+"\n")
+            #for (tid,tname) in self._groupTracks[g]:
+            #totalSumData = dict()
+            lines = []
+            #self._output.write ("=== "+tname+"\n")
+        
+            for s in self._solvers:
+                if s not in totalSumData:
+                    totalSumData[s] = [0,0,0]
+
+                (smtcalls,timeouted,satis,unk,nsatis,errors,time,total,timeWO,totalWO) = self._res.getSummaryForSolverGroupTotalTimeWOTimeout (s,g)
+                print(g,s,timeWO,totalWO)
+
+                #(smtcalls,timeouted,satis,unk,nsatis,errors,time,total) = self._res.getSummaryForSolverTrack (s,tid)
+                lines.append ("|{}|{}|{}|{}|{}|{}|{}|{:.2f}|{}|{:.2f}\n".format(s,satis,nsatis,unk,errors,timeouted,total,time,totalWO,timeWO))
+
+
+                classified = satis + nsatis -errors
+                totalSumData[s][0]+=classified
+                totalSumData[s][1]+=time
+                totalSumData[s][2]+=timeWO
+
+            #self._output.write ("=== "+g+"\n")
+
+            self._output.write ('''\n\n[.text-center]
+image::img/'''+g.lower().split(" ", 1)[0]+'''.png[cactus]\n\n''')
+
+            self._output.write ('''|===\n|Tool name |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time|Total instances w/o TO |Total time w/o TO\n''')
             self._output.write ("".join (lines))
-            self._output.write ("|===\n\n")    
+            self._output.write ("|===\n\n")
+
+
+        # overview Data
+        lines = []
+        self._output.write("\n\n=== Total\n")
+
+        for s in totalSumData:
+            lines.append ("|{}|{}|{:.2f}|{:.2f}\n".format(s,totalSumData[s][0],totalSumData[s][1],totalSumData[s][2]))
+
+        self._output.write ('''|===\n|Tool name |Correctly classified |Total time| Total time w/o TO\n''')
+        self._output.write ("".join (lines))
+        self._output.write ("|===\n\n")
+
     
     def generateTable (self,output):
         self._output = output
@@ -50,4 +91,10 @@ if __name__ == "__main__":
 |norn|176|4|4|0|20|200|1037.63|437.63
 |sloth|101|0|0|0|99|200|3658.34|688.34
 |===
+'''
+
+
+'''
+<link rel="stylesheet" type="text/css" href="ascii.css">
+<link rel="stylesheet" type="text/css" href="css.css">
 '''

@@ -85,7 +85,7 @@ class BaseView(webserver.views.TextView.TextView):
       '''
 
         #colors = [ "#0065AB" ,"#007E7A", "#A6D8E7", "#CD3517","#FF8142","#85C81A","#1D5100","#8939AD","#4D007A","#00D4B8","#25333D","#007E7A","#0F1E82","#4E56B8","#798893","#49AFD9",]
-        colors = ["#25333D","#0065AB","#8939AD","#007E7A","#318700","#CD3517","#80746D","#FF9A69","#00D4B8","#85C81A", #none_5_z3str3
+        colors = ["#25333D","#0065AB","#8939AD","#007E7A","#CD3517","#318700","#80746D","#FF9A69","#00D4B8","#85C81A", #none_5_z3str3
                   "#AC75C6","#0F1E82","#A3EDF6","#FFB38F","#49AFD9",]
 
         # extend the colors 

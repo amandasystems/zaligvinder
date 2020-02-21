@@ -31,7 +31,7 @@ def run (eq,timeout,ploc,wd):
 
     time = timer.Timer ()
     try:
-        out = subprocess.check_output ([path,"smt.string_solver=z3str3","dump_models=true",smtfile],timeout=timeout).decode().strip()
+        out = subprocess.check_output ([path,"smt.string_solver=z3str3","dump_models=true","smt.str.fixed_length_iterations=5",smtfile],timeout=timeout).decode().strip()
     except subprocess.TimeoutExpired:
         return utils.Result(None,timeout,True,1)
 
@@ -56,7 +56,7 @@ def run (eq,timeout,ploc,wd):
     return utils.Result(None,time.getTime  (),False,1,out)
 
 def addRunner (addto):
-    addto['z3str3-portfolio'] = run
+    addto['z3str4'] = run
 
 
 if __name__ == "__main__":

@@ -13,6 +13,8 @@ import tools.woorpjeSMT
 import tools.trau
 import tools.woorpje_heuristics
 import tools.dummy
+import tools.z3str2
+import tools.z3str3length
 
 
 #import models.woorpje.track01
@@ -72,9 +74,11 @@ for s in [tools.z3seq,
           tools.z3str3,
           tools.cvc4,
           tools.z3str3portfolio,
-          tools.z3str3bv,
+          #tools.z3str3bv,
+          #tools.z3str2,
+          tools.z3str3length,
           #tools.woorpjeSMT
-          tools.trau,
+          #tools.trau,
           #tools.dummy
 ]:
     s.addRunner (solvers)
@@ -82,7 +86,7 @@ for s in [tools.z3seq,
 
 summaries = [summarygenerators.terminalResult
 ]
-timeout = 30 
+timeout = 20 
 ploc = utils.JSONProgramConfig ()
 
 store = storage.SQLiteDB ("RP")

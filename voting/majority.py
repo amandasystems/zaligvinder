@@ -70,7 +70,7 @@ class MajorityVoter:
                         assertedInputFile = self._modifyInputFile(tempd,foundModel,filepath)
                         for v in verifiers:
                             vRes = vRes and verifiers[v].run(assertedInputFile,timeout,ploc,os.path.abspath(".")).result
-                        r[i].verified = vRes 
+                        r[i].verified = vRes
                         shutil.rmtree (tempd)
 
                 toolResults = [r[i] for r in res.values ()]

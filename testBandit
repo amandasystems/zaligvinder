@@ -19,7 +19,7 @@ import tools.z3str3portfolioNoProbe
 import tools.z3str3portfolioNoProbe2
 import tools.z3str3portfolioNoProbe3
 import tools.z3str3bv
-
+import tools.z3str3portfolio2
 
 #import models.woorpje.track01
 
@@ -84,6 +84,7 @@ for s in [tools.z3seq,
           tools.z3str3portfolioNoProbe2,
           tools.z3str3portfolioNoProbe3,
           tools.z3str3bv,
+          tools.z3str3portfolio2,
           #tools.z3str2,
           #tools.z3str3length,
           #tools.woorpjeSMT

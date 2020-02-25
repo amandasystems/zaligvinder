@@ -2,6 +2,8 @@
 import os
 import sys
 import utils
+import tools.cvc4
+import tools.z3seq
 
 def progressMessage (track,file,solver,cur,total):
     sys.stdout.write ("\x1b[2K\r[ {0}  {1} {2} - {3}/{4}]".format(track,file,solver,cur+1,total))
@@ -25,6 +27,7 @@ class TheRunner:
     def runTestSetup (self,tracks,solvers,voter,summaries,outputfile,timeout,ploc):
         for t in tracks:
             res = self.runTrack (t,solvers,outputfile,timeout,ploc)
-            voter.voteOnResult (t,res)
+            print(outputfile)
+            voter.voteOnResult (t,res,timeout,ploc,{"cvc4": tools.cvc4,"z3seq" : tools.z3seq})
             for s in summaries:
                 s(t,res)

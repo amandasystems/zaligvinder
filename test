@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from runners.multi import TheRunner as testrunner
+from runners.base import TheRunner as testrunner
 import utils
 import storage
 import voting.majority as voting
@@ -21,11 +21,11 @@ import tools.z3str3length
 
 import models.woorpje
 import models.kaluza
-import models.PyEx
+import models.PyEx.httplib2cachecontrol
 import models.pisa
 import models.nornbenchmarks
 import models.stringfuzz
-import models.z3_regression
+import models.z3regression
 import models.appscan
 import models.slothtests
 import models.light
@@ -37,25 +37,25 @@ import models.kauslersuite
 import startwebserver
 
 
-
+import models.test.test
 
 import summarygenerators
 
-tracks = (models.PyEx.getTrackData () +
-          models.pisa.getTrackData ("Pisa") +
-          models.nornbenchmarks.getTrackData ("Norn Benchmarks") +
-          models.light.getTrackData("Trau Light")+
-          models.Leetcode.getTrackData ("Leetcode Strings") + 
-          models.appscan.getTrackData ( "IBM Appscan") + 
-          models.slothtests.getTrackData ("Sloth Tests") +
-          models.woorpje.getTrackData ("Woorpje Word Equations") +
-          models.kaluza.getTrackData ("Kaluza") +
-          models.stringfuzz.getTrackData ("StringFuzz Tests") +
-          models.z3_regression.getTrackData("z3Str3 Regression Test")+
-          models.cashewsuite.getTrackData ("Cashew Suite") + 
-          models.joacosuite.getTrackData ("JOACO Suite") +
-          models.strangersuite.getTrackData ("Stranger Benchmarks") +
-          models.kauslersuite.getTrackData ("Kausler Suite") +
+tracks = (models.PyEx.httplib2cachecontrol.getTrackData () +
+          #models.pisa.getTrackData ("Pisa") +
+          #models.nornbenchmarks.getTrackData ("Norn Benchmarks") +
+          #models.light.getTrackData("Trau Light")+
+          #models.Leetcode.getTrackData ("Leetcode Strings") + 
+          #models.appscan.getTrackData ( "IBM Appscan") + 
+          #models.slothtests.getTrackData ("Sloth Tests") +
+          #models.woorpje.getTrackData ("Woorpje Word Equations") +
+          #models.kaluza.getTrackData ("Kaluza") +
+          #models.stringfuzz.getTrackData ("StringFuzz Tests") +
+          #models.z3_regression.getTrackData("z3Str3 Regression Test")+
+          #models.cashewsuite.getTrackData ("Cashew Suite") + 
+          #models.joacosuite.getTrackData ("JOACO Suite") +
+          #models.strangersuite.getTrackData ("Stranger Benchmarks") +
+          #models.kauslersuite.getTrackData ("Kausler Suite") +
           []
 )
 #solvers = {
@@ -71,12 +71,12 @@ smtsolvers = ["cvc4"]
 
 solvers = {}
 for s in [tools.z3seq,
-          tools.z3str3,
+          #tools.z3str3,
           tools.cvc4,
-          tools.z3str3portfolio,
+          #tools.z3str3portfolio,
           #tools.z3str3bv,
           #tools.z3str2,
-          tools.z3str3length,
+          #tools.z3str3length,
           #tools.woorpjeSMT
           #tools.trau,
           #tools.dummy

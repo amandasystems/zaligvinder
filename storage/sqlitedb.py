@@ -117,13 +117,13 @@ class ResultRepository:
         self.trackrepo = trackrepo
 
     def createSchema (self):
-        query = '''Create Table IF NOT EXISTS Result (solver TEXT, instanceid INTEGER, smtcalls INTEGER, timeouted BOOLEAN,result BOOLEAN,time INTEGER,output TEXT,model TEXT)'''       
+        query = '''Create Table IF NOT EXISTS Result (solver TEXT, instanceid INTEGER, smtcalls INTEGER, timeouted BOOLEAN,result BOOLEAN,verified BOOLEAN, time INTEGER,output TEXT,model TEXT)'''       
         self._db.execute (query)
 
     def storeResult (self,result,solver,instance):
-        query = '''INSERT INTO Result (solver,instanceid,smtcalls,timeouted,result,time,output,model) VALUES(?,?,?,?,?,?,?,?)'''
+        query = '''INSERT INTO Result (solver,instanceid,smtcalls,timeouted,result,verified,time,output,model) VALUES(?,?,?,?,?,?,?,?,?)'''
         tid = self.instancerepo.storeInstance ( instance)
-        self._db.execute (query,(solver,tid,result.smtcalls,result.timeouted,result.result,result.time,result.output,result.model))
+        self._db.execute (query,(solver,tid,result.smtcalls,result.timeouted,result.result,result.verified,result.time,result.output,result.model))
 
     def getSolvers (self):
         query = '''SELECT DISTINCT solver  FROM Result'''

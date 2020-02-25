@@ -72,7 +72,6 @@ class MajorityVoter:
                             vRes = vRes and verifiers[v].run(assertedInputFile,timeout,ploc,os.path.abspath(".")).result
                         r[i].verified = vRes
                         shutil.rmtree (tempd)
-
                 toolResults = [r[i] for r in res.values ()]
                 tts = [r for r in toolResults if r.result == True and r.verified == True]
                 ffs = [r for r in toolResults if r.result == False]

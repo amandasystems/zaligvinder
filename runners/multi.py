@@ -49,10 +49,12 @@ class TheRunner:
         
         return results
 
-    def runTestSetup (self,tracks,solvers,voter,summaries,outputfile,timeout,ploc):
+    def runTestSetup (self,tracks,solvers,voter,summaries,outputfile,timeout,ploc,verifiers=dict()):
         for t in tracks:
             res = self.runTrack (t,solvers,outputfile,timeout,ploc)
             voter.voteOnResult (t,res)
+            voter.voteOnResult (t,res,timeout,ploc)
+
             for s in summaries:
                 s(t,res)
 

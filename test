@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from runners.base import TheRunner as testrunner
+from runners.multi import TheRunner as testrunner
 import utils
 import storage
 import voting.majority as voting
@@ -89,6 +89,7 @@ summaries = [summarygenerators.terminalResult
 timeout = 20 
 ploc = utils.JSONProgramConfig ()
 
+verifiers = {"cvc4": tools.cvc4,"z3seq" : tools.z3seq} # use cvc4 and the sequence solver as verifiers
 store = storage.SQLiteDB ("RP")
 summaries = [
     summarygenerators.terminalResult,

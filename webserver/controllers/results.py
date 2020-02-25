@@ -185,7 +185,7 @@ class ResultController:
                     if expectedResult != None:
                         expectedResultSet = True
                     instanceName = tt[3]
-                error = 1 if expectedResult != tt[4].result and expectedResultSet and tt[4].result != None else 0
+                error = 1 if ((expectedResult != tt[4].result and expectedResultSet) or (tt[4].result == True and tt[4].verified == False)) and tt[4].result != None else 0
                 programError = 1 if "Error" in tt[5] else 0
 
                 errorFound = 1 if error == 1 or errorFound == 1 else 0
@@ -196,7 +196,8 @@ class ResultController:
                                      "time" : "%.2f" % tt[4].time,
                                      "error" : error,
                                      "unique_answer" : 0,
-                                     "programError" : programError}
+                                     "programError" : programError,
+                                     "veriefied" : tt[4].verified}
                 if tt[4].result != None and error == 0:
                     classifications+=[tt[0]]
                     if tt[4].result == 1:

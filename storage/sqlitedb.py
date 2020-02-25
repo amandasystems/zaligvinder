@@ -299,13 +299,12 @@ class ResultRepository:
         query = '''SELECT Result.solver, Result.instanceid, Result.result FROM Result,TrackInstanceMap WHERE Result.instanceid = TrackInstanceMap.instance AND TrackInstanceMap.track = ? AND Result.result IS NOT NULL GROUP BY Result.instanceid,Result.result HAVING COUNT(Result.result) = 1'''
         return self._getUniquelyClassifiedInstancesHelper(query,str(trackid))
 
-
     def getInstanceResultForSolvers(self,instanceid,solvers):
         paramsStr = ', '.join("?" for s in solvers)
         querylist = [instanceid] + solvers
         query = '''SELECT Result.*,TrackInstance.expected,TrackInstance.Name FROM Result,TrackInstance WHERE Result.instanceid = ? AND Result.instanceid = TrackInstance.id  AND Result.solver IN (%s) ORDER BY time ASC ''' % paramsStr
         rows = self._db.executeRet (query,(querylist))
-        return [(t[0],t[1],t[8], t[9], utils.Result(t[4],t[5],t[3],t[2]),t[6]) for t in rows]
+        return [(t[0],t[1],t[9], t[10], utils.Result(t[4],t[5],t[3],t[2],t[6],t[7],t[8]),t[6]) for t in rows]
         
     def getSummaryForSolver (self,solver):
         query = '''SELECT SUM(Result.smtcalls), SUM(Result.timeouted), SUM(Result.time),COUNT(*) FROM Result WHERE solver = ?'''

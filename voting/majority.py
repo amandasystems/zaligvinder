@@ -74,6 +74,7 @@ class MajorityVoter:
                         shutil.rmtree (tempd)
 
                 toolResults = [r[i] for r in res.values ()]
+                verifiedTrue = True if True in [r.verified for r in toolResults] else False
                 tts = [r for r in toolResults if r.result == True and r.verified == True]
                 ffs = [r for r in toolResults if r.result == False]
                 unk = [r for r in toolResults if r.result == None]
@@ -82,7 +83,7 @@ class MajorityVoter:
                 cunk = len(unk)
                 if ctts > 0 or cffs > 0:
                     #Someone made a conclusion
-                    if ctts > cffs:
+                    if ctts > cffs or verifiedTrue:
                         #More True votes
                         inst.expected = True
                         

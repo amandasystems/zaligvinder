@@ -24,10 +24,10 @@ class TheRunner:
         sys.stdout.write ("\n")
         return results
 
-    def runTestSetup (self,tracks,solvers,voter,summaries,outputfile,timeout,ploc):
+    def runTestSetup (self,tracks,solvers,voter,summaries,outputfile,timeout,ploc,verifiers=dict()):
         for t in tracks:
             res = self.runTrack (t,solvers,outputfile,timeout,ploc)
             print(outputfile)
-            voter.voteOnResult (t,res,timeout,ploc,{"cvc4": tools.cvc4,"z3seq" : tools.z3seq})
+            voter.voteOnResult (t,res,timeout,ploc,verifiers)
             for s in summaries:
                 s(t,res)

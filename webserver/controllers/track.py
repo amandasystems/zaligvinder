@@ -29,3 +29,23 @@ class TracksController:
         ids = self._track.getAllGroups ()
         return webserver.views.jsonview.JSONView ([{"id" : tt[0]} for tt in ids])
 
+
+    def getStringOperationDataForTrack(self,params):
+        if "track" in params:
+            data = self._track.getStringOperationDataForTrack(params["track"])
+            return webserver.views.jsonview.JSONView ([data])
+        
+        else: 
+            return webserver.views.jsonview.JSONView ({"Error" : "No TrackId given!"})
+
+    def getStringOperationDataForGroup(self,params):
+        if "bgroup" in params:
+            data = self._track.getStringOperationDataForGroup(params["bgroup"])
+            return webserver.views.jsonview.JSONView ([data])
+        
+        else: 
+            return webserver.views.jsonview.JSONView ({"Error" : "No Group name given!"})
+
+
+
+

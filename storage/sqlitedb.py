@@ -108,6 +108,40 @@ class TrackRepository:
     def getAllGroups (self):
         query = '''SELECT DISTINCT Track.bgroup FROM Track'''
         return self._db.executeRet(query,)
+
+    def getStringOperationDataForGroup(self,group,keywords=[]):
+        query = '''SELECT Track.id FROM Track WHERE Track.bgroup = ?'''
+        trackids = [t[0] for t in self._db.executeRet (query,(group,))]
+        keywordDistribution = dict()
+        for i,tid in enumerate(trackids):
+            print("Processing " + str(i) + " of " + str(len(trackids)))
+            keywordDistribution = self.getStringOperationDataForTrack(tid,keywords,keywordDistribution)
+        return keywordDistribution
+
+    def getStringOperationDataForTrack(self,trackid,keywords=[],keywordDistribution = dict()):
+        if len(keywords) == 0:
+            keywords = ["str.++","str.len","str.<",
+                "str.to.re","str.in.re",
+                "str.<=","str.at","str.substr","str.prefixof","str.suffixof","str.contains","str.indexof","str.replace","str.is_digit","str.to.int","int.to.str"]
+
+        query = '''SELECT TrackInstance.id, TrackInstance.name, TrackInstance.filepath FROM TrackInstanceMap,TrackInstance WHERE TrackInstanceMap.track = ? AND TrackInstanceMap.instance = TrackInstance.id'''
+        rows = self._db.executeRet (query,(trackid,))
+        for (iid,name,filepath) in rows:
+            rFilepath = filepath[filepath.rindex("models"):]
+            keywordDistribution = self._getKeywordDistribution(rFilepath,keywords,keywordDistribution)
+        return keywordDistribution
+
+    def _getKeywordDistribution (self,filepath,keywords,keywordDistribution=dict()):
+        if set(keywordDistribution.keys()) != set(keywords):
+            for k in keywords:
+                keywordDistribution[k] = 0
+        f=open(filepath,"r")
+        for l in f:
+            for k in keywords:
+                if k in l:
+                    keywordDistribution[k]+=l.count(k)
+        return keywordDistribution
+
     
 
 class ResultRepository:
@@ -180,6 +214,7 @@ class ResultRepository:
     def getResultForSolverGroup (self,solver,group):
         query = '''SELECT * FROM Result,TrackInstanceMap,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance and TrackInstanceMap.track = Track.id and Track.bgroup = ? ORDER BY time ASC '''
         rows = self._db.executeRet (query,(solver,group,))
+        print(rows)
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
 
     def getResultForSolverTrack (self,solver,track):
@@ -293,6 +328,13 @@ class ResultRepository:
  
         return data
 
+    def instanceInformation(self,instanceid):
+        keywords = ["Bool","String","Int"]
+        queryInstance = '''SELECT filepath FROM TrackInstance WHERE id = ?'''
+        filepath = self._db.executeRet (queryInstance, (instanceid,))[0][0]
+
+        return self.classifyInstance(filepath[len("/home/mku/wordbenchmarks/"):],keywords)
+        #distributionList = list(filter(lambda x: x[1] > 0, sorted(distribution.items(), key = lambda kv:(kv[1], kv[0]))))
 
     def classifyInstance (self,instance,keywords):
         keywordDistribution = dict()
@@ -301,9 +343,11 @@ class ResultRepository:
 
         deepest_nest = 0
         current_nest = 0
+        charcount = 0
 
         f=open(instance,"r")
         for l in f:
+            charcount+=len(l)
             for k in keywords:
                 if k in l:
                     keywordDistribution[k]+=l.count(k)
@@ -318,6 +362,7 @@ class ResultRepository:
                         current_nest=-1;
 
         keywordDistribution["deepest_nest"] = deepest_nest; 
+        keywordDistribution["length"] = charcount
 
         return keywordDistribution
     ####
@@ -440,7 +485,6 @@ class ResultRepository:
         if timeWO == None:
             timeWO = 0.0
 
-
         return (smtcalls,timeouted,satis,unk,nsatis,errors,time,total,timeWO,totalWO)
 
 
@@ -482,7 +526,21 @@ class ResultRepository:
 
         #total = timeouted+satis+unk+nsatis+errors
         
-        return (smtcalls,timeouted,satis,unk,nsatis,errors,time,total) 
+        return (smtcalls,timeouted,satis,unk,nsatis,errors,time,total)
+
+    def getSummaryForSolverTrackTotalTimeWOTimeout(self,solver,track):
+        (smtcalls,timeouted,satis,unk,nsatis,errors,time,total) = self.getSummaryForSolverTrack(solver,track)
+
+        #query = '''SELECT SUM(Result.time),COUNT(*) FROM Result,TrackInstanceMap,TrackInstance,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? AND Result.timeouted = false AND Result.instanceid = TrackInstance.id AND (TrackInstance.expected = Result.result OR Result.result = NULL)'''
+        query = '''SELECT SUM(Result.time),COUNT(*) FROM Result,TrackInstanceMap WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = ? AND Result.timeouted = false'''
+        row = self._db.executeRet (query, (solver,track,))
+        timeWO,totalWO = row[0]
+
+        if timeWO == None:
+            timeWO = 0.0
+
+        return (smtcalls,timeouted,satis,unk,nsatis,errors,time,total,timeWO,totalWO)
+
 
     def getReferenceForInstance (self,instance):
         query = '''SELECT result,Solver FROM Result WHERE instanceid = ? '''
@@ -500,6 +558,12 @@ class ResultRepository:
         elif len(nsat) > len(sat):
             res = False
         return utils.ReferenceResult (res,sat,nsat)
+
+    def getErrosForSolverGroup (self,solver,group):
+        errorquery = ''' SELECT Result.solver, Track.bgroup, Track.name, TrackInstance.name, TrackInstance.filepath, Result.result, TrackInstance.expected, Result.model TrackInstance FROM Result,TrackInstance,TrackInstanceMap,Track WHERE Result.solver = ? AND Result.result IS NOT NULL AND Result.instanceid = TrackInstance.id AND TrackInstance.expected != Result.result AND TrackInstance.id = TrackInstanceMap.instance AND TrackInstanceMap.track = Track.id AND Track.bgroup = ?''' 
+        errors = self._db.executeRet (errorquery, (solver,group,))
+
+        return errors
         
         
 class SQLiteDB:

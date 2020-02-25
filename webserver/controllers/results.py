@@ -224,19 +224,33 @@ class ResultController:
             return webserver.views.jsonview.JSONView ({"Error" : "Missing parameter"})
 
 
+    def getAllErrorsForSolver(self,params):
+        if "solver" in params:
+            solver = params["solver"][0]
+            bgroups = list(self._results.getTrackInfo ().keys())
+
+
+            for bgroup in bgroups:
+                results = self._results.getErrosForSolverGroup(solver,bgroup)
+
+                #Result.solver, Track.bgroup, Track.name, TrackInstance.name, Result.result, TrackInstance.expected, Result.model
+
+                for (s,g,tname,instance,filepath,res,exp,model) in results:
+                    print(filepath) #+" (expected: " + str(exp) + ", got: " + str(res) +")")
+                    """if res == 1:
+                        print("------")
+                        print(model)
+                        print("------")
+                    """
+
+            return webserver.views.jsonview.JSONView ({"Error" : "Done"})
 
     def getFasterClassifiedInstancesForTrack(self,params):
         if "solvers" in params and "track" in params and len(params["solvers"]) == 2:
             solver1 = params["solvers"][0]
             solver2 = params["solvers"][1]
             #trackid = params["track"][0]
-
-
-
-
-
-
-            #bgroup = list(self._results.getTrackInfo ().keys())[0]
+           #bgroup = list(self._results.getTrackInfo ().keys())[0]
             groups = self._results.getTrackInfo ()
 
             out = ""

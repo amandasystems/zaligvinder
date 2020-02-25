@@ -40,15 +40,20 @@ def run (eq,timeout,ploc,wd,solver="1",param="60"):
 
     time = timer.Timer ()
     try:
-        out = subprocess.check_output ([path,"--lang","smt2","-m","--no-interactive","--no-interactive-prompt","--strings-exp",smtfile],timeout=timeout).decode().strip()
+        out = subprocess.check_output ([path,"--lang","smt2","-m","--no-interactive","--no-interactive-prompt","--strings-exp","--tlimit-per",str(timeout)+"000",smtfile]).decode().strip()
     except subprocess.TimeoutExpired:
         return utils.Result(None,timeout,True,1)
     except subprocess.CalledProcessError as e:
         time.stop()
-        out = "Error in " + eq + ": " + str(e)
-        return utils.Result(None,time.getTime(),False,1,out)
+        
+        if time.getTime() >= timeout:
+            return utils.Result(None,timeout,True,1)
+        else:
+            out = "Error in " + eq + ": " + str(e)
+            return utils.Result(None,time.getTime(),False,1,out)
     time.stop ()
     shutil.rmtree (tempd)
+    
     if "unsat" in out:
         return utils.Result(False,time.getTime (),False,1,out)
     elif "sat" in out:

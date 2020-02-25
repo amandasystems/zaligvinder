@@ -58,7 +58,7 @@ def run (eq,timeout,ploc,wd):
     return utils.Result(None,time.getTime  (),False,1,out)
 
 def addRunner (addto):
-    addto['z3str3-bv'] = run
+    addto['z3str3-murphy'] = run
 
 
 if __name__ == "__main__":

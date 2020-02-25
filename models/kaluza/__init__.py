@@ -1,16 +1,12 @@
+import os
+import utils
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
 def getTrackData (bname = None):
-    import models.kaluza.BigSat
-    import models.kaluza.BigUnsat
-    import models.kaluza.SmallSat
-    import models.kaluza.SmallUnsat
-    res = []
-    for k in [models.kaluza.BigSat,
-              models.kaluza.BigUnsat,
-              models.kaluza.SmallSat,
-              models.kaluza.SmallUnsat]:
-        
-    
-        res = res+k.getTrackData (bname or "Kaluza")
-    return res
+    filest = []
+    for root, dirs, files in os.walk(dir_path, topdown=False):
+        for name in files:
+            if name.endswith (".smt2") and not name.startswith("."):
+                filest.append(utils.TrackInstance(name,os.path.join (root,name)))
 
+    return [utils.Track("kaluza",filest,bname)]

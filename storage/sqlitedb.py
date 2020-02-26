@@ -119,18 +119,13 @@ class TrackRepository:
         return keywordDistribution
 
     def getStringOperationDataForTrack(self,trackid,keywords=[],keywordDistribution = dict()):
-        if len(keywords) == 0:
-            keywords = ["str.++","str.len","str.<",
-                "str.to.re","str.in.re",
-                "str.<=","str.at","str.substr","str.prefixof","str.suffixof","str.contains","str.indexof","str.replace","str.is_digit","str.to.int","int.to.str"]
-
-        query = '''SELECT TrackInstance.id FROM TrackInstanceMap WHERE TrackInstanceMap.track = ?'''
+        query = '''SELECT TrackInstanceMap.instance FROM TrackInstanceMap WHERE TrackInstanceMap.track = ?'''
         rows = [t[0] for t in self._db.executeRet (query,(trackid,))]
         for iid in rows:
             keywordDistribution = self.getStringOperationDataForInstance(iid,keywords,keywordDistribution)
         return keywordDistribution
 
-    def getStringOperationDataForInstance(self,instanceid,keywords,keywordDistribution = dict()):
+    def getStringOperationDataForInstance(self,instanceid,keywords=[],keywordDistribution = dict()):
         if len(keywords) == 0:
             keywords = ["str.++","str.len","str.<",
                 "str.to.re","str.in.re",
@@ -144,17 +139,26 @@ class TrackRepository:
         return keywordDistribution
 
     def _getKeywordDistribution (self,filepath,keywords,keywordDistribution=dict()):
-        if set(keywordDistribution.keys()) != set(keywords):
+        """if set(keywordDistribution.keys()) != set(keywords):
             for k in keywords:
                 keywordDistribution[k] = 0
+        """
         f=open(filepath,"r")
+        #print(filepath)
         for l in f:
-            for k in keywords:
+            keywordDistribution = self._dynamicallyAquireKeywords(l,keywordDistribution)
+            for k in keywordDistribution.keys():
                 if k in l:
                     keywordDistribution[k]+=l.count(k)
         return keywordDistribution
 
-    
+    def _dynamicallyAquireKeywords(self,line,keywordDistribution):
+        import re
+        keywords = list(keywordDistribution.keys()) 
+        for k in re.findall(r'\bstr\.[\S]+\s', line):
+            if k not in keywords:
+                keywordDistribution[k] = 0
+        return keywordDistribution
 
 class ResultRepository:
     def __init__ (self,db,trackrepo,instancerepo):
@@ -207,7 +211,7 @@ class ResultRepository:
         return data
 
     def getInstanceIdsForTrack(self,trackid):
-        print(trackid)
+        #print(trackid)
         query = '''SELECT DISTINCT TrackInstanceMap.instance  FROM TrackInstanceMap WHERE TrackInstanceMap.track = ?'''
         rows = self._db.executeRet (query,(int(trackid),))
         return [t[0] for t in rows] 
@@ -266,6 +270,13 @@ class ResultRepository:
             #print (rows)
             return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
 
+    def getBestSolverForInstance(self,instanceid):
+        query = '''SELECT Result.solver FROM Result,TrackInstance WHERE Result.instanceid = TrackInstance.id AND Result.instanceid = ? AND Result.result IS NOT NULL AND Result.result = TrackInstance.expected ORDER BY time ASC ''' # TODO ADD Result.verified IS NOT false
+        rows = [t[0] for t in self._db.executeRet (query,(instanceid,))]
+        if len(rows) > 0:
+            return rows[0]
+        else:
+            return None
 
     # faster classification
     def get2ComparisonTrackResultsFasterClassified(self,trackid,solver1,solver2):
@@ -572,7 +583,7 @@ class ResultRepository:
         return utils.ReferenceResult (res,sat,nsat)
 
     def getErrosForSolverGroup (self,solver,group):
-        errorquery = ''' SELECT Result.solver, Track.bgroup, Track.name, TrackInstance.name, TrackInstance.filepath, Result.result, TrackInstance.expected, Result.model, Result.verified, Result.output TrackInstance FROM Result,TrackInstance,TrackInstanceMap,Track WHERE Result.solver = ? AND Result.instanceid = TrackInstance.id AND TrackInstance.id = TrackInstanceMap.instance AND TrackInstanceMap.track = Track.id AND Track.bgroup = ? AND ( ((TrackInstance.expected != Result.result OR Result.verified = false) AND Result.result IS NOT NULL) OR Result.output LIKE '%Error%')''' 
+        errorquery = ''' SELECT Result.solver, Track.bgroup, Track.name, TrackInstance.name, TrackInstance.filepath, Result.time, Result.result, TrackInstance.expected, Result.model, Result.verified, Result.output TrackInstance FROM Result,TrackInstance,TrackInstanceMap,Track WHERE Result.solver = ? AND Result.instanceid = TrackInstance.id AND Result.timeouted = false AND TrackInstance.id = TrackInstanceMap.instance AND TrackInstanceMap.track = Track.id AND Track.bgroup = ? AND ( ((TrackInstance.expected != Result.result OR Result.verified = false) AND Result.result IS NOT NULL) OR Result.output LIKE '%Error%')''' 
         errors = self._db.executeRet (errorquery, (solver,group,))
 
         return errors

@@ -12,7 +12,7 @@ class Server:
         self._results = storage.sqlitedb.ResultRepository (db,self._track,self._trackinstance)
         self._tcontroller = webserver.controllers.TracksController (self._track)
         self._icontroller = webserver.controllers.TrackInstanceController (self._trackinstance)
-        self._rcontroller = webserver.controllers.ResultController (self._results)
+        self._rcontroller = webserver.controllers.ResultController (self._results,self._track)
         self._ccontroller = webserver.controllers.ChartController (self._results,self._track)
         self._fcontroller = webserver.controllers.FileControl ()
         #self._ccontrollerJS = webserver.controllers.ChartControllerJS (self._results)
@@ -64,7 +64,11 @@ class Server:
 
         app.addEndpoint (webserver.routing.RegexMatch("z3/keywords/track/(?P<track>\d+)"),self._tcontroller.getStringOperationDataForTrack)
         app.addEndpoint (webserver.routing.RegexMatch("z3/keywords/group/(?P<bgroup>[^/]+)"),self._tcontroller.getStringOperationDataForGroup)
-        
+        app.addEndpoint (webserver.routing.RegexMatch("z3/keywords/best"),self._rcontroller.getBestSolverForStringOperations)
+
+
+
+
         
 
 

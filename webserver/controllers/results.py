@@ -2,8 +2,9 @@ import webserver.views
 
 
 class ResultController:
-    def __init__(self,results):
+    def __init__(self,results,track):
         self._results = results
+        self._track = track
 
     def getSummaryForSolver (self,params):
         res = {}
@@ -235,27 +236,68 @@ class ResultController:
 
             for bgroup in bgroups:
                 results = self._results.getErrosForSolverGroup(solver,bgroup)
-                for (s,g,tname,instance,filepath,res,exp,model,verified,output) in results:
-                    if "sat" not in output and "unsat" not in output:
-                        print(output)
+                for (s,g,tname,instance,filepath,t,res,exp,model,verified,output) in results:
                     if verified == False:
                         invalidModel+=[filepath]
                     elif res != exp and res != None:
                         wrongUnsat+=[filepath]
                     elif "Error" in output:
+                        #print(t,res)
                         programError+=[filepath]
                     else:
                         pass
                         #raise Exception("This point should never be reached!")
+            data = {"invalidModel" : invalidModel,"wrongUnsat" : wrongUnsat,"programError" : programError}
+
+            # hack
+            """
+            print("----------")
+            print("mkdir invalidModel wrongUnsat programError")
+            for k in data:
+                for f in data[k]:
+                    print("cp " + f + " ./" + k + "/")
+            """
 
 
+            return webserver.views.jsonview.JSONView (data)
+
+    def getBestSolverForStringOperations(self,params):
+        benchmarkInfo = self._results.getTrackInfo ()
+        keyWordLimit = 3
+        # keywords -> solver -> occurence
+        solverStats = dict()
+        for g in benchmarkInfo.keys():
+            for (tid,tname) in benchmarkInfo[g]:
+                print("Track :" + str(tid) + " - " + tname)
+                for instanceid in self._results.getInstanceIdsForTrack(tid):
+                    #print("Instance id:" + str(instanceid))
+                    s = self._results.getBestSolverForInstance(instanceid)
+                    if s != None:
+                        distributionList = [k[0] for k in sorted(self._track.getStringOperationDataForInstance(instanceid).items(), key = lambda kv:(kv[1], kv[0]))]
+                        distributionList.reverse()
+                        distributionList = distributionList[:keyWordLimit]
+                        distributionList.sort()
+
+                        kt = tuple(distributionList)
+
+                        if kt not in solverStats:
+                            solverStats[kt] = dict() 
+
+                        if s not in solverStats[kt]:
+                            solverStats[kt][s]=1
+                        else:
+                            solverStats[kt][s]+=1
 
 
+        for kt in solverStats:
+            print("KeyWords: " + str(kt))
+            for s in solverStats[kt]:
+                print(s + ": " + str(solverStats[kt][s]))
+            print("------")
 
 
-
-            return webserver.views.jsonview.JSONView ({"invalidModel" : invalidModel,"wrongUnsats" : wrongUnsat,"programErrors" : programError})
-
+        return webserver.views.jsonview.JSONView ("")
+    
     def getFasterClassifiedInstancesForTrack(self,params):
         if "solvers" in params and "track" in params and len(params["solvers"]) == 2:
             solver1 = params["solvers"][0]

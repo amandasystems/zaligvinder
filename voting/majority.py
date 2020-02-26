@@ -73,7 +73,15 @@ class MajorityVoter:
                         r[i].verified = vRes
                         shutil.rmtree (tempd)
                 toolResults = [r[i] for r in res.values ()]
-                verifiedTrue = True if True in [r.verified for r in toolResults] else False
+
+                verifiedResults = [r.verified for r in toolResults]
+                if True in verifiedResults:
+                    verifiedTrue = True
+                elif False in verifiedResults:
+                    verifiedTrue = False
+                else:
+                    verifiedTrue = None
+
                 tts = [r for r in toolResults if r.result == True and r.verified == True]
                 ffs = [r for r in toolResults if r.result == False]
                 unk = [r for r in toolResults if r.result == None]

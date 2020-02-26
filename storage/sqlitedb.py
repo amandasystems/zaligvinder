@@ -124,9 +124,21 @@ class TrackRepository:
                 "str.to.re","str.in.re",
                 "str.<=","str.at","str.substr","str.prefixof","str.suffixof","str.contains","str.indexof","str.replace","str.is_digit","str.to.int","int.to.str"]
 
-        query = '''SELECT TrackInstance.id, TrackInstance.name, TrackInstance.filepath FROM TrackInstanceMap,TrackInstance WHERE TrackInstanceMap.track = ? AND TrackInstanceMap.instance = TrackInstance.id'''
-        rows = self._db.executeRet (query,(trackid,))
-        for (iid,name,filepath) in rows:
+        query = '''SELECT TrackInstance.id FROM TrackInstanceMap WHERE TrackInstanceMap.track = ?'''
+        rows = [t[0] for t in self._db.executeRet (query,(trackid,))]
+        for iid in rows:
+            keywordDistribution = self.getStringOperationDataForInstance(iid,keywords,keywordDistribution)
+        return keywordDistribution
+
+    def getStringOperationDataForInstance(self,instanceid,keywords,keywordDistribution = dict()):
+        if len(keywords) == 0:
+            keywords = ["str.++","str.len","str.<",
+                "str.to.re","str.in.re",
+                "str.<=","str.at","str.substr","str.prefixof","str.suffixof","str.contains","str.indexof","str.replace","str.is_digit","str.to.int","int.to.str"]
+
+        query = '''SELECT TrackInstance.name, TrackInstance.filepath FROM TrackInstance WHERE TrackInstance.id = ?'''
+        rows = self._db.executeRet (query,(instanceid,))
+        for (name,filepath) in rows:
             rFilepath = filepath[filepath.rindex("models"):]
             keywordDistribution = self._getKeywordDistribution(rFilepath,keywords,keywordDistribution)
         return keywordDistribution
@@ -429,7 +441,7 @@ class ResultRepository:
         querylist = [instanceid] + solvers
         query = '''SELECT Result.*,TrackInstance.expected,TrackInstance.Name FROM Result,TrackInstance WHERE Result.instanceid = ? AND Result.instanceid = TrackInstance.id  AND Result.solver IN (%s) ORDER BY time ASC ''' % paramsStr
         rows = self._db.executeRet (query,(querylist))
-        return [(t[0],t[1],t[8], t[9], utils.Result(t[4],t[5],t[3],t[2]),t[6]) for t in rows]
+        return [(t[0],t[1],t[9], t[10], utils.Result(t[4],t[5],t[3],t[2],t[6],t[7],t[8]),t[6]) for t in rows]
         
     def getSummaryForSolver (self,solver):
         query = '''SELECT SUM(Result.smtcalls), SUM(Result.timeouted), SUM(Result.time),COUNT(*) FROM Result WHERE solver = ?'''
@@ -560,7 +572,7 @@ class ResultRepository:
         return utils.ReferenceResult (res,sat,nsat)
 
     def getErrosForSolverGroup (self,solver,group):
-        errorquery = ''' SELECT Result.solver, Track.bgroup, Track.name, TrackInstance.name, TrackInstance.filepath, Result.result, TrackInstance.expected, Result.model TrackInstance FROM Result,TrackInstance,TrackInstanceMap,Track WHERE Result.solver = ? AND Result.result IS NOT NULL AND Result.instanceid = TrackInstance.id AND TrackInstance.expected != Result.result AND TrackInstance.id = TrackInstanceMap.instance AND TrackInstanceMap.track = Track.id AND Track.bgroup = ?''' 
+        errorquery = ''' SELECT Result.solver, Track.bgroup, Track.name, TrackInstance.name, TrackInstance.filepath, Result.result, TrackInstance.expected, Result.model, Result.verified, Result.output TrackInstance FROM Result,TrackInstance,TrackInstanceMap,Track WHERE Result.solver = ? AND Result.instanceid = TrackInstance.id AND TrackInstance.id = TrackInstanceMap.instance AND TrackInstanceMap.track = Track.id AND Track.bgroup = ? AND ( ((TrackInstance.expected != Result.result OR Result.verified = false) AND Result.result IS NOT NULL) OR Result.output LIKE '%Error%')''' 
         errors = self._db.executeRet (errorquery, (solver,group,))
 
         return errors

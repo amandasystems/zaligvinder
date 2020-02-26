@@ -229,21 +229,32 @@ class ResultController:
             solver = params["solver"][0]
             bgroups = list(self._results.getTrackInfo ().keys())
 
+            invalidModel = []
+            programError = []
+            wrongUnsat = []
 
             for bgroup in bgroups:
                 results = self._results.getErrosForSolverGroup(solver,bgroup)
+                for (s,g,tname,instance,filepath,res,exp,model,verified,output) in results:
+                    if "sat" not in output and "unsat" not in output:
+                        print(output)
+                    if verified == False:
+                        invalidModel+=[filepath]
+                    elif res != exp and res != None:
+                        wrongUnsat+=[filepath]
+                    elif "Error" in output:
+                        programError+=[filepath]
+                    else:
+                        pass
+                        #raise Exception("This point should never be reached!")
 
-                #Result.solver, Track.bgroup, Track.name, TrackInstance.name, Result.result, TrackInstance.expected, Result.model
 
-                for (s,g,tname,instance,filepath,res,exp,model) in results:
-                    print(filepath) #+" (expected: " + str(exp) + ", got: " + str(res) +")")
-                    """if res == 1:
-                        print("------")
-                        print(model)
-                        print("------")
-                    """
 
-            return webserver.views.jsonview.JSONView ({"Error" : "Done"})
+
+
+
+
+            return webserver.views.jsonview.JSONView ({"invalidModel" : invalidModel,"wrongUnsats" : wrongUnsat,"programErrors" : programError})
 
     def getFasterClassifiedInstancesForTrack(self,params):
         if "solvers" in params and "track" in params and len(params["solvers"]) == 2:

@@ -66,48 +66,6 @@ class Server:
         app.addEndpoint (webserver.routing.RegexMatch("z3/keywords/group/(?P<bgroup>[^/]+)"),self._tcontroller.getStringOperationDataForGroup)
         app.addEndpoint (webserver.routing.RegexMatch("z3/keywords/best"),self._rcontroller.getBestSolverForStringOperations)
 
-
-
-
-
-        benchmarkInfo = self._results.getTrackInfo ()
-        keyWordLimit = 3
-        # keywords -> solver -> occurence
-        solverStats = dict()
-        for g in benchmarkInfo.keys():
-            for (tid,tname) in benchmarkInfo[g]:
-                print("Track :" + str(tid) + " - " + tname)
-                for instanceid in self._results.getInstanceIdsForTrack(tid):
-                    #print("Instance id:" + str(instanceid))
-                    s = self._results.getBestSolverForInstance(instanceid)
-                    if s != None:
-                        distributionList = [k[0] for k in sorted(self._track.getStringOperationDataForInstance(instanceid).items(), key = lambda kv:(kv[1], kv[0]))]
-                        distributionList.reverse()
-                        distributionList = distributionList[:keyWordLimit]
-                        distributionList.sort()
-
-                        kt = tuple(distributionList)
-
-                        if kt not in solverStats:
-                            solverStats[kt] = dict() 
-
-                        if s not in solverStats[kt]:
-                            solverStats[kt][s]=1
-                        else:
-                            solverStats[kt][s]+=1
-
-
-        for kt in solverStats:
-            print("KeyWords: " + str(kt))
-            for s in solverStats[kt]:
-                print(s + ": " + str(solverStats[kt][s]))
-            print("------")
-
-
-        
-
-
-
         self._app = app
 
     def startServer (self):

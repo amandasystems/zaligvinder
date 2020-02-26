@@ -367,11 +367,13 @@ class EntryView(BaseView):
                  benchmarks,
                  tracks,
                  solvers = [],
+                 instanceCount = 0
     ):
         
         self._bmarks = benchmarks
         self._tracks = tracks
         self._solvers = solvers
+        self._totalInstances = instanceCount
         
     def genEntryText(self,sendto):
       tt = '''<div class="clr-row clr-justify-content-centerr">
@@ -382,7 +384,7 @@ class EntryView(BaseView):
                       </div>
                         <div class="card-block">
                             <p class="card-text">'''
-      tt+="Your current setup features "+str(len(self._solvers))+" solvers on "+str(len(self._tracks))+" tracks in "+str(len(self._bmarks))+" benchmark sets."
+      tt+="Your current setup features "+str(len(self._solvers))+" solvers on "+str(len(self._tracks))+" tracks in "+str(len(self._bmarks))+" benchmark sets, having "+ str(self._totalInstances)+" many instances."
 
 
       tt+='''
@@ -392,7 +394,7 @@ class EntryView(BaseView):
                 </div>
             </div>'''
 
-      tt= '''<div class="clr-row clr-justify-content-centerr">
+      tt+= '''<div class="clr-row clr-justify-content-centerr">
                 <div class="clr-col">                
                 <div class="card">
                        <div class="card-header">

@@ -510,6 +510,36 @@ class ResultRepository:
 
         return (smtcalls,timeouted,satis,unk,nsatis,errors,time,total,timeWO,totalWO)
 
+    # quick hack...
+    def getSummaryForSolver(self,solver):
+        query = '''SELECT SUM(Result.smtcalls), SUM(Result.timeouted), SUM(Result.time),COUNT(*) FROM Result WHERE solver = ?'''
+        rows = self._db.executeRet (query, (solver,))
+        smtcalls,timeouted,time,total = rows[0]
+        assert(len(rows) == 1)
+
+        queryWO = '''SELECT SUM(Result.time),COUNT(*) FROM Result WHERE solver = ? AND Result.timeouted = false'''
+        rowWO = self._db.executeRet (query, (solver,))
+        timeWO,totalWO = row[0]
+
+
+        satisquery = ''' SELECT COUNT(*) FROM Result WHERE solver = ? AND Result.result = true'''
+        satis = self._db.executeRet (satisquery, (solver,))[0][0]
+
+        unkquery = ''' SELECT COUNT(*) FROM Result WHERE solver = ? AND Result.timeouted = false AND Result.result IS NULL'''
+        unk = self._db.executeRet (unkquery, (solver,))[0][0]
+
+        nsatisquery = ''' SELECT COUNT(*)  FROM Result WHERE solver = ? AND Result.result = false'''
+        nsatis = self._db.executeRet (nsatisquery, (solver,))[0][0]
+
+        errorquery = ''' SELECT COUNT(*) FROM Result,TrackInstance WHERE Result.solver = ? AND Result.result IS NOT NULL AND Result.instanceid = TrackInstance.id AND TrackInstance.expected != Result.result''' ### TODO ADD VERIFIED!!!
+        errors = self._db.executeRet (errorquery, (solver,))[0][0]
+
+        crashquery = ''' SELECT COUNT(*) FROM Result,TrackInstance WHERE Result.solver = ? AND Result.result IS NULL AND Result.output LIKE '%Error%' ''' ### TODO ADD VERIFIED!!!
+        crashs = self._db.executeRet (errorquery, (solver,))[0][0]
+
+
+        return {"smtcalls" : smtcalls, "timeouted" : timeouted, "satis" : satis, "nsatis" : nsatis, "unk" : unk, "errors" : errors, "crashs" : crashs, "time" : time, "total" : total, "totalWO" : totalWO, "timeWO" : timeWO}
+
 
     def getOutputForSolverInstance (self,solver,instance):
         query = '''SELECT output  FROM Result WHERE solver = ? AND instanceid = ?'''
@@ -588,6 +618,11 @@ class ResultRepository:
 
         return errors
         
+    def getInstancesCount (self):
+        query = '''SELECT COUNT(*) FROM TrackInstance'''
+        return [t[0] for t in self._db.executeRet (query)][0]
+        
+
         
 class SQLiteDB:
     def __init__ (self,prefix = ""):

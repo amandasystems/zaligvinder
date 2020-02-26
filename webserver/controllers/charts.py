@@ -13,6 +13,8 @@ class ChartController:
 
     def generateCactus(self,params,to_zip=None):
         no_unk = False
+        all_instances = True
+
 
         if no_unk:
             results_for_solver_func=self._result.getResultForSolverGroup
@@ -37,19 +39,21 @@ class ChartController:
         if "bgroup" in params:
             activeGroup = params["bgroup"][0]
 
-        for solv in solvers:
+        for solv in ["z3seq","z3str3","cvc4","z3str4-np_len-abs-5_seq_2_str3","z3str4-murphy"]: #solvers:
             l = []
 
-            # lookup track
-            if "track" not in params or int(str(params["track"][0])) not in avtracks:
-                res = results_for_solver_func(solv,activeGroup)
+            if all_instances:
+                if no_unk:
+                    res = self._result.getResultForSolverNoUnk(solv)
+                else:
+                    res = self._result.getResultForSolver(solv)
             else:
-                track = int(str(params["track"][0]))
-
-
-
-                activeTrack = [ttracks[1] for ttracks in self._result.getTrackNames() if ttracks[0] == track][0]
-                res = results_for_solver_track_func(solv,track)
+                if "track" not in params or int(str(params["track"][0])) not in avtracks:
+                    res = results_for_solver_func(solv,activeGroup)
+                else:
+                    track = int(str(params["track"][0]))
+                    activeTrack = [ttracks[1] for ttracks in self._result.getTrackNames() if ttracks[0] == track][0]
+                    res = results_for_solver_track_func(solv,track)
 
             s = 0
             for i,data in enumerate(res):

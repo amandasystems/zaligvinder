@@ -1,6 +1,7 @@
 import os 
 import tempfile
 import shutil
+import re
 
 class MajorityVoter:
 
@@ -11,18 +12,34 @@ class MajorityVoter:
             s+=l.rstrip("\n")
         assignment = dict()
         currentWords = []
+        in_qutation = False
+        previous_char = ''
         for a in s:
-            if a == "(":
+            if a == "(" and not in_qutation:
                 currentWords+=[""]
-            elif a == ")":
+            elif a == ")" and not in_qutation:
                 if len(currentWords) > 0:
                     w = currentWords.pop()
                     if w.startswith("define-fun"):
-                        substitution = w[w.find(' "')+1:]
-                        variable = w.split()[1]
+                        w_split = w.split()
+                        variable = w_split[1]
+                        if w_split[3] == "String":
+                            substitution = w[w.find(' "')+1:]
+                        elif w_split[3] == "Int":
+                            if w_split[4] == "-":
+                                substitution = "(- "+str(int(re.sub("[^0-9]", "", w_split[5]))) + ")" #-int(re.sub("[^0-9]", "", w_split[5]))
+                            else:
+                                substitution = int(re.sub("[^0-9]", "",w_split[4]))
+                        else:
+                            raise("Variabletype " + str(w_split[3]) + " not known!")
                         assignment[variable] = substitution
-            else:
                 currentWords = [w+a for w in currentWords]
+            else:
+                if a == '"' and not previous_char == "\\":
+                    in_qutation = not in_qutation
+                currentWords = [w+a for w in currentWords]
+            previous_char = a
+                
         return assignment
 
     def _modifyInputFile(self,tempd,assignment,filepath):
@@ -44,7 +61,7 @@ class MajorityVoter:
 
             if modelEntered == False and "(check-sat)" in l: 
                 for variable in assignment:
-                    copy.write("(assert (= "+variable+" "+assignment[variable]+"))\n")
+                    copy.write("(assert (= "+variable+" "+str(assignment[variable])+"))\n")
                 modelEntered  = True
             
             if "(get-model)" not in l:
@@ -69,7 +86,9 @@ class MajorityVoter:
                         tempd = tempfile.mkdtemp ()
                         assertedInputFile = self._modifyInputFile(tempd,foundModel,filepath)
                         for v in verifiers:
-                            vRes = vRes and verifiers[v].run(assertedInputFile,timeout,ploc,os.path.abspath(".")).result
+                            thisRes =  verifiers[v].run(assertedInputFile,timeout,ploc,os.path.abspath(".")).result
+                            vRes = vRes and thisRes
+                        
                         r[i].verified = vRes
                         shutil.rmtree (tempd)
                 toolResults = [r[i] for r in res.values ()]

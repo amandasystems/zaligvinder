@@ -10,6 +10,12 @@ class MajorityVoter:
         s = ""
         for l in model:
             s+=l.rstrip("\n")
+
+        return s[len("(model"):-1]
+
+
+
+        #    
         assignment = dict()
         currentWords = []
         in_qutation = False
@@ -31,7 +37,8 @@ class MajorityVoter:
                             else:
                                 substitution = int(re.sub("[^0-9]", "",w_split[4]))
                         else:
-                            raise("Variabletype " + str(w_split[3]) + " not known!")
+                            print(w_split[3],variable, int(re.sub("[^0-9]", "",w_split[4]))) 
+                            #raise("Variabletype " + str(w_split[3]) + " not known!")
                         assignment[variable] = substitution
                 currentWords = [w+a for w in currentWords]
             else:
@@ -42,12 +49,13 @@ class MajorityVoter:
                 
         return assignment
 
-    def _modifyInputFile(self,tempd,assignment,filepath):
+    def _modifyInputFile(self,tempd,model,filepath):
         smtfile = os.path.join (tempd,"out.smt")
         f=open(filepath,"r")
         copy=open(smtfile,"w")
         firstLine = None
-        modelEntered = False
+        #modelEntered = False
+        declareBlockReached = False
         for l in f:
             if not l.startswith(";") and firstLine == None:
                 firstLine = True
@@ -59,13 +67,23 @@ class MajorityVoter:
             if firstLine:
                 firstLine = False
 
-            if modelEntered == False and "(check-sat)" in l: 
-                for variable in assignment:
-                    copy.write("(assert (= "+variable+" "+str(assignment[variable])+"))\n")
-                modelEntered  = True
-            
-            if "(get-model)" not in l:
+            if "(define-fun" in l or "(declare-fun" in l: 
+                if declareBlockReached == False:
+                    declareBlockReached = True   
+            elif declareBlockReached == True:
+                copy.write(model)
+                declareBlockReached = None
+            elif "(get-model)" not in l:
                 copy.write(l)
+
+
+            #if modelEntered == False and "(check-sat)" in l: 
+            #    for variable in assignment:
+            #        copy.write("(assert (= "+variable+" "+str(assignment[variable])+"))\n")
+            #    modelEntered  = True
+            
+            #if "(get-model)" not in l:
+            #    copy.write(l)
 
         copy.write("\n(get-model)")
         f.close()
@@ -85,10 +103,12 @@ class MajorityVoter:
                         foundModel = self._extractAssignment(r[i].model)
                         tempd = tempfile.mkdtemp ()
                         assertedInputFile = self._modifyInputFile(tempd,foundModel,filepath)
+                        print(filepath)
                         for v in verifiers:
                             thisRes =  verifiers[v].run(assertedInputFile,timeout,ploc,os.path.abspath(".")).result
                             vRes = vRes and thisRes
-                        
+                            print(v,thisRes)
+                        print("----")
                         r[i].verified = vRes
                         shutil.rmtree (tempd)
                 toolResults = [r[i] for r in res.values ()]

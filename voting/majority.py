@@ -103,12 +103,9 @@ class MajorityVoter:
                         foundModel = self._extractAssignment(r[i].model)
                         tempd = tempfile.mkdtemp ()
                         assertedInputFile = self._modifyInputFile(tempd,foundModel,filepath)
-                        print(filepath)
                         for v in verifiers:
                             thisRes =  verifiers[v].run(assertedInputFile,timeout,ploc,os.path.abspath(".")).result
                             vRes = vRes and thisRes
-                            print(v,thisRes)
-                        print("----")
                         r[i].verified = vRes
                         shutil.rmtree (tempd)
                 toolResults = [r[i] for r in res.values ()]

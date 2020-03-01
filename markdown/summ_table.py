@@ -33,12 +33,13 @@ class TableGenerator:
 
                 (smtcalls,timeouted,satis,unk,nsatis,errors,time,total,timeWO,totalWO) = self._res.getSummaryForSolverGroupTotalTimeWOTimeout (s,g)
                 print(g,s,timeWO,totalWO)
+                classified = satis + nsatis -errors
 
                 #(smtcalls,timeouted,satis,unk,nsatis,errors,time,total) = self._res.getSummaryForSolverTrack (s,tid)
-                lines.append ("|{}|{}|{}|{}|{}|{}|{}|{:.2f}|{}|{:.2f}\n".format(s,satis,nsatis,unk,errors,timeouted,total,time,totalWO,timeWO))
+                lines.append ("|{}|{}|{}|{}|{}|{}|{}|{}|{:.2f}|{}|{:.2f}\n".format(s,classified,satis,nsatis,unk,errors,timeouted,total,time,totalWO,timeWO))
 
                 #correctly,satis,nsatis,unk,errors,timeouted,total,time,totalWO,timeWO
-                classified = satis + nsatis -errors
+                
                 totalSumData[s][0]+=classified
                 totalSumData[s][1]+=satis
                 totalSumData[s][2]+=nsatis
@@ -57,10 +58,10 @@ class TableGenerator:
             self._output.write ('''\n\n[.text-center]
 image::img/'''+g.lower().replace(" ", "")+'''.png[cactus]\n\n''')
 
-            self._output.write ('''\n\n[.text-center]
-image::img/keys/'''+g.lower().replace(" ", "")+'''.png[keywords]\n\n''')
+            #self._output.write ('''\n\n[.text-center]
+            #image::img/keys/'''+g.lower().replace(" ", "")+'''.png[keywords]\n\n''')
 
-            self._output.write ('''|===\n|Tool name |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time|Total instances w/o TO |Total time w/o TO\n''')
+            self._output.write ('''|===\n|Tool name |Correctly classified  |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time|Total instances w/o TO |Total time w/o TO\n''')
             self._output.write ("".join (lines))
             self._output.write ("|===\n\n")
 

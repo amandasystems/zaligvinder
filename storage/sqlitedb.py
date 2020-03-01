@@ -227,10 +227,15 @@ class ResultRepository:
         rows = self._db.executeRet (query,(solver,))
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
 
+    def getResultForSolverInstance (self,solver,instanceid):
+        query = '''SELECT * FROM Result WHERE solver = ? AND instanceid = ? ORDER BY time ASC '''
+        rows = self._db.executeRet (query,(solver,instanceid))
+        return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows][0]
+
     def getResultForSolverGroup (self,solver,group):
         query = '''SELECT * FROM Result,TrackInstanceMap,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance and TrackInstanceMap.track = Track.id and Track.bgroup = ? ORDER BY time ASC '''
         rows = self._db.executeRet (query,(solver,group,))
-        print(rows)
+        #print(rows)
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
 
     def getResultForSolverTrack (self,solver,track):
@@ -518,8 +523,8 @@ class ResultRepository:
         assert(len(rows) == 1)
 
         queryWO = '''SELECT SUM(Result.time),COUNT(*) FROM Result WHERE solver = ? AND Result.timeouted = false'''
-        rowWO = self._db.executeRet (query, (solver,))
-        timeWO,totalWO = row[0]
+        rowWO = self._db.executeRet (queryWO, (solver,))
+        timeWO,totalWO = rowWO[0][0],rowWO[0][1]
 
 
         satisquery = ''' SELECT COUNT(*) FROM Result WHERE solver = ? AND Result.result = true'''
@@ -538,7 +543,7 @@ class ResultRepository:
         crashs = self._db.executeRet (errorquery, (solver,))[0][0]
 
 
-        return {"smtcalls" : smtcalls, "timeouted" : timeouted, "satis" : satis, "nsatis" : nsatis, "unk" : unk, "errors" : errors, "crashs" : crashs, "time" : time, "total" : total, "totalWO" : totalWO, "timeWO" : timeWO}
+        return {"smtcalls" : smtcalls, "timeout" : timeouted, "sat" : satis, "unsat" : nsatis, "unk" : unk, "error" : errors, "crash" : crashs, "time" : round(time, 2), "total" : total, "totalWO" : totalWO, "timeWO" : round(timeWO,2)}
 
 
     def getOutputForSolverInstance (self,solver,instance):
@@ -578,6 +583,8 @@ class ResultRepository:
         errors = self._db.executeRet (errorquery, (solver,track))[0][0]
 
         #total = timeouted+satis+unk+nsatis+errors
+
+        print("LOL")
         
         return (smtcalls,timeouted,satis,unk,nsatis,errors,time,total)
 

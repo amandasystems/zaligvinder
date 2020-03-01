@@ -243,23 +243,52 @@ class ResultController:
                         wrongUnsat+=[filepath]
                     elif "Error" in output:
                         #print(t,res)
-                        programError+=[filepath]
+                        if "SIG" in output:
+                            test = output.split("died with")
+
+                            import ntpath
+                            print(ntpath.basename(filepath),test[len(test)-1])
+
+                            programError+=[filepath]
                     else:
                         pass
                         #raise Exception("This point should never be reached!")
             data = {"invalidModel" : invalidModel,"wrongUnsat" : wrongUnsat,"programError" : programError}
 
             # hack
-            """
+            
             print("----------")
             print("mkdir invalidModel wrongUnsat programError")
             for k in data:
                 for f in data[k]:
                     print("cp " + f + " ./" + k + "/")
-            """
+            
 
-
+            #return data
             return webserver.views.jsonview.JSONView (data)
+
+    def quickHACK(self,params):
+        dataSeq = self.getAllErrorsForSolver({"solver" : ["z3seq"]})
+        dataStr = self.getAllErrorsForSolver({"solver" : ["z3str4-overlaps"]})
+
+
+        for k in dataSeq:
+            for filepath in dataSeq[k]:
+                if filepath not in dataStr[k]:
+                    print(filepath)
+                else:
+                    pass
+                    #print("LOL")
+
+        print("----------")
+        print("mkdir invalidModel wrongUnsat programError")
+        for k in dataSeq:
+            for f in dataSeq[k]:
+                if f not in dataStr[k]:
+                    print("cp " + f + " ./" + k + "/")
+
+        return webserver.views.jsonview.JSONView ("")           
+
 
     def getBestSolverForStringOperations(self,params):
         benchmarkInfo = self._results.getTrackInfo ()

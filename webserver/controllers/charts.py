@@ -11,9 +11,8 @@ class ChartController:
         self._result = result
         self._track = track
 
-    def generateCactus(self,params,to_zip=None):
+    def generateCactus(self,params,to_zip=None,all_instances=False):
         no_unk = False
-        all_instances = True
 
 
         if no_unk:
@@ -39,11 +38,11 @@ class ChartController:
         if "bgroup" in params:
             activeGroup = params["bgroup"][0]
 
-        for solv in ["z3seq","z3str3","cvc4","z3str4-np_len-abs-5_seq_2_str3","z3str4-murphy"]: #solvers:
+        for solv in solvers:
             l = []
 
             if all_instances:
-                if no_unk:
+                if not no_unk:
                     res = self._result.getResultForSolverNoUnk(solv)
                 else:
                     res = self._result.getResultForSolver(solv)
@@ -119,6 +118,7 @@ class ChartController:
                         name = activeGroup
                     fileName = name.lower().replace(" ", "")+'.png'
                     fig.savefig(to_zip+"/"+fileName,format="png",dpi=160,prop=fontP,bbox_extra_artists=(lgd,), bbox_inches='tight')
+                    #fig.savefig(to_zip+"/"+fileName,format="png",dpi=160,prop=fontP,bbox_extra_artists=(lgd,), bbox_inches='tight')
                     return to_zip+"/"+fileName 
                 else:
                     fig.savefig(buf, format="png",dpi=160,prop=fontP,bbox_extra_artists=(lgd,), bbox_inches='tight')
@@ -133,10 +133,15 @@ class ChartController:
         tmpFolder = tempfile.mkdtemp()
         fileList = []
 
-        # only groups atm
-        groups = list( self._result.getTrackInfo().keys() )
+        if "all" in params:
+            all_instances = True
+            groups = ["total"]
+        else:
+            all_instances = False
+            groups = list( self._result.getTrackInfo().keys() )
+
         for g in groups:
-            fileList.append(apply_fun({"format":["png"],"bgroup":[g]},tmpFolder))
+            fileList.append(apply_fun({"format":["png"],"bgroup":[g]},tmpFolder,all_instances))
 
         """
         with zipfile.ZipFile('out.zip', 'w') as zipMe:        
@@ -175,7 +180,7 @@ class ChartController:
     def downloadStringOperationDistributionTracks(self,params):
         return self.downloadGraphTrack(params,self.generateStringOperationDistribution)
         
-    def generateStringOperationDistribution(self,params,to_zip=None):
+    def generateStringOperationDistribution(self,params,to_zip=None,all_instances=None):
         avtracks = self._result.getTrackIds()
         activeGroup = list( self._result.getTrackInfo().keys() )[0]
         activeTrack = None
@@ -337,6 +342,168 @@ class ChartController:
             else:
                 return webserver.views.TextView.ErrorText ("Unknown format")
 
+
+    #scattered plots
+    def generateScatteredPlots(self,params,to_zip=None,all_instances=False):
+        no_unk = False
+
+
+        """if no_unk:
+            results_for_solver_func=self._result.getResultForSolverGroup
+            results_for_solver_track_func=self._result.getResultForSolverTrack
+        else:
+            results_for_solver_func=self._result.getResultForSolverGroupNoUnk
+            results_for_solver_track_func=self._result.getResultForSolverTrackNoUnk
+
+
+        rdata = {}
+        avtracks = self._result.getTrackIds()
+        activeGroup = list( self._result.getTrackInfo().keys() )[0]
+        activeTrack = None
+
+        basis = "group"
+        apl_fun = self._result.getSummaryForSolverGroup
+        iterationData = list(self._result.getTrackInfo().keys())
+
+        # analysis based on benchmark set, track or instances
+        if "basis" in params:
+            if params["basis"][0] == "instances":
+                basis = "instances"
+                groups = list(self._result.getTrackInfo().keys())
+                iterationData = []
+                for g in groups:
+                    iterationData+=self._result.getInstanceIdsForGroup(g)
+                apl_fun = self._result.getResultForSolverInstance # collect all instance data for a solver --> this is only working if no errors within a solver!
+            elif params["basis"][0] == "tracks":
+                basis = "tracks"
+                iterationData = [t[0][0] for t in self._result.getTrackInfo().values()]
+                apl_fun = self._result.getSummaryForSolverTrack
+        # fetch solvers
+        if "solvers" in params:
+            solvers = params["solvers"][:2]
+        else:
+            solvers = self._result.getSolvers ()[:2]
+        rdata = []
+        for d in iterationData:
+            currentTuple = []
+            for s in solvers:
+                if basis in ["tracks","group"]:
+                    currentTuple.append(apl_fun(s,d)[6])
+                elif basis == "instances":
+                    currentTuple.append(apl_fun(s,d)[2].time)
+
+            rdata.append(tuple(currentTuple))
+        """
+
+        if "solvers" in params:
+            solvers = params["solvers"][:2]
+        else:
+            solvers = self._result.getSolvers ()[:2]
+
+        # do it for a single group first...
+        if "bgroup" in params:
+            groups = [params["bgroup"][0]]
+        else: 
+            groups = list(self._result.getTrackInfo().keys())
+
+
+        data = dict()
+        for bgroup in groups:
+            for s in solvers:
+                res = self._result.getResultForSolverGroup(s,bgroup)
+                for t in res:
+                    if t[1] not in data:
+                        data[t[1]] = [t[2].time]
+                    else: 
+                        data[t[1]] = data[t[1]] + [t[2].time]
+        print(len(data.values()))
+
+
+        if "format" not in params:
+            return webserver.views.jsonview.JSONView (data)
+        else:
+            form = params["format"][0]
+            if form == "png":
+                from matplotlib.figure import Figure
+                from matplotlib.font_manager import FontProperties
+                from io import BytesIO
+                import itertools
+                import random
+
+
+                # colour setup
+                colors = ["#25333D","#0065AB","#8939AD","#007E7A","#CD3517","#318700","#80746D","#FF9A69","#00D4B8","#85C81A", #none_5_z3str3
+                  "#AC75C6","#0F1E82","#A3EDF6","#FFB38F","#49AFD9",]
+
+                # extend the colors 
+                r = lambda: random.randint(0,255)
+                colorGen = lambda : '#%02X%02X%02X' % (r(),r(),r())
+                while len(colors) < 26:
+                  newColor = colorGen()
+                  if newColor not in colors:
+                    colors+=[newColor]
+
+
+
+                it_cols = itertools.cycle(colors)
+
+                fig = Figure(figsize=(6,3))
+                ax = fig.subplots()
+
+                fontP = FontProperties()
+                fontP.set_size('small')
+
+                dataX_a = []
+                dataX_b = []
+                dataY_a = []
+                dataY_b = []
+
+
+                for i in data.values():
+                    if i[0] <= i[1]:
+                        dataX_a+=[i[0]]
+                        dataY_a+=[i[1]]
+                    else:
+                        dataX_b+=[i[0]]
+                        dataY_b+=[i[1]]
+
+                print(solvers[0] + ": " + str(len(dataX_a)))
+                print(solvers[1] + ": " + str(len(dataY_b)))
+
+                max_x = 20#max([max(dataX_a),max(dataX_b)])
+                max_y = 20#max([max(dataY_a),max(dataY_b)])
+
+                #ax.plot ([0,max_x],[0,max_y],'-',linewidth=0.25,color=next(it_cols))#,marker='.')
+                next(it_cols)
+                ax.scatter (dataX_a,dataY_a,linewidth=0.01,color=next(it_cols),marker='.')
+                ax.scatter (dataX_b,dataY_b,linewidth=0.01,color=next(it_cols),marker='.')
+                #ax.fill_between(range(0,len(data)),data, color=current_color,alpha=0.15)
+                #lgd = ax.legend(fancybox=True,bbox_to_anchor=(0., 1.02, 1., .102), loc='lower left', ncol=2, mode="expand", borderaxespad=0.,frameon=False)#loc='upper left', bbox_to_anchor=(0, 0, 0, 0))#bbox_to_anchor=(0.4, 1.1))
+                ax.spines['top'].set_visible(False)
+                ax.spines['right'].set_visible(False)
+                ax.spines['bottom'].set_visible(False)
+                ax.spines['left'].set_visible(False)
+                ax.xaxis.grid(color='black', linestyle='dashdot', linewidth=0.1)
+                ax.yaxis.grid(color='black', linestyle='dashdot', linewidth=0.1)
+                ax.set_xlabel (solvers[0])
+                ax.set_ylabel (solvers[1])
+                # Save it to a temporary buffer.
+                buf = BytesIO()
+
+                if to_zip != None:
+                    if activeTrack != None:
+                        name = activeTrack
+                    else:
+                        name = activeGroup
+                    fileName = name.lower().replace(" ", "")+'.png'
+                    fig.savefig(to_zip+"/"+fileName,format="png",dpi=160,prop=fontP, bbox_inches='tight')
+                    #fig.savefig(to_zip+"/"+fileName,format="png",dpi=160,prop=fontP,bbox_extra_artists=(lgd,), bbox_inches='tight')
+                    return to_zip+"/"+fileName 
+                else:
+                    fig.savefig(buf, format="png",dpi=160,prop=fontP, bbox_inches='tight')
+                    return webserver.views.PNGView.PNGView (buf)
+            else:
+                return webserver.views.TextView.ErrorText ("Unknown format")
             
 
 

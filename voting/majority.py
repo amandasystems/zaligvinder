@@ -107,10 +107,13 @@ class MajorityVoter:
                             thisRes =  verifiers[v].run(assertedInputFile,timeout,ploc,os.path.abspath(".")).result
                             vRes = vRes and thisRes
                         r[i].verified = vRes
+                        print(vRes)
                         shutil.rmtree (tempd)
                 toolResults = [r[i] for r in res.values ()]
 
                 verifiedResults = [r.verified for r in toolResults]
+                if r[i].result == True:
+                    print(verifiedResults)
                 if True in verifiedResults:
                     verifiedTrue = True
                 elif False in verifiedResults:

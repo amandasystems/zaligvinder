@@ -123,7 +123,12 @@ class ResultRepository:
     def storeResult (self,result,solver,instance):
         query = '''INSERT INTO Result (solver,instanceid,smtcalls,timeouted,result,time,output,model,verified) VALUES(?,?,?,?,?,?,?,?,?)'''
         tid = self.instancerepo.storeInstance ( instance)
+        print("STORE:" + str(result.verified))
         self._db.execute (query,(solver,tid,result.smtcalls,result.timeouted,result.result,result.time,result.output,result.model,result.verified))
+
+    def updateVerified(self,instanceid,solver,verified):
+        query = '''UPDATE Result SET verified = ? WHERE solver = ? AND instanceid = ?'''
+        self._db.execute(query,(verified,solver,instanceid,))
 
     def getSolvers (self):
         query = '''SELECT DISTINCT solver  FROM Result'''
@@ -430,8 +435,15 @@ class SQLiteDB:
     
 
     def postTrackUpdate (self,track,res):
-        for t in track.instances:
-            self._instancerepo.storeInstance(t)
-    
+        for s in res.keys():
+            for i,r in enumerate(res[s]):
+                print(i,r.verified)
+        
+        for i,t in enumerate(track.instances):
+            iid = self._instancerepo.storeInstance(t)
+            for s in res:
+                r = res[s]
+                if r[i].result == True:
+                    self._resrepo.updateVerified(iid,s,r[i].verified)
         
 

@@ -123,7 +123,6 @@ class ResultRepository:
     def storeResult (self,result,solver,instance):
         query = '''INSERT INTO Result (solver,instanceid,smtcalls,timeouted,result,time,output,model,verified) VALUES(?,?,?,?,?,?,?,?,?)'''
         tid = self.instancerepo.storeInstance ( instance)
-        print("STORE:" + str(result.verified))
         self._db.execute (query,(solver,tid,result.smtcalls,result.timeouted,result.result,result.time,result.output,result.model,result.verified))
 
     def updateVerified(self,instanceid,solver,verified):

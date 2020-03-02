@@ -435,10 +435,6 @@ class SQLiteDB:
     
 
     def postTrackUpdate (self,track,res):
-        for s in res.keys():
-            for i,r in enumerate(res[s]):
-                print(i,r.verified)
-        
         for i,t in enumerate(track.instances):
             iid = self._instancerepo.storeInstance(t)
             for s in res:

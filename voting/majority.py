@@ -111,7 +111,6 @@ class MajorityVoter:
                 toolResults = [r[i] for r in res.values ()]
 
                 verifiedResults = [r.verified for r in toolResults]
-                if r[i].result == True:
                 if True in verifiedResults:
                     verifiedTrue = True
                 elif False in verifiedResults:

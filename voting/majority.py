@@ -49,14 +49,41 @@ class MajorityVoter:
                 
         return assignment
 
+    def _translateSMTFile(self,filepath):
+        f=open(filepath,"r")
+        matchingBraces = 0
+        firstMatchFound = False
+        currentWord = ""
+        in_qutation = False
+        previous_char = None
+        for l in f:
+            if l.startswith(";"):
+                continue
+            for a in l:
+                if a == "(" and not in_qutation:
+                    matchingBraces+=1
+                    firstMatchFound = True
+                if a == ")" and not in_qutation:
+                    matchingBraces-=1
+
+                if firstMatchFound == True:
+                    if a == '"' and not previous_char == '\\':
+                        in_qutation = not in_qutation
+                    previous_char = a
+                    currentWord+=a
+
+                if matchingBraces == 0 and len(currentWord) > 0 and firstMatchFound:
+                    yield currentWord
+                    currentWord = ""
+        f.close()
+
     def _modifyInputFile(self,tempd,model,filepath):
         smtfile = os.path.join (tempd,"out.smt")
-        f=open(filepath,"r")
         copy=open(smtfile,"w")
         firstLine = None
         #modelEntered = False
         declareBlockReached = False
-        for l in f:
+        for l in self._translateSMTFile(filepath):
             if not l.startswith(";") and firstLine == None:
                 firstLine = True
 
@@ -71,10 +98,10 @@ class MajorityVoter:
                 if declareBlockReached == False:
                     declareBlockReached = True   
             elif declareBlockReached == True:
-                copy.write(model)
+                copy.write("\n"+model+"\n")
                 declareBlockReached = None
             elif "(get-model)" not in l:
-                copy.write(l)
+                copy.write(l+"\n")
 
 
             #if modelEntered == False and "(check-sat)" in l: 
@@ -86,7 +113,6 @@ class MajorityVoter:
             #    copy.write(l)
 
         copy.write("\n(get-model)")
-        f.close()
         copy.close()
         return smtfile
 
@@ -109,14 +135,19 @@ class MajorityVoter:
                         r[i].verified = vRes
                         shutil.rmtree (tempd)
                 toolResults = [r[i] for r in res.values ()]
+                
 
                 verifiedResults = [r.verified for r in toolResults]
-                if True in verifiedResults:
-                    verifiedTrue = True
-                elif False in verifiedResults:
-                    verifiedTrue = False
-                else:
-                    verifiedTrue = None
+                toolAnswers = [r.result for r in toolResults]
+                verifiedTrue = None
+                
+                if True in toolAnswers:
+                    if True in verifiedResults:
+                        verifiedTrue = True
+                    elif False in verifiedResults:
+                        verifiedTrue = False
+                    else:
+                        verifiedTrue = None
 
                 tts = [r for r in toolResults if r.result == True and r.verified == True]
                 ffs = [r for r in toolResults if r.result == False]

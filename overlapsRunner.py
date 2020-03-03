@@ -21,6 +21,8 @@ import tools.z3str3portfolioNoProbe3
 import tools.z3str3bv
 import tools.z3str3portfolio2
 import tools.z3str3overlaps
+import tools.z3str3overlapsNew
+import tools.z3str3NoOverlaps
 #import models.woorpje.track01
 
 import models.woorpje
@@ -41,8 +43,9 @@ import models.kauslersuite
 import models.banditfuzz
 import startwebserver
 
-
-
+import tools.z3str4murphy
+import tools.z3str4federico
+import tools.z3str4multi
 
 import summarygenerators
 tracks = (models.PyEx.getTrackData () +
@@ -79,11 +82,16 @@ solvers = {}
 for s in [tools.z3seq,
           tools.z3str3,
           tools.cvc4,
-          tools.z3str3portfolio,
+          tools.z3str4multi,
+          #tools.z3str4murphy,
+          #tools.z3str4federico,
+          #tools.z3str3NoOverlaps,
+          #tools.z3str3overlapsNew,
+          #tools.z3str3portfolio,
           #tools.z3str3portfolioNoProbe,
           #tools.z3str3portfolioNoProbe2,
           #tools.z3str3portfolioNoProbe3,
-          tools.z3str3bv,
+          #tools.z3str3bv,
           tools.z3str3overlaps,
           #tools.z3str3portfolio2,
           #tools.z3str2,

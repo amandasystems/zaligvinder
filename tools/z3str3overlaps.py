@@ -32,7 +32,7 @@ def run (eq,timeout,ploc,wd):
     time = timer.Timer ()
     myerror = ""
     try:
-        out = subprocess.check_output ([path,"smt.string_solver=z3str3","dump_models=true","smt.str.search_overlaps=true","smt.str.search_overlaps_milliseconds=5000","smt.str.fixed_length_iterations=5","smt.str.pre_milliseconds=2000",smtfile],timeout=timeout,stderr=subprocess.STDOUT).decode().strip()
+        out = subprocess.check_output ([path,"smt.string_solver=z3str3","dump_models=true","smt.str.search_overlaps=true","smt.str.fixed_length_iterations=5","smt.str.pre_milliseconds=2000",smtfile],timeout=timeout,stderr=subprocess.STDOUT).decode().strip()
     except subprocess.TimeoutExpired:
         return utils.Result(None,timeout,True,1)
     

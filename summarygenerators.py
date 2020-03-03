@@ -12,7 +12,7 @@ def calculateErrors (track,res):
             inst = instances[i]
             if inst.expected != None and k.result != None:
                 #Only count errors if we have an expected value and this solver gave an answer
-                if inst.expected != k.result:
+                if inst.expected != k.result or k.verified == False:
                     errors[solver]+=1
     return errors
 
@@ -61,27 +61,23 @@ def calculateErrorsOld(res):
 
     return errors
 
-                
-                    
-        
-
 def terminalResult (track,res):
     name,files = track.name,track.instances
     print ("Track: " + str(track))
     table = []
     errors = calculateErrors(track,res)
-
     for n in res.keys():
         smtcalls = sum([i.smtcalls for i in res[n]])
         sat = sum([1 for i in res[n] if True == i.result])
         nsat = sum([1 for i in res[n] if False == i.result])
-        unk = sum([1 for i in res[n] if None == i.result])
+        unk = sum([1 for i in res[n] if None == i.result and i.timeouted != True])   
+        to = sum([1 for i in res[n] if None == i.result and i.timeouted == True])
         t = sum([i.time for i in res[n] ])
+        two = sum([i.time for i in res[n] if i.timeouted != True])
         #cort = sum([i[0][1] for i in zip([(j.result,j.time) for j in res[n]],ref) if i[0][0] == i[1] and i[1] != None])
         error = errors[n] 
-        table.append ([n,sat,nsat,unk,error,smtcalls,t])
-
-    print(tabulate.tabulate(table,["Solver", "Satis", "NSatis", "Unknown", "Errors",  "SMT Solver Calls", "Total Time"]))
+        table.append ([n,sat,nsat,unk,to,error,smtcalls,t,two])
+    print(tabulate.tabulate(table,["Solver", "Satis", "NSatis", "Unknown", "Timeout", "Errors",  "SMT Solver Calls", "Total Time", "Total Time w/o Timeout"]))
 
 def cactusPlot (track,res):
     name,files = track.name,track.instances

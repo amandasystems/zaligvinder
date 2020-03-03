@@ -1,4 +1,4 @@
-1
+import sys
 import sqlite3
 import utils
 
@@ -432,13 +432,18 @@ class SQLiteDB:
         self._trackrepo.storeTrack (track)
         self._resrepo.storeResult (result,solvername,trackinstance)
     
+    def progressMessage (self,cur,total):
+        sys.stdout.write ("\x1b[2K\r[ Update database  - {0}/{1} ]".format(cur+1,total))
+
 
     def postTrackUpdate (self,track,res):
+        sys.stdout.write("Starting post track update!\n")
+        totalCount = len(track.instances)
         for i,t in enumerate(track.instances):
+            self.progressMessage(i,totalCount)
             iid = self._instancerepo.storeInstance(t)
             for s in res:
-                r = res[s]
-                if r[i].result == True:
-                    self._resrepo.updateVerified(iid,s,r[i].verified)
-        
+                if res[s][i].result == True:
+                    self._resrepo.updateVerified(iid,s,res[s][i].verified)
+        sys.stdout.write("\n")        
 

@@ -2,6 +2,7 @@ import os
 import tempfile
 import shutil
 import re
+import sys
 
 class MajorityVoter:
 
@@ -116,40 +117,45 @@ class MajorityVoter:
         copy.close()
         return smtfile
 
+    def progressMessage (self,cur,total):
+        sys.stdout.write ("\x1b[2K\r[ Model verification  - {0}/{1} ]".format(cur+1,total))
+
     def voteOnResult (self,track,res,timeout=0,ploc=None,verifiers=dict()):
+        sys.stdout.write("Starting verification.\n")
         name,instances  = track.name,track.instances
+        totalCount = len(instances)
+        verifierCount = len(list(verifiers.keys()))
+        verifiedTrue = None
         for i,inst in enumerate(instances):
+            self.progressMessage(i,totalCount)
             if inst.expected == None:
-                
-                # Verification of a result
-                for r in res.values():
-                    if r[i].result == True:
-                        vRes = True
-                        filepath = inst.filepath
-                        foundModel = self._extractAssignment(r[i].model)
-                        tempd = tempfile.mkdtemp ()
-                        assertedInputFile = self._modifyInputFile(tempd,foundModel,filepath)
-                        for v in verifiers:
-                            thisRes =  verifiers[v].run(assertedInputFile,timeout,ploc,os.path.abspath(".")).result
-                            vRes = vRes and thisRes
-                        r[i].verified = vRes
-                        shutil.rmtree (tempd)
-                toolResults = [r[i] for r in res.values ()]
-                
+                toolResults = [r[i] for r in res.values ()] 
+                if verifierCount > 0:
+                    # Verification of a result
+                    for r in res.values():
+                        if r[i].result == True:
+                            vRes = True
+                            filepath = inst.filepath
+                            foundModel = self._extractAssignment(r[i].model)
+                            tempd = tempfile.mkdtemp ()
+                            assertedInputFile = self._modifyInputFile(tempd,foundModel,filepath)
+                            for v in verifiers:
+                                thisRes =  verifiers[v].run(assertedInputFile,timeout,ploc,os.path.abspath(".")).result
+                                vRes = vRes and thisRes
+                            r[i].verified = vRes
+                            shutil.rmtree (tempd)
+                    verifiedResults = [r.verified for r in toolResults]
+                    toolAnswers = [r.result for r in toolResults]
+                    verifiedTrue = None
+                    if True in toolAnswers:
+                        if True in verifiedResults:
+                            verifiedTrue = True
+                        elif False in verifiedResults:
+                            verifiedTrue = False
+                        else:
+                            verifiedTrue = None
 
-                verifiedResults = [r.verified for r in toolResults]
-                toolAnswers = [r.result for r in toolResults]
-                verifiedTrue = None
-                
-                if True in toolAnswers:
-                    if True in verifiedResults:
-                        verifiedTrue = True
-                    elif False in verifiedResults:
-                        verifiedTrue = False
-                    else:
-                        verifiedTrue = None
-
-                tts = [r for r in toolResults if r.result == True and r.verified == True]
+                tts = [r for r in toolResults if r.result == True and (r.verified == True or verifierCount == 0)]
                 ffs = [r for r in toolResults if r.result == False]
                 unk = [r for r in toolResults if r.result == None]
                 ctts = len(tts)
@@ -164,4 +170,4 @@ class MajorityVoter:
                     elif cffs > ctts:
                         #More False votes
                         inst.expected = False
-                
+        sys.stdout.write("\n")

@@ -238,6 +238,12 @@ class ResultRepository:
         #print(rows)
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
 
+    def getResultForSolverGroupAndFilePath (self,solver,group):
+        query = '''SELECT Result.*,TrackInstance.filepath FROM Result,TrackInstanceMap,Track,TrackInstance WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance and TrackInstanceMap.track = Track.id and Track.bgroup = ? and TrackInstance.id = TrackInstanceMap.instance ORDER BY time ASC '''
+        rows = self._db.executeRet (query,(solver,group,))
+        #print(rows)
+        return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2]),t[9]) for t in rows]
+
     def getResultForSolverTrack (self,solver,track):
         query = '''SELECT Result.* FROM Result,TrackInstanceMap WHERE Result.solver = ? and Result.instanceid = TrackInstanceMap.instance and TrackInstanceMap.track = ? ORDER BY time ASC '''
         rows = self._db.executeRet (query,(solver,track))
@@ -254,17 +260,17 @@ class ResultRepository:
         return row[0][0]
 
     def getResultForSolverNoUnk (self,solver):
-        query = '''SELECT * FROM Result,TrackInstance WHERE solver = ? and Result.result IS NOT NULL AND  Result.instanceid = TrackInstance.id AND TrackInstance.expected == Result.result ORDER BY time ASC '''
+        query = '''SELECT * FROM Result,TrackInstance WHERE solver = ? and Result.result IS NOT NULL AND  Result.instanceid = TrackInstance.id AND TrackInstance.expected == Result.result AND Result.verified IS NOT false ORDER BY time ASC '''
         rows = self._db.executeRet (query,(solver,))
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
 
     def getResultForSolverGroupNoUnk (self,solver,group):
-        query = '''SELECT * FROM Result,TrackInstanceMap,Track,TrackInstance WHERE solver = ? AND TrackInstance.id = Result.instanceid AND TrackInstance.expected = Result.result AND Result.result IS NOT NULL and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ?  ORDER BY time ASC '''
+        query = '''SELECT * FROM Result,TrackInstanceMap,Track,TrackInstance WHERE solver = ? AND TrackInstance.id = Result.instanceid AND TrackInstance.expected = Result.result AND Result.verified IS NOT false AND Result.result IS NOT NULL and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ?  ORDER BY time ASC '''
         rows = self._db.executeRet (query,(solver,group,))
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
 
     def getResultForSolverTrackNoUnk (self,solver,track):
-        query = '''SELECT Result.* FROM Result,TrackInstanceMap,TrackInstance WHERE Result.solver = ? AND TrackInstance.id = Result.instanceid AND TrackInstance.expected = Result.result AND Result.result IS NOT NULL and Result.instanceid = TrackInstanceMap.instance and TrackInstanceMap.track = ? ORDER BY time ASC '''
+        query = '''SELECT Result.* FROM Result,TrackInstanceMap,TrackInstance WHERE Result.solver = ? AND TrackInstance.id = Result.instanceid AND TrackInstance.expected = Result.result AND Result.verified IS NOT false AND Result.result IS NOT NULL and Result.instanceid = TrackInstanceMap.instance and TrackInstanceMap.track = ? ORDER BY time ASC '''
         rows = self._db.executeRet (query,(solver,track))
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
 
@@ -496,8 +502,9 @@ class ResultRepository:
         nsatisquery = ''' SELECT COUNT(*)  FROM Result,TrackInstanceMap,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? AND Result.result = false'''
         nsatis = self._db.executeRet (nsatisquery, (solver,group,))[0][0]
 
-        errorquery = ''' SELECT COUNT(*) FROM Result,TrackInstance,TrackInstanceMap,Track WHERE Result.solver = ? AND Result.result IS NOT NULL AND Result.instanceid = TrackInstance.id AND TrackInstance.expected != Result.result AND TrackInstance.id = TrackInstanceMap.instance AND TrackInstanceMap.track = Track.id AND Track.bgroup = ?''' 
+        errorquery = ''' SELECT COUNT(*) FROM Result,TrackInstance,TrackInstanceMap,Track WHERE Result.solver = ? AND Result.result IS NOT NULL AND Result.instanceid = TrackInstance.id AND (TrackInstance.expected != Result.result OR (TrackInstance.expected = Result.result AND Result.verified = false)) AND TrackInstance.id = TrackInstanceMap.instance AND TrackInstanceMap.track = Track.id AND Track.bgroup = ?''' 
         errors = self._db.executeRet (errorquery, (solver,group,))[0][0]
+
 
 
         return (smtcalls,timeouted,satis,unk,nsatis,errors,time,total) 
@@ -515,8 +522,12 @@ class ResultRepository:
 
         return (smtcalls,timeouted,satis,unk,nsatis,errors,time,total,timeWO,totalWO)
 
+    def getVerifiedCountForSolverGroup(self,solver,group):
+        query = '''SELECT COUNT(*) FROM Result,TrackInstanceMap,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? AND Result.verified = true'''
+        return self._db.executeRet (query, (solver,group,))[0][0]
+
     # quick hack...
-    def getSummaryForSolver(self,solver):
+    def getSummaryForSolverTable(self,solver):
         query = '''SELECT SUM(Result.smtcalls), SUM(Result.timeouted), SUM(Result.time),COUNT(*) FROM Result WHERE solver = ?'''
         rows = self._db.executeRet (query, (solver,))
         smtcalls,timeouted,time,total = rows[0]
@@ -539,11 +550,14 @@ class ResultRepository:
         errorquery = ''' SELECT COUNT(*) FROM Result,TrackInstance WHERE Result.solver = ? AND Result.result IS NOT NULL AND Result.instanceid = TrackInstance.id AND TrackInstance.expected != Result.result''' ### TODO ADD VERIFIED!!!
         errors = self._db.executeRet (errorquery, (solver,))[0][0]
 
-        crashquery = ''' SELECT COUNT(*) FROM Result,TrackInstance WHERE Result.solver = ? AND Result.result IS NULL AND Result.output LIKE '%Error%' ''' ### TODO ADD VERIFIED!!!
-        crashs = self._db.executeRet (errorquery, (solver,))[0][0]
 
+        invalidquery = ''' SELECT COUNT(*) FROM Result,TrackInstance WHERE Result.solver = ? AND Result.result IS NOT NULL AND Result.instanceid = TrackInstance.id AND Result.verified = false''' ### TODO ADD VERIFIED!!!
+        invalid = self._db.executeRet (invalidquery, (solver,))[0][0]
 
-        return {"smtcalls" : smtcalls, "timeout" : timeouted, "sat" : satis, "unsat" : nsatis, "unk" : unk, "error" : errors, "crash" : crashs, "time" : round(time, 2), "total" : total, "totalWO" : totalWO, "timeWO" : round(timeWO,2)}
+        crashquery = ''' SELECT COUNT(*) FROM Result WHERE Result.solver = ? AND Result.result IS NULL AND Result.output LIKE '%Error%' ''' ### TODO ADD VERIFIED!!!
+        crashs = self._db.executeRet (crashquery, (solver,))[0][0]
+
+        return {"smtcalls" : smtcalls, "timeout" : timeouted, "sat" : satis, "unsat" : nsatis, "unk" : unk, "error" : errors, "invalid": invalid, "crash" : crashs, "time" : round(time, 2), "total" : total, "totalWO" : totalWO, "timeWO" : round(timeWO,2)}
 
 
     def getOutputForSolverInstance (self,solver,instance):
@@ -622,7 +636,6 @@ class ResultRepository:
     def getErrosForSolverGroup (self,solver,group):
         errorquery = ''' SELECT Result.solver, Track.bgroup, Track.name, TrackInstance.name, TrackInstance.filepath, Result.time, Result.result, TrackInstance.expected, Result.model, Result.verified, Result.output TrackInstance FROM Result,TrackInstance,TrackInstanceMap,Track WHERE Result.solver = ? AND Result.instanceid = TrackInstance.id AND Result.timeouted = false AND TrackInstance.id = TrackInstanceMap.instance AND TrackInstanceMap.track = Track.id AND Track.bgroup = ? AND ( ((TrackInstance.expected != Result.result OR Result.verified = false) AND Result.result IS NOT NULL) OR Result.output LIKE '%Error%')''' 
         errors = self._db.executeRet (errorquery, (solver,group,))
-
         return errors
         
     def getInstancesCount (self):

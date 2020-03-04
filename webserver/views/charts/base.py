@@ -132,6 +132,9 @@ class BaseView(webserver.views.TextView.TextView):
         .error_row {
           background:#F5DBD9;color:#A32100;padding:5px;    
         }
+        .verify_row {
+          background:#FEECB5;color:#EFD603;padding:5px; 
+        }
 
         .unique_row {
           background:#DFF0D0;color:#266900;padding:5px;

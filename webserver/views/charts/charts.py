@@ -81,12 +81,17 @@ class ComparisonTable:
         # tool error string
         toolErrorStr = ("".join (['''data[i]['{}']['programError'] == 1 ||'''.format (s) for s in self._activeSolvers]))[:-2]
 
+        verifiedErrorStr = ("".join (['''data[i]['{}']['verified'] == 0 ||'''.format (s) for s in self._activeSolvers]))[:-2]
+
         tt = '''<script>function addComparisonDataTable (data) {
         var tableRef = document.getElementById("comparison_table").getElementsByTagName("tbody")[0];
         var row = tableRef.insertRow ();
         var i = Object.keys(data)[0];
         if(data[i]["error"] == 1){
             row.classList.add("error_row");
+        }
+        else if('''+verifiedErrorStr+'''){
+            row.classList.add("ambiguous_row");
         }
         else if(data[i]["unique"] == 1){
             row.classList.add("unique_row");   
@@ -114,10 +119,14 @@ class ComparisonTable:
             tt+='''
                 var model'''+s_striped+''' = "";                
                 var programError'''+s_striped+''' = data[i][\''''+str(s)+'''\']['programError'];
+                var verifyError'''+s_striped+''' = data[i][\''''+str(s)+'''\']['verified'];
 
                 if (programError'''+s_striped+''' == 1){
                     model'''+s_striped+''' = "<clr-icon shape=\\"error-standard\\" class=\\"is-solid\\" onclick=\\"show_model(\''''+str(s)+'''\',\'"+i+"\',\'"+data[i][\'name\']+"\',\'Output for "+data[i][\'name\']+" of '''+str(s)+'''\', \'/results/'''+str(s)+'''/"+i+"/output\');\\"></clr-icon>";
-                } else if (data[i][\''''+str(s)+'''\']['result'] == 1){
+                } 
+                if (verifyError'''+s_striped+''' == 0){
+                    model'''+s_striped+''' = "<clr-icon shape=\\"firewall\\" class=\\"is-solid\\" onclick=\\"show_model(\''''+str(s)+'''\',\'"+i+"\',\'"+data[i][\'name\']+"\',\'Invalid model for "+data[i][\'name\']+" of '''+str(s)+'''\', \'/results/'''+str(s)+'''/"+i+"/model\');\\"></clr-icon>";
+                }else if (data[i][\''''+str(s)+'''\']['result'] == 1){
                     model'''+s_striped+''' = "<clr-icon shape=\\"list\\" onclick=\\"show_model(\''''+str(s)+'''\',\'"+i+"\',\'"+data[i][\'name\']+"\',\'Model for "+data[i][\'name\']+" of '''+str(s)+'''\', \'/results/'''+str(s)+'''/"+i+"/model\');\\"></clr-icon>";
                 } else {
                     model'''+s_striped+''' = "<clr-icon shape='no-access' style='color:#948981;'></clr-icon>";
@@ -262,7 +271,7 @@ class ComparisonTable:
                         <div class="dropdown-item"><a onclick="just_enable_rows('unique');open_close_menu();" href="javascript:void(0);">Only unique classified instances</a></div>
                         <div class="dropdown-item"><a onclick="just_enable_rows('error');open_close_menu();" href="javascript:void(0);">Only instances with errors</a></div>
                         <div class="dropdown-item"><a onclick="just_enable_rows('unknown');open_close_menu();" href="javascript:void(0);">Only undeclared instances</a></div>
-                        <div class="dropdown-item"><a onclick="just_enable_rows('ambiguous');open_close_menu();" href="javascript:void(0);">Only ambiguous declared instances</a></div>
+                        <div class="dropdown-item"><a onclick="just_enable_rows('ambiguous');open_close_menu();" href="javascript:void(0);">Only instances with invalid models</a></div>
                         <div class="dropdown-item"><a onclick="just_enable_rows('toolError');open_close_menu();" href="javascript:void(0);">Only instances where a tool terminated unexpectedly</a></div>
                         <div class="dropdown-divider"></div>
                         <div class="dropdown-item"><a onclick="just_enable_rows('common');open_close_menu();" href="javascript:void(0);">All instances</a></div>

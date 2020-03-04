@@ -197,7 +197,8 @@ class ResultController:
                                      "time" : "%.2f" % tt[4].time,
                                      "error" : error,
                                      "unique_answer" : 0,
-                                     "programError" : programError}
+                                     "programError" : programError,
+                                     "verified" : tt[4].verified}
                 if tt[4].result != None and error == 0:
                     classifications+=[tt[0]]
                     if tt[4].result == 1:
@@ -257,17 +258,17 @@ class ResultController:
 
             # hack
             
-            print("----------")
+            """ print("----------")
             print("mkdir invalidModel wrongUnsat programError")
             for k in data:
                 for f in data[k]:
                     print("cp " + f + " ./" + k + "/")
             
-
+            """
             #return data
             return webserver.views.jsonview.JSONView (data)
 
-    def quickHACK(self,params):
+    def quickHack(self,params):
         dataSeq = self.getAllErrorsForSolver({"solver" : ["z3seq"]})
         dataStr = self.getAllErrorsForSolver({"solver" : ["z3str4-overlaps"]})
 
@@ -282,9 +283,9 @@ class ResultController:
 
         print("----------")
         print("mkdir invalidModel wrongUnsat programError")
-        for k in dataSeq:
-            for f in dataSeq[k]:
-                if f not in dataStr[k]:
+        for k in dataStr:
+            for f in dataStr[k]:
+                if f not in dataSeq[k]:
                     print("cp " + f + " ./" + k + "/")
 
         return webserver.views.jsonview.JSONView ("")           

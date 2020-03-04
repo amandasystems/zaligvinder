@@ -61,7 +61,7 @@ class Server:
         app.addEndpoint (webserver.routing.RegexMatch(""),self._ccontrollerJS.cdl_entry)
         app.addEndpoint (webserver.routing.RegexMatch("becnhmarks"),self._ccontrollerJS.cdl_test)
 
-        app.addEndpoint (webserver.routing.RegexMatch("z3/errors"),self._rcontroller.getAllErrorsForSolver) #quickHack
+        app.addEndpoint (webserver.routing.RegexMatch("z3/errors"),self._rcontroller.getAllErrorsForSolver) #
 
         app.addEndpoint (webserver.routing.RegexMatch("z3/keywords/track/(?P<track>\d+)"),self._tcontroller.getStringOperationDataForTrack)
         app.addEndpoint (webserver.routing.RegexMatch("z3/keywords/group/(?P<bgroup>[^/]+)"),self._tcontroller.getStringOperationDataForGroup)

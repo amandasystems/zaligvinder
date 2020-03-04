@@ -11,8 +11,18 @@ class ChartController:
         self._result = result
         self._track = track
 
+    def _solverNameMap(self,name):
+        solvermapping = { "cvc4" : "CVC4", "z3str4-overlaps-ds-7" : "Z3hydra-dynamic" , "z3str4-overlaps" : "Z3hydra-static", "z3str3" : "Z3str3", "z3seq" : "Z3Seq"}
+        if name in solvermapping:
+            return solvermapping[name]
+        else:
+            return name
+
     def generateCactus(self,params,to_zip=None,all_instances=False):
         no_unk = False
+
+        # WRITE A FUNCTION FOR THIS!
+        #solvermapping = { "cvc4" : "CVC4", "z3str4-overlaps-ds-7" : "Z3hydra-dynamic" , "z3str4-overlaps-murphy" : "Z3hydra-static"}
 
 
         if no_unk:
@@ -38,9 +48,12 @@ class ChartController:
         if "bgroup" in params:
             activeGroup = params["bgroup"][0]
 
+        if "all" in params:
+            all_instances = True
+
+
         for solv in solvers:
             l = []
-
             if all_instances:
                 if not no_unk:
                     res = self._result.getResultForSolverNoUnk(solv)
@@ -101,7 +114,7 @@ class ChartController:
                 for p in rdata.keys():
                     current_color = next(it_cols)
                     data = [i["y"] for i in rdata[p]]
-                    ax.plot (range(0,len(data)),data,'-',linewidth=2.5,label=p,color=current_color)#,marker='.')
+                    ax.plot (range(0,len(data)),data,'-',linewidth=2.5,label=self._solverNameMap(p),color=current_color)#,marker='.')
                     ax.fill_between(range(0,len(data)),data, color=current_color,alpha=0.15)
                     lgd = ax.legend(fancybox=True,bbox_to_anchor=(0., 1.02, 1., .102), loc='lower left', ncol=2, mode="expand", borderaxespad=0.,frameon=False)#loc='upper left', bbox_to_anchor=(0, 0, 0, 0))#bbox_to_anchor=(0.4, 1.1))
                     ax.spines['top'].set_visible(False)
@@ -329,7 +342,7 @@ class ChartController:
                     res = (r["satis"],r["unk"],r["nsatis"])
                     ax.bar(index+c*bar_width, res, bar_width,
                                      alpha=opacity,
-                                     label=p)
+                                     label=self._solverNameMap(p))
                     c = c+1
 
                 ax.set_xticks(index)
@@ -407,17 +420,48 @@ class ChartController:
             groups = list(self._result.getTrackInfo().keys())
 
 
+        filePaths = dict()
+        for s in solvers:
+            filePaths[s] = []
+
+
         data = dict()
         for bgroup in groups:
             for s in solvers:
-                res = self._result.getResultForSolverGroup(s,bgroup)
+                res = self._result.getResultForSolverGroupAndFilePath(s,bgroup)
                 for t in res:
                     if t[1] not in data:
                         data[t[1]] = [t[2].time]
                     else: 
                         data[t[1]] = data[t[1]] + [t[2].time]
-        print(len(data.values()))
 
+                        if data[t[1]][0] <= data[t[1]][1]:
+                            filePaths[solvers[0]] += [t[3][len("/home/mku/wordbenchmarks/"):]]
+                        else: 
+                            filePaths[solvers[1]] += [t[3][len("/home/mku/wordbenchmarks/"):]]
+        print(len(data.values()))
+        """
+        print("start copy!")
+        import os
+        import shutil  
+        folder = "split_groups"
+        #for s in solvers:
+        #    os.mkdir(folder+"/"+str(s))
+
+        for s in filePaths:
+            for source in filePaths[s]:
+                #print(source)
+                #os.makedirs()
+                filename = os.path.basename(source)
+                modelFolder = source[len("models/"):-len(filename)]
+                destination = folder + "/" + str(s) + "/" + modelFolder + "" + filename
+                if not os.path.exists(folder + "/" + str(s) + "/" + modelFolder):
+                    os.makedirs(folder + "/" + str(s) + "/" + modelFolder)
+                #print("cp " + source + " " + destination)
+                shutil.copyfile(source, destination) 
+
+        print("copy done!")
+        """
 
         if "format" not in params:
             return webserver.views.jsonview.JSONView (data)
@@ -485,8 +529,8 @@ class ChartController:
                 ax.spines['left'].set_visible(False)
                 ax.xaxis.grid(color='black', linestyle='dashdot', linewidth=0.1)
                 ax.yaxis.grid(color='black', linestyle='dashdot', linewidth=0.1)
-                ax.set_xlabel (solvers[0])
-                ax.set_ylabel (solvers[1])
+                ax.set_xlabel (self._solverNameMap(solvers[0]))
+                ax.set_ylabel (self._solverNameMap(solvers[1]))
                 # Save it to a temporary buffer.
                 buf = BytesIO()
 

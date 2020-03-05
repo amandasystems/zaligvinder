@@ -554,7 +554,7 @@ class ResultRepository:
         invalidquery = ''' SELECT COUNT(*) FROM Result,TrackInstance WHERE Result.solver = ? AND Result.result IS NOT NULL AND Result.instanceid = TrackInstance.id AND Result.verified = false''' ### TODO ADD VERIFIED!!!
         invalid = self._db.executeRet (invalidquery, (solver,))[0][0]
 
-        crashquery = ''' SELECT COUNT(*) FROM Result WHERE Result.solver = ? AND Result.result IS NULL AND Result.output LIKE '%Error%' ''' ### TODO ADD VERIFIED!!!
+        crashquery = ''' SELECT COUNT(*) FROM Result WHERE Result.solver = ? AND Result.result IS NULL AND Result.output LIKE '%SIG%' ''' ### TODO ADD VERIFIED!!!
         crashs = self._db.executeRet (crashquery, (solver,))[0][0]
 
         return {"smtcalls" : smtcalls, "timeout" : timeouted, "sat" : satis, "unsat" : nsatis, "unk" : unk, "error" : errors, "invalid": invalid, "crash" : crashs, "time" : round(time, 2), "total" : total, "totalWO" : totalWO, "timeWO" : round(timeWO,2)}

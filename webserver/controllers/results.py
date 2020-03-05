@@ -244,6 +244,7 @@ class ResultController:
                         wrongUnsat+=[filepath]
                     elif "Error" in output:
                         #print(t,res)
+                        #print(output)
                         if "SIG" in output:
                             test = output.split("died with")
 
@@ -257,14 +258,14 @@ class ResultController:
             data = {"invalidModel" : invalidModel,"wrongUnsat" : wrongUnsat,"programError" : programError}
 
             # hack
-            
-            """ print("----------")
+            """
+            print("----------")
             print("mkdir invalidModel wrongUnsat programError")
             for k in data:
                 for f in data[k]:
                     print("cp " + f + " ./" + k + "/")
-            
             """
+            
             #return data
             return webserver.views.jsonview.JSONView (data)
 
@@ -273,9 +274,9 @@ class ResultController:
         dataStr = self.getAllErrorsForSolver({"solver" : ["z3str4-overlaps"]})
 
 
-        for k in dataSeq:
-            for filepath in dataSeq[k]:
-                if filepath not in dataStr[k]:
+        for k in dataStr:
+            for filepath in dataStr[k]:
+                if filepath not in dataSeq[k]:
                     print(filepath)
                 else:
                     pass

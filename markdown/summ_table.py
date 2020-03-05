@@ -12,7 +12,7 @@ class TableGenerator:
         #self._groupTracks = self._res.getTrackInfo( )
 
     def _solverNameMap(self,name):
-        solvermapping = { "cvc4" : "CVC4", "z3str4-overlaps-ds-7" : "Z3hydra-dynamic" , "z3str4-overlaps" : "Z3hydra-static", "z3str3" : "Z3str3", "z3seq" : "Z3Seq"}
+        solvermapping = dict() #{ "cvc4" : "CVC4", "z3str4-overlaps-ds-7" : "Z3hydra-dynamic" , "z3str4-overlaps" : "Z3hydra-static", "z3str3" : "Z3str3", "z3seq" : "Z3Seq"}
         if name in solvermapping:
             return solvermapping[name]
         else:

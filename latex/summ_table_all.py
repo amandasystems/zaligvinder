@@ -9,7 +9,7 @@ class TableGenerator:
         self._groups = groups or [tup[0] for tup in list(self._track.getAllGroups ())]
 
     def _solverNameMap(self,name):
-        solvermapping = { "cvc4" : "CVC4", "z3str4-overlaps-ds-7" : "Z3hydra-dynamic" , "z3str4-overlaps" : "Z3hydra-static", "z3str3" : "Z3str3", "z3seq" : "Z3Seq"}
+        solvermapping = dict() # { "cvc4" : "CVC4", "z3str4-overlaps-ds-7" : "Z3hydra-dynamic" , "z3str4-overlaps" : "Z3hydra-static", "z3str3" : "Z3str3", "z3seq" : "Z3Seq"}
         if name in solvermapping:
             return solvermapping[name]
         else:
@@ -24,11 +24,12 @@ class TableGenerator:
             self._output.write ("" + solverLayout + "\\\\ \n  \\hline\\hline \n")
         
     def getData (self):
-        output = ["sat ","unsat ","\\hline \n unknown ","timeout ","soundness error ","invalid model ","\\hline \n Total correct ", "Time (s) ", "Time w/o timeouts (s) "]
-        key = ["sat","unsat","unk","timeout","error","invalid","totalClassified","time","timeWO"]
+        output = ["sat ","unsat ","\\hline \n unknown ","timeout ","soundness error ","program crashes ","\\hline \n Total correct ", "Time (s) ", "Time w/o timeouts (s) "]
+        key = ["sat","unsat","unk","timeout","errorsTotal","crash","totalClassified","time","timeWO"]
         for s in self._solvers:
             res = self._res.getSummaryForSolverTable (s)
             res["totalClassified"] = res["sat"]+res["unsat"]-(res["error"]+res["invalid"])
+            res["errorsTotal"] = res["error"]+res["invalid"]
             for i in range(0,len(output)):
                 output[i]+= "&"+str(res[key[i]])
 

@@ -1,12 +1,16 @@
-import os
-import utils
-dir_path = os.path.dirname(os.path.realpath(__file__))
-
 def getTrackData (bname = None):
-    filest = []
-    for root, dirs, files in os.walk(dir_path, topdown=False):
-        for name in files:
-            if name.endswith (".smt2") and not name.startswith("."):
-                filest.append(utils.TrackInstance(name,os.path.join (root,name)))
-
-    return [utils.Track("woorpje",filest,bname)]
+    import models.woorpje.track01
+    import models.woorpje.track02
+    import models.woorpje.track03
+    import models.woorpje.track04
+    import models.woorpje.track05
+    res = []
+    for k in [
+    		  models.woorpje.track01,
+    		  models.woorpje.track02,
+    		  models.woorpje.track03,
+    		  models.woorpje.track04,
+    		  models.woorpje.track05,
+              ]:
+        res = res+k.getTrackData (bname or "woorpje")
+    return res

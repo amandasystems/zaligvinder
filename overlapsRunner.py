@@ -20,7 +20,9 @@ import tools.z3str3portfolioNoProbe2
 import tools.z3str3portfolioNoProbe3
 import tools.z3str3bv
 import tools.z3str3portfolio2
-
+import tools.z3str3overlaps
+import tools.z3str3overlapsNew
+import tools.z3str3NoOverlaps
 #import models.woorpje.track01
 
 import models.woorpje
@@ -41,25 +43,26 @@ import models.kauslersuite
 import models.banditfuzz
 import startwebserver
 
-
-
+import tools.z3str4murphy
+import tools.z3str4federico
+import tools.z3str4multi
 
 import summarygenerators
 tracks = (models.PyEx.getTrackData () +
           models.pisa.getTrackData ("Pisa") +
-          models.nornbenchmarks.getTrackData ("Norn Benchmarks") +
+          models.nornbenchmarks.getTrackData ("Norn") +
           models.light.getTrackData("Trau Light")+
           models.Leetcode.getTrackData ("Leetcode Strings") + 
           models.appscan.getTrackData ( "IBM Appscan") + 
-          models.slothtests.getTrackData ("Sloth Tests") +
+          models.slothtests.getTrackData ("Sloth") +
           models.woorpje.getTrackData ("Woorpje Word Equations") +
           models.kaluza.getTrackData ("Kaluza") +
-          models.stringfuzz.getTrackData ("StringFuzz Tests") +
-          models.z3_regression.getTrackData("z3Str3 Regression Test")+
-          models.cashewsuite.getTrackData ("Cashew Suite") + 
-          models.joacosuite.getTrackData ("JOACO Suite") +
-          models.strangersuite.getTrackData ("Stranger Benchmarks") +
-          models.kauslersuite.getTrackData ("Kausler Suite") +
+          models.stringfuzz.getTrackData ("StringFuzz") +
+          models.z3_regression.getTrackData("z3Str3 Regression")+
+          models.cashewsuite.getTrackData ("Cashew") + 
+          models.joacosuite.getTrackData ("JOACO") +
+          models.strangersuite.getTrackData ("Stranger") +
+          models.kauslersuite.getTrackData ("Kausler") +
           models.banditfuzz.getTrackData("BanditFuzz") +
         []
         )
@@ -79,12 +82,18 @@ solvers = {}
 for s in [tools.z3seq,
           tools.z3str3,
           tools.cvc4,
-          tools.z3str3portfolio,
-          tools.z3str3portfolioNoProbe,
-          tools.z3str3portfolioNoProbe2,
-          tools.z3str3portfolioNoProbe3,
-          tools.z3str3bv,
-          tools.z3str3portfolio2,
+          #tools.z3str4multi,
+          #tools.z3str4murphy,
+          #tools.z3str4federico,
+          #tools.z3str3NoOverlaps,
+          #tools.z3str3overlapsNew,
+          #tools.z3str3portfolio,
+          #tools.z3str3portfolioNoProbe,
+          #tools.z3str3portfolioNoProbe2,
+          #tools.z3str3portfolioNoProbe3,
+          #tools.z3str3bv,
+          tools.z3str3overlaps,
+          #tools.z3str3portfolio2,
           #tools.z3str2,
           #tools.z3str3length,
           #tools.woorpjeSMT
@@ -99,11 +108,12 @@ summaries = [summarygenerators.terminalResult
 timeout = 20 
 ploc = utils.JSONProgramConfig ()
 
-store = storage.SQLiteDB ("Z3TEST")
+store = storage.SQLiteDB ("z3str4_final")
 summaries = [
     summarygenerators.terminalResult,
     store.postTrackUpdate
 ]
 verifiers = {"cvc4": tools.cvc4,"z3seq" : tools.z3seq} # use cvc4 and the sequence solver as verifiers
+#verifiers = dict()
 testrunner().runTestSetup (tracks,solvers,voting.MajorityVoter(),summaries,store,timeout,ploc,verifiers)
 startwebserver.Server (store.getDB ()).startServer ()

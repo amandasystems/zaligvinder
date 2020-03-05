@@ -2,8 +2,9 @@ import webserver.views
 
 
 class ResultController:
-    def __init__(self,results):
+    def __init__(self,results,track):
         self._results = results
+        self._track = track
 
     def getSummaryForSolver (self,params):
         res = {}
@@ -197,7 +198,7 @@ class ResultController:
                                      "error" : error,
                                      "unique_answer" : 0,
                                      "programError" : programError,
-                                     "veriefied" : tt[4].verified}
+                                     "verified" : tt[4].verified}
                 if tt[4].result != None and error == 0:
                     classifications+=[tt[0]]
                     if tt[4].result == 1:
@@ -225,36 +226,152 @@ class ResultController:
             return webserver.views.jsonview.JSONView ({"Error" : "Missing parameter"})
 
 
+    def getAllErrorsForSolver(self,params):
+        if "solver" in params:
+            solver = params["solver"][0]
+            bgroups = list(self._results.getTrackInfo ().keys())
 
+            invalidModel = []
+            programError = []
+            wrongUnsat = []
+
+            for bgroup in bgroups:
+                results = self._results.getErrosForSolverGroup(solver,bgroup)
+                for (s,g,tname,instance,filepath,t,res,exp,model,verified,output) in results:
+                    if verified == False:
+                        invalidModel+=[filepath]
+                    elif res != exp and res != None:
+                        wrongUnsat+=[filepath]
+                    elif "Error" in output:
+                        #print(t,res)
+                        #print(output)
+                        if "SIG" in output:
+                            test = output.split("died with")
+
+                            import ntpath
+                            print(ntpath.basename(filepath),test[len(test)-1])
+
+                            programError+=[filepath]
+                    else:
+                        pass
+                        #raise Exception("This point should never be reached!")
+            data = {"invalidModel" : invalidModel,"wrongUnsat" : wrongUnsat,"programError" : programError}
+
+            # hack
+            """
+            print("----------")
+            print("mkdir invalidModel wrongUnsat programError")
+            for k in data:
+                for f in data[k]:
+                    print("cp " + f + " ./" + k + "/")
+            """
+            
+            #return data
+            return webserver.views.jsonview.JSONView (data)
+
+    def quickHack(self,params):
+        dataSeq = self.getAllErrorsForSolver({"solver" : ["z3seq"]})
+        dataStr = self.getAllErrorsForSolver({"solver" : ["z3str4-overlaps"]})
+
+
+        for k in dataStr:
+            for filepath in dataStr[k]:
+                if filepath not in dataSeq[k]:
+                    print(filepath)
+                else:
+                    pass
+                    #print("LOL")
+
+        print("----------")
+        print("mkdir invalidModel wrongUnsat programError")
+        for k in dataStr:
+            for f in dataStr[k]:
+                if f not in dataSeq[k]:
+                    print("cp " + f + " ./" + k + "/")
+
+        return webserver.views.jsonview.JSONView ("")           
+
+
+    def getBestSolverForStringOperations(self,params):
+        benchmarkInfo = self._results.getTrackInfo ()
+        keyWordLimit = 3
+        # keywords -> solver -> occurence
+        solverStats = dict()
+        for g in benchmarkInfo.keys():
+            for (tid,tname) in benchmarkInfo[g]:
+                print("Track :" + str(tid) + " - " + tname)
+                for instanceid in self._results.getInstanceIdsForTrack(tid):
+                    #print("Instance id:" + str(instanceid))
+                    s = self._results.getBestSolverForInstance(instanceid)
+                    if s != None:
+                        distributionList = [k[0] for k in sorted(self._track.getStringOperationDataForInstance(instanceid).items(), key = lambda kv:(kv[1], kv[0]))]
+                        distributionList.reverse()
+                        distributionList = distributionList[:keyWordLimit]
+                        distributionList.sort()
+
+                        kt = tuple(distributionList)
+
+                        if kt not in solverStats:
+                            solverStats[kt] = dict() 
+
+                        if s not in solverStats[kt]:
+                            solverStats[kt][s]=1
+                        else:
+                            solverStats[kt][s]+=1
+
+
+        for kt in solverStats:
+            print("KeyWords: " + str(kt))
+            for s in solverStats[kt]:
+                print(s + ": " + str(solverStats[kt][s]))
+            print("------")
+
+
+        return webserver.views.jsonview.JSONView ("")
+    
     def getFasterClassifiedInstancesForTrack(self,params):
         if "solvers" in params and "track" in params and len(params["solvers"]) == 2:
             solver1 = params["solvers"][0]
             solver2 = params["solvers"][1]
             #trackid = params["track"][0]
-
-
+           #bgroup = list(self._results.getTrackInfo ().keys())[0]
             groups = self._results.getTrackInfo ()
 
             out = ""
 
             for bgroup in groups: 
-                out+= "=== "+str(bgroup)+"\n"
+                out= "=== "+str(bgroup)+"\n"
                 for (trackid,tname) in groups[bgroup]:
                     out+= "==== "+str(tname)+"\n"
-                    data = self._results.get2ComparisonTrackResultsFasterClassified(trackid,solver1,solver2)
-                    out+='''|===\n|Instance |Timeout ''' + str(solver1) + ''' |Timeout ''' + str(solver2) + ''' | Time ''' + str(solver1) + ''' |Time ''' + str(solver2) + '''\n'''
+                    data = self._results.getArmsHack(trackid) #self._results.get2ComparisonTrackResultsFasterClassified(trackid,solver1,solver2)
+                    #out+='''|===\n|Instance |Timeout ''' + str(solver1) + ''' |Timeout ''' + str(solver2) + ''' | Time ''' + str(solver1) + ''' |Time ''' + str(solver2) + '''\n'''
+                    out+='''|===\n|Instance |Timeout z3str3-portfolio |Time z3str3-portfolio |Other Solver |Timeout |Time |Deepest Nesting |Block # |Variables #| Symbols # \n'''
                     for iid in data:
                         #(solv,to,error,unk,time) = data[iid][0]
                         solver1Data = data[iid][0]
                         solver2Data = data[iid][1]
+                        nesting = 0
+                        blocks = 0
+                        symbols = ""
+                        variables = ""
 
-                        if solver1Data[0] ==  solver1:
-                            out+="|{}|{}|{}|{:.2f}|{:.2f}\n".format(self._results.getInstanceNameToId(iid),solver1Data[1],solver2Data[1],solver1Data[4],solver2Data[4])
+                        # post processing 
+                        for (k,v) in data[iid][2]:
+                            if k == "deepest_nest":
+                                nesting = v
+                            elif k == "(":
+                                blocks = v
+                            elif k in ["Int","String","Bool"]:
+                                variables+=k+" ("+str(v)+"), "
+                            else:
+                                symbols+=k+" ("+str(v)+"), "
+
+
+                        #if solver1Data[0] ==  solver1:
+                        out+="|{}|{}|{:.2f}|{}|{}|{:.2f}|{}|{}|{}|{}\n".format(self._results.getInstanceNameToId(iid),solver1Data[1],solver1Data[4],solver2Data[0],solver2Data[1],solver2Data[4],nesting,blocks,variables,symbols)
 
                     out+="|===\n\n"     
-
-
-            print(out)
+                print(out)
 
 
             return webserver.views.jsonview.JSONView ("")

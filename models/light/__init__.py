@@ -1,8 +1,12 @@
+import os
+import utils
+dir_path = os.path.dirname(os.path.realpath(__file__))
+
 def getTrackData (bname = None):
-    import models.light.light
-    res = []
-    for k in [
-    		  models.light.light,
-              ]:
-        res = res+k.getTrackData (bname or "light")
-    return res
+    filest = []
+    for root, dirs, files in os.walk(dir_path, topdown=False):
+        for name in files:
+            if name.endswith (".smt2") and not name.startswith("."):
+                filest.append(utils.TrackInstance(name,os.path.join (root,name)))
+
+    return [utils.Track("light",filest,bname)]

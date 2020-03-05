@@ -41,8 +41,6 @@ class TheRunner:
         with Pool (self._cores) as p:
             res = p.map (runSpecific,tasks)
         
-        
-    
         for setting,result in zip (tasks,res):
             solvername,model = setting[0],setting[2]
             store.writeData (track,model,solvername,result)

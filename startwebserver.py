@@ -12,8 +12,8 @@ class Server:
         self._results = storage.sqlitedb.ResultRepository (db,self._track,self._trackinstance)
         self._tcontroller = webserver.controllers.TracksController (self._track)
         self._icontroller = webserver.controllers.TrackInstanceController (self._trackinstance)
-        self._rcontroller = webserver.controllers.ResultController (self._results)
-        self._ccontroller = webserver.controllers.ChartController (self._results)
+        self._rcontroller = webserver.controllers.ResultController (self._results,self._track)
+        self._ccontroller = webserver.controllers.ChartController (self._results,self._track)
         self._fcontroller = webserver.controllers.FileControl ()
         #self._ccontrollerJS = webserver.controllers.ChartControllerJS (self._results)
         self._ccontrollerJS = webserver.controllers.dbpText.DBPTest (self._results)
@@ -39,8 +39,11 @@ class Server:
         app.addEndpoint (webserver.routing.RegexMatch("results/(?P<solver>[^/]+)/(?P<instance>\d+)/model"),self._rcontroller.getModel)
         app.addEndpoint (webserver.routing.RegexMatch("summary/(?P<solver>[^/]+)"),self._rcontroller.getSummaryForSolver)
         app.addEndpoint (webserver.routing.RegexMatch("summary/(?P<solver>[^/]+)/(?P<track>\d+)"),self._rcontroller.getSummaryForSolverTrack)
-        app.addEndpoint (webserver.routing.ExactMatch("chart/cactus"),self._ccontroller.generateCactus)
+        app.addEndpoint (webserver.routing.RegexMatch("chart/cactus"),self._ccontroller.generateCactus)
         app.addEndpoint (webserver.routing.RegexMatch("chart/distribution/(?P<track>\d+)"),self._ccontroller.generateTrackDistribution)
+        app.addEndpoint (webserver.routing.RegexMatch("chart/keywords"),self._ccontroller.generateStringOperationDistribution)
+        app.addEndpoint (webserver.routing.RegexMatch("chart/scattered"),self._ccontroller.generateScatteredPlots)
+
         
         app.addEndpoint (webserver.routing.RegexMatch("ranks/(?P<track>\d+)"),self._rcontroller.getRanks)
         #app.addEndpoint (webserver.routing.RegexMatch("jschart/cactus"),self._ccontrollerJS.generateCactus)
@@ -48,13 +51,21 @@ class Server:
         #app.addEndpoint (webserver.routing.RegexMatch("jschart/distribution"),self._ccontrollerJS.generateDistribution)  
         #app.addEndpoint (webserver.routing.RegexMatch("jschart/pie"),self._ccontrollerJS.generatePie)
 
+        app.addEndpoint (webserver.routing.RegexMatch("download/cactus/groups"),self._ccontroller.downloadCactus)
+        app.addEndpoint (webserver.routing.RegexMatch("download/cactus/tracks"),self._ccontroller.downloadCactusTracks)
+        app.addEndpoint (webserver.routing.RegexMatch("download/keywords/groups"),self._ccontroller.downloadStringOperationDistribution)
+        app.addEndpoint (webserver.routing.RegexMatch("download/keywords/tracks"),self._ccontroller.downloadStringOperationDistributionTracks)
+
+
         app.addEndpoint (webserver.routing.RegexMatch("comparison"),self._ccontrollerJS.cdl_comparison)
         app.addEndpoint (webserver.routing.RegexMatch(""),self._ccontrollerJS.cdl_entry)
         app.addEndpoint (webserver.routing.RegexMatch("becnhmarks"),self._ccontrollerJS.cdl_test)
 
-        app.addEndpoint (webserver.routing.RegexMatch("z3/(?P<track>\d+)"),self._rcontroller.getFasterClassifiedInstancesForTrack)
-        
+        app.addEndpoint (webserver.routing.RegexMatch("z3/errors"),self._rcontroller.getAllErrorsForSolver) #
 
+        app.addEndpoint (webserver.routing.RegexMatch("z3/keywords/track/(?P<track>\d+)"),self._tcontroller.getStringOperationDataForTrack)
+        app.addEndpoint (webserver.routing.RegexMatch("z3/keywords/group/(?P<bgroup>[^/]+)"),self._tcontroller.getStringOperationDataForGroup)
+        app.addEndpoint (webserver.routing.RegexMatch("z3/keywords/best"),self._rcontroller.getBestSolverForStringOperations)
 
         self._app = app
 

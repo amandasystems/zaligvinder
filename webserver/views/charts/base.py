@@ -85,7 +85,7 @@ class BaseView(webserver.views.TextView.TextView):
       '''
 
         #colors = [ "#0065AB" ,"#007E7A", "#A6D8E7", "#CD3517","#FF8142","#85C81A","#1D5100","#8939AD","#4D007A","#00D4B8","#25333D","#007E7A","#0F1E82","#4E56B8","#798893","#49AFD9",]
-        colors = ["#25333D","#0065AB","#8939AD","#007E7A","#318700","#CD3517","#80746D","#FF9A69","#00D4B8","#85C81A", #none_5_z3str3
+        colors = ["#25333D","#0065AB","#8939AD","#007E7A","#CD3517","#318700","#80746D","#FF9A69","#00D4B8","#85C81A", #none_5_z3str3
                   "#AC75C6","#0F1E82","#A3EDF6","#FFB38F","#49AFD9",]
 
         # extend the colors 
@@ -131,6 +131,9 @@ class BaseView(webserver.views.TextView.TextView):
 
         .error_row {
           background:#F5DBD9;color:#A32100;padding:5px;    
+        }
+        .verify_row {
+          background:#FEECB5;color:#EFD603;padding:5px; 
         }
 
         .unique_row {
@@ -367,11 +370,13 @@ class EntryView(BaseView):
                  benchmarks,
                  tracks,
                  solvers = [],
+                 instanceCount = 0
     ):
         
         self._bmarks = benchmarks
         self._tracks = tracks
         self._solvers = solvers
+        self._totalInstances = instanceCount
         
     def genEntryText(self,sendto):
       tt = '''<div class="clr-row clr-justify-content-centerr">
@@ -382,7 +387,7 @@ class EntryView(BaseView):
                       </div>
                         <div class="card-block">
                             <p class="card-text">'''
-      tt+="Your current setup features "+str(len(self._solvers))+" solvers on "+str(len(self._tracks))+" tracks in "+str(len(self._bmarks))+" benchmark sets."
+      tt+="Your current setup features "+str(len(self._solvers))+" solvers on "+str(len(self._tracks))+" tracks in "+str(len(self._bmarks))+" benchmark sets, having "+ str(self._totalInstances)+" many instances."
 
 
       tt+='''
@@ -392,7 +397,7 @@ class EntryView(BaseView):
                 </div>
             </div>'''
 
-      tt= '''<div class="clr-row clr-justify-content-centerr">
+      tt+= '''<div class="clr-row clr-justify-content-centerr">
                 <div class="clr-col">                
                 <div class="card">
                        <div class="card-header">

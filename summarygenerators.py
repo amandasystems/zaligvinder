@@ -14,6 +14,9 @@ def calculateErrors (track,res):
                 #Only count errors if we have an expected value and this solver gave an answer
                 if inst.expected != k.result or k.verified == False:
                     errors[solver]+=1
+                # Count as error if a solver produced a wrong model
+                if inst.expected == k.result and k.verified == False:
+                    errors[solver]+1
     return errors
 
 def calculateErrorsOld(res):

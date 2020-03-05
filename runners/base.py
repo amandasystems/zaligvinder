@@ -2,6 +2,8 @@
 import os
 import sys
 import utils
+import tools.cvc4
+import tools.z3seq
 
 def progressMessage (track,file,solver,cur,total):
     sys.stdout.write ("\x1b[2K\r[ {0}  {1} {2} - {3}/{4}]".format(track,file,solver,cur+1,total))

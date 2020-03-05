@@ -108,7 +108,57 @@ class TrackRepository:
     def getAllGroups (self):
         query = '''SELECT DISTINCT Track.bgroup FROM Track'''
         return self._db.executeRet(query,)
-    
+
+    def getStringOperationDataForGroup(self,group,keywords=[]):
+        query = '''SELECT Track.id FROM Track WHERE Track.bgroup = ?'''
+        trackids = [t[0] for t in self._db.executeRet (query,(group,))]
+        keywordDistribution = dict()
+        for i,tid in enumerate(trackids):
+            print("Processing " + str(i) + " of " + str(len(trackids)))
+            keywordDistribution = self.getStringOperationDataForTrack(tid,keywords,keywordDistribution)
+        return keywordDistribution
+
+    def getStringOperationDataForTrack(self,trackid,keywords=[],keywordDistribution = dict()):
+        query = '''SELECT TrackInstanceMap.instance FROM TrackInstanceMap WHERE TrackInstanceMap.track = ?'''
+        rows = [t[0] for t in self._db.executeRet (query,(trackid,))]
+        for iid in rows:
+            keywordDistribution = self.getStringOperationDataForInstance(iid,keywords,keywordDistribution)
+        return keywordDistribution
+
+    def getStringOperationDataForInstance(self,instanceid,keywords=[],keywordDistribution = dict()):
+        if len(keywords) == 0:
+            keywords = ["str.++","str.len","str.<",
+                "str.to.re","str.in.re",
+                "str.<=","str.at","str.substr","str.prefixof","str.suffixof","str.contains","str.indexof","str.replace","str.is_digit","str.to.int","int.to.str"]
+
+        query = '''SELECT TrackInstance.name, TrackInstance.filepath FROM TrackInstance WHERE TrackInstance.id = ?'''
+        rows = self._db.executeRet (query,(instanceid,))
+        for (name,filepath) in rows:
+            rFilepath = filepath[filepath.rindex("models"):]
+            keywordDistribution = self._getKeywordDistribution(rFilepath,keywords,keywordDistribution)
+        return keywordDistribution
+
+    def _getKeywordDistribution (self,filepath,keywords,keywordDistribution=dict()):
+        """if set(keywordDistribution.keys()) != set(keywords):
+            for k in keywords:
+                keywordDistribution[k] = 0
+        """
+        f=open(filepath,"r")
+        #print(filepath)
+        for l in f:
+            keywordDistribution = self._dynamicallyAquireKeywords(l,keywordDistribution)
+            for k in keywordDistribution.keys():
+                if k in l:
+                    keywordDistribution[k]+=l.count(k)
+        return keywordDistribution
+
+    def _dynamicallyAquireKeywords(self,line,keywordDistribution):
+        import re
+        keywords = list(keywordDistribution.keys()) 
+        for k in re.findall(r'\bstr\.[\S]+\s', line):
+            if k not in keywords:
+                keywordDistribution[k] = 0
+        return keywordDistribution
 
 class ResultRepository:
     def __init__ (self,db,trackrepo,instancerepo):
@@ -165,7 +215,7 @@ class ResultRepository:
         return data
 
     def getInstanceIdsForTrack(self,trackid):
-        print(trackid)
+        #print(trackid)
         query = '''SELECT DISTINCT TrackInstanceMap.instance  FROM TrackInstanceMap WHERE TrackInstanceMap.track = ?'''
         rows = self._db.executeRet (query,(int(trackid),))
         return [t[0] for t in rows] 
@@ -181,10 +231,22 @@ class ResultRepository:
         rows = self._db.executeRet (query,(solver,))
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
 
+    def getResultForSolverInstance (self,solver,instanceid):
+        query = '''SELECT * FROM Result WHERE solver = ? AND instanceid = ? ORDER BY time ASC '''
+        rows = self._db.executeRet (query,(solver,instanceid))
+        return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows][0]
+
     def getResultForSolverGroup (self,solver,group):
         query = '''SELECT * FROM Result,TrackInstanceMap,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance and TrackInstanceMap.track = Track.id and Track.bgroup = ? ORDER BY time ASC '''
         rows = self._db.executeRet (query,(solver,group,))
+        #print(rows)
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
+
+    def getResultForSolverGroupAndFilePath (self,solver,group):
+        query = '''SELECT Result.*,TrackInstance.filepath FROM Result,TrackInstanceMap,Track,TrackInstance WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance and TrackInstanceMap.track = Track.id and Track.bgroup = ? and TrackInstance.id = TrackInstanceMap.instance ORDER BY time ASC '''
+        rows = self._db.executeRet (query,(solver,group,))
+        #print(rows)
+        return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2]),t[9]) for t in rows]
 
     def getResultForSolverTrack (self,solver,track):
         query = '''SELECT Result.* FROM Result,TrackInstanceMap WHERE Result.solver = ? and Result.instanceid = TrackInstanceMap.instance and TrackInstanceMap.track = ? ORDER BY time ASC '''
@@ -202,17 +264,17 @@ class ResultRepository:
         return row[0][0]
 
     def getResultForSolverNoUnk (self,solver):
-        query = '''SELECT * FROM Result,TrackInstance WHERE solver = ? and Result.result IS NOT NULL AND  Result.instanceid = TrackInstance.id AND TrackInstance.expected == Result.result ORDER BY time ASC '''
+        query = '''SELECT * FROM Result,TrackInstance WHERE solver = ? and Result.result IS NOT NULL AND  Result.instanceid = TrackInstance.id AND TrackInstance.expected == Result.result AND Result.verified IS NOT false ORDER BY time ASC '''
         rows = self._db.executeRet (query,(solver,))
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
 
     def getResultForSolverGroupNoUnk (self,solver,group):
-        query = '''SELECT * FROM Result,TrackInstanceMap,Track,TrackInstance WHERE solver = ? AND TrackInstance.id = Result.instanceid AND TrackInstance.expected = Result.result AND Result.result IS NOT NULL and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ?  ORDER BY time ASC '''
+        query = '''SELECT * FROM Result,TrackInstanceMap,Track,TrackInstance WHERE solver = ? AND TrackInstance.id = Result.instanceid AND TrackInstance.expected = Result.result AND Result.verified IS NOT false AND Result.result IS NOT NULL and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ?  ORDER BY time ASC '''
         rows = self._db.executeRet (query,(solver,group,))
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
 
     def getResultForSolverTrackNoUnk (self,solver,track):
-        query = '''SELECT Result.* FROM Result,TrackInstanceMap,TrackInstance WHERE Result.solver = ? AND TrackInstance.id = Result.instanceid AND TrackInstance.expected = Result.result AND Result.result IS NOT NULL and Result.instanceid = TrackInstanceMap.instance and TrackInstanceMap.track = ? ORDER BY time ASC '''
+        query = '''SELECT Result.* FROM Result,TrackInstanceMap,TrackInstance WHERE Result.solver = ? AND TrackInstance.id = Result.instanceid AND TrackInstance.expected = Result.result AND Result.verified IS NOT false AND Result.result IS NOT NULL and Result.instanceid = TrackInstanceMap.instance and TrackInstanceMap.track = ? ORDER BY time ASC '''
         rows = self._db.executeRet (query,(solver,track))
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
 
@@ -223,6 +285,13 @@ class ResultRepository:
             #print (rows)
             return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
 
+    def getBestSolverForInstance(self,instanceid):
+        query = '''SELECT Result.solver FROM Result,TrackInstance WHERE Result.instanceid = TrackInstance.id AND Result.instanceid = ? AND Result.result IS NOT NULL AND Result.result = TrackInstance.expected ORDER BY time ASC ''' # TODO ADD Result.verified IS NOT false
+        rows = [t[0] for t in self._db.executeRet (query,(instanceid,))]
+        if len(rows) > 0:
+            return rows[0]
+        else:
+            return None
 
     # faster classification
     def get2ComparisonTrackResultsFasterClassified(self,trackid,solver1,solver2):
@@ -238,16 +307,105 @@ class ResultRepository:
                 continue
 
 
-
-
-
-            if dataSolver1[iid][0][4] > dataSolver2[iid][0][4]+1.0:
+            if dataSolver1[iid][0][4] > dataSolver2[iid][0][4]+3.0:
                 data[iid] = [dataSolver1[iid][0]] + [dataSolver2[iid][0]]
             #else: 
             #    data[iid] = [dataSolver2[iid][0]]
-
-
         return data
+
+    # z3str3 ARM HACK
+    def getArmsHack(self,trackid):
+        query = '''SELECT Result.solver, Result.instanceid, Result.timeouted, Result.result, TrackInstance.expected,Result.time FROM Result,TrackInstance,TrackInstanceMap WHERE Result.instanceid = TrackInstanceMap.instance AND TrackInstanceMap.track = ? AND TrackInstance.id = Result.instanceid AND Result.solver = ?'''
+        dataPortfolio = self._prepareClassificationData(self._db.executeRet (query, (trackid,"z3str3-portfolio")))
+
+
+        solverData = []
+        time_gap = 3.0
+
+        keywords = ["and","assert","not",
+                    "str.++","str.len","str.<",
+                    "str.to.re","str.in.re",
+                    "str.<=","str.at","str.substr","str.prefixof","str.suffixof","str.contains","str.indexof","str.replace","str.is_digit","str.to.int","int.to.str",
+                    "Bool","String","Int","("]
+
+
+        for s in ["z3str2","z3seq","z3str3-length","z3str3-bv"]:
+            solverData+=[self._prepareClassificationData(self._db.executeRet (query, (trackid,s)))]
+
+
+        data = dict()
+
+
+        for iid in dataPortfolio:
+        
+            new_best = False
+            assert(len(dataPortfolio[iid]) == 1)
+
+            #(solv,time,error,unkown)
+            cur_port_data = [dataPortfolio[iid][0][0],dataPortfolio[iid][0][4],dataPortfolio[iid][0][2],dataPortfolio[iid][0][3]]
+
+            if not cur_port_data[2]:
+                best_data = cur_port_data.copy()
+            else: 
+                best_data = ["none",100.0,False,False]
+
+
+            for i,sd in enumerate(solverData):
+                if sd[iid][0][4]+time_gap < best_data[1] and not sd[iid][0][2]:
+                    best_data = [sd[iid][0][0],sd[iid][0][4],sd[iid][0][2],sd[iid][0][3]]
+                    new_best = True
+                    best_id = i
+
+            if new_best:
+                queryInstance = '''SELECT filepath FROM TrackInstance WHERE id = ?'''
+                filepath = self._db.executeRet (queryInstance, (iid,))[0][0]
+
+                distribution = self.classifyInstance(filepath[len("/home/mku/wordbenchmarks/"):],keywords)
+                distributionList = list(filter(lambda x: x[1] > 0, sorted(distribution.items(), key = lambda kv:(kv[1], kv[0]))))
+                data[iid] = [dataPortfolio[iid][0]] + [solverData[best_id][iid][0]] + [distributionList]
+ 
+        return data
+
+    def instanceInformation(self,instanceid):
+        keywords = ["Bool","String","Int"]
+        queryInstance = '''SELECT filepath FROM TrackInstance WHERE id = ?'''
+        filepath = self._db.executeRet (queryInstance, (instanceid,))[0][0]
+
+        return self.classifyInstance(filepath[len("/home/mku/wordbenchmarks/"):],keywords)
+        #distributionList = list(filter(lambda x: x[1] > 0, sorted(distribution.items(), key = lambda kv:(kv[1], kv[0]))))
+
+    def classifyInstance (self,instance,keywords):
+        keywordDistribution = dict()
+        for k in keywords:
+            keywordDistribution[k] = 0
+
+        deepest_nest = 0
+        current_nest = 0
+        charcount = 0
+
+        f=open(instance,"r")
+        for l in f:
+            charcount+=len(l)
+            for k in keywords:
+                if k in l:
+                    keywordDistribution[k]+=l.count(k)
+
+                #check nesting
+                for a in l:
+                    if a == "(":
+                        current_nest+=1
+                    elif a == ")":
+                        if current_nest > deepest_nest:
+                            deepest_nest = current_nest
+                        current_nest=-1;
+
+        keywordDistribution["deepest_nest"] = deepest_nest; 
+        keywordDistribution["length"] = charcount
+
+        return keywordDistribution
+    ####
+
+
 
     def getTrackResults (self,trackid):
         query = '''SELECT Result.solver, Result.instanceid, Result.smtcalls, Result.timeouted, Result.result, Result.time FROM Result,Track,TrackInstanceMap WHERE Result.instanceid = TrackInstanceMap.instance AND TrackInstanceMap.track = ? ORDER BY Result.time ASC'''
@@ -347,14 +505,63 @@ class ResultRepository:
         nsatisquery = ''' SELECT COUNT(*)  FROM Result,TrackInstanceMap,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? AND Result.result = false'''
         nsatis = self._db.executeRet (nsatisquery, (solver,group,))[0][0]
 
-        errorquery = ''' SELECT COUNT(*) FROM Result,TrackInstance,TrackInstanceMap,Track WHERE Result.solver = ? AND Result.result IS NOT NULL AND Result.instanceid = TrackInstance.id AND TrackInstance.expected != Result.result AND TrackInstance.id = TrackInstanceMap.instance AND TrackInstanceMap.track = Track.id AND Track.bgroup = ?''' 
+        errorquery = ''' SELECT COUNT(*) FROM Result,TrackInstance,TrackInstanceMap,Track WHERE Result.solver = ? AND Result.result IS NOT NULL AND Result.instanceid = TrackInstance.id AND (TrackInstance.expected != Result.result OR (TrackInstance.expected = Result.result AND Result.verified = false)) AND TrackInstance.id = TrackInstanceMap.instance AND TrackInstanceMap.track = Track.id AND Track.bgroup = ?''' 
         errors = self._db.executeRet (errorquery, (solver,group,))[0][0]
-        
 
-        print(timeouted+satis+unk+nsatis+errors)
-        
+
 
         return (smtcalls,timeouted,satis,unk,nsatis,errors,time,total) 
+
+    def getSummaryForSolverGroupTotalTimeWOTimeout(self,solver,group):
+        (smtcalls,timeouted,satis,unk,nsatis,errors,time,total) = self.getSummaryForSolverGroup(solver,group)
+
+        #query = '''SELECT SUM(Result.time),COUNT(*) FROM Result,TrackInstanceMap,TrackInstance,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? AND Result.timeouted = false AND Result.instanceid = TrackInstance.id AND (TrackInstance.expected = Result.result OR Result.result = NULL)'''
+        query = '''SELECT SUM(Result.time),COUNT(*) FROM Result,TrackInstanceMap,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? AND Result.timeouted = false'''
+        row = self._db.executeRet (query, (solver,group,))
+        timeWO,totalWO = row[0]
+
+        if timeWO == None:
+            timeWO = 0.0
+
+        return (smtcalls,timeouted,satis,unk,nsatis,errors,time,total,timeWO,totalWO)
+
+    def getVerifiedCountForSolverGroup(self,solver,group):
+        query = '''SELECT COUNT(*) FROM Result,TrackInstanceMap,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? AND Result.verified = true'''
+        return self._db.executeRet (query, (solver,group,))[0][0]
+
+    # quick hack...
+    def getSummaryForSolverTable(self,solver):
+        query = '''SELECT SUM(Result.smtcalls), SUM(Result.timeouted), SUM(Result.time),COUNT(*) FROM Result WHERE solver = ?'''
+        rows = self._db.executeRet (query, (solver,))
+        smtcalls,timeouted,time,total = rows[0]
+        assert(len(rows) == 1)
+
+        queryWO = '''SELECT SUM(Result.time),COUNT(*) FROM Result WHERE solver = ? AND Result.timeouted = false'''
+        rowWO = self._db.executeRet (queryWO, (solver,))
+        timeWO,totalWO = rowWO[0][0],rowWO[0][1]
+
+
+        satisquery = ''' SELECT COUNT(*) FROM Result WHERE solver = ? AND Result.result = true'''
+        satis = self._db.executeRet (satisquery, (solver,))[0][0]
+
+        unkquery = ''' SELECT COUNT(*) FROM Result WHERE solver = ? AND Result.timeouted = false AND Result.result IS NULL'''
+        unk = self._db.executeRet (unkquery, (solver,))[0][0]
+
+        nsatisquery = ''' SELECT COUNT(*)  FROM Result WHERE solver = ? AND Result.result = false'''
+        nsatis = self._db.executeRet (nsatisquery, (solver,))[0][0]
+
+        errorquery = ''' SELECT COUNT(*) FROM Result,TrackInstance WHERE Result.solver = ? AND Result.result IS NOT NULL AND Result.instanceid = TrackInstance.id AND TrackInstance.expected != Result.result''' ### TODO ADD VERIFIED!!!
+        errors = self._db.executeRet (errorquery, (solver,))[0][0]
+
+
+        invalidquery = ''' SELECT COUNT(*) FROM Result,TrackInstance WHERE Result.solver = ? AND Result.result IS NOT NULL AND Result.instanceid = TrackInstance.id AND Result.verified = false''' ### TODO ADD VERIFIED!!!
+        invalid = self._db.executeRet (invalidquery, (solver,))[0][0]
+
+        crashquery = ''' SELECT COUNT(*) FROM Result WHERE Result.solver = ? AND Result.result IS NULL AND Result.output LIKE '%SIG%' ''' ### TODO ADD VERIFIED!!!
+        crashs = self._db.executeRet (crashquery, (solver,))[0][0]
+
+        return {"smtcalls" : smtcalls, "timeout" : timeouted, "sat" : satis, "unsat" : nsatis, "unk" : unk, "error" : errors, "invalid": invalid, "crash" : crashs, "time" : round(time, 2), "total" : total, "totalWO" : totalWO, "timeWO" : round(timeWO,2)}
+
 
     def getOutputForSolverInstance (self,solver,instance):
         query = '''SELECT output  FROM Result WHERE solver = ? AND instanceid = ?'''
@@ -393,8 +600,24 @@ class ResultRepository:
         errors = self._db.executeRet (errorquery, (solver,track))[0][0]
 
         #total = timeouted+satis+unk+nsatis+errors
+
+        print("LOL")
         
-        return (smtcalls,timeouted,satis,unk,nsatis,errors,time,total) 
+        return (smtcalls,timeouted,satis,unk,nsatis,errors,time,total)
+
+    def getSummaryForSolverTrackTotalTimeWOTimeout(self,solver,track):
+        (smtcalls,timeouted,satis,unk,nsatis,errors,time,total) = self.getSummaryForSolverTrack(solver,track)
+
+        #query = '''SELECT SUM(Result.time),COUNT(*) FROM Result,TrackInstanceMap,TrackInstance,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? AND Result.timeouted = false AND Result.instanceid = TrackInstance.id AND (TrackInstance.expected = Result.result OR Result.result = NULL)'''
+        query = '''SELECT SUM(Result.time),COUNT(*) FROM Result,TrackInstanceMap WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = ? AND Result.timeouted = false'''
+        row = self._db.executeRet (query, (solver,track,))
+        timeWO,totalWO = row[0]
+
+        if timeWO == None:
+            timeWO = 0.0
+
+        return (smtcalls,timeouted,satis,unk,nsatis,errors,time,total,timeWO,totalWO)
+
 
     def getReferenceForInstance (self,instance):
         query = '''SELECT result,Solver FROM Result WHERE instanceid = ? '''
@@ -412,7 +635,17 @@ class ResultRepository:
         elif len(nsat) > len(sat):
             res = False
         return utils.ReferenceResult (res,sat,nsat)
+
+    def getErrosForSolverGroup (self,solver,group):
+        errorquery = ''' SELECT Result.solver, Track.bgroup, Track.name, TrackInstance.name, TrackInstance.filepath, Result.time, Result.result, TrackInstance.expected, Result.model, Result.verified, Result.output TrackInstance FROM Result,TrackInstance,TrackInstanceMap,Track WHERE Result.solver = ? AND Result.instanceid = TrackInstance.id AND Result.timeouted = false AND TrackInstance.id = TrackInstanceMap.instance AND TrackInstanceMap.track = Track.id AND Track.bgroup = ? AND ( ((TrackInstance.expected != Result.result OR Result.verified = false) AND Result.result IS NOT NULL) OR Result.output LIKE '%Error%')''' 
+        errors = self._db.executeRet (errorquery, (solver,group,))
+        return errors
         
+    def getInstancesCount (self):
+        query = '''SELECT COUNT(*) FROM TrackInstance'''
+        return [t[0] for t in self._db.executeRet (query)][0]
+        
+
         
 class SQLiteDB:
     def __init__ (self,prefix = ""):

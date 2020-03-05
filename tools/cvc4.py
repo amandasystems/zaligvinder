@@ -53,7 +53,12 @@ def run (eq,timeout,ploc,wd,solver="1",param="60"):
             return utils.Result(None,timeout,True,1)
         else:
             out = "Error in " + eq + ": " + str(e)
-            return utils.Result(None,time.getTime(),False,1,out)
+            if "SIG" in str(e):          
+                return utils.Result(None,time.getTime(),False,1,out)
+            else:
+                # treat unsupported operations as timeout:
+                return utils.Result(None,timeout,True,1,str(e))
+    
     time.stop ()
     shutil.rmtree (tempd)
     

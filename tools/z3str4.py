@@ -10,8 +10,8 @@ import timer
 
 #path = utils.findProgram ("Z3BINARY","z3")
 
-def run (params,eq,timeout,ploc,wd):
-    path = ploc.findProgram ("Z3Overlaps")
+def run (eq,timeout,ploc,wd):
+    path = ploc.findProgram ("Z3Port")
     if not path:
         raise "Z3BV Not in Path"
 
@@ -32,7 +32,7 @@ def run (params,eq,timeout,ploc,wd):
     time = timer.Timer ()
     myerror = ""
     try:
-        out = subprocess.check_output ([path,"smt.string_solver=z3str3","dump_models=true","smt.str.search_overlaps=true","smt.str.fixed_length_iterations=5","smt.str.pre_milliseconds=2500"]+params+[smtfile],timeout=timeout,stderr=subprocess.STDOUT).decode().strip()
+        out = subprocess.check_output ([path,"smt.string_solver=z3str3","dump_models=true","smt.str.search_overlaps=true","smt.str.fixed_length_iterations=5","smt.str.tactic=3","smt.seq.giveup_point=7","smt.str.pre_milliseconds=5000",smtfile],timeout=timeout,stderr=subprocess.STDOUT).decode().strip()
     except subprocess.TimeoutExpired:
         return utils.Result(None,timeout,True,1)
     
@@ -58,12 +58,12 @@ def run (params,eq,timeout,ploc,wd):
     return utils.Result(None,time.getTime  (),False,1,out)
 
 def addRunner (addto):
-    from functools import partial
-    params = { "sharing-on" : ["smt.str.share_constraints=true"],
-               "sharing-off" : ["smt.str.share_constraints=false"]}
+    #from functools import partial
+    #params = { "sharing-on" : ["smt.str.share_constraints=true"],
+    # "sharing-off" : ["smt.str.share_constraints=false"]}
 
-    for i in params:
-        addto['z3str4-murphy-'+str(i)] = partial(run,params[i])
+    #for i in params:
+    addto['z3str4'] = run
 
 
 if __name__ == "__main__":

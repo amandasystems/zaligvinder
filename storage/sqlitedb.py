@@ -502,12 +502,17 @@ class ResultRepository:
         nsatisquery = ''' SELECT COUNT(*)  FROM Result,TrackInstanceMap,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? AND Result.result = false'''
         nsatis = self._db.executeRet (nsatisquery, (solver,group,))[0][0]
 
-        errorquery = ''' SELECT COUNT(*) FROM Result,TrackInstance,TrackInstanceMap,Track WHERE Result.solver = ? AND Result.result IS NOT NULL AND Result.instanceid = TrackInstance.id AND (TrackInstance.expected != Result.result OR (TrackInstance.expected = Result.result AND Result.verified = false)) AND TrackInstance.id = TrackInstanceMap.instance AND TrackInstanceMap.track = Track.id AND Track.bgroup = ?''' 
+        #errorquery = ''' SELECT COUNT(*) FROM Result,TrackInstance,TrackInstanceMap,Track WHERE Result.solver = ? AND Result.result IS NOT NULL AND Result.instanceid = TrackInstance.id AND (TrackInstance.expected != Result.result OR (TrackInstance.expected = Result.result AND Result.verified = false)) AND TrackInstance.id = TrackInstanceMap.instance AND TrackInstanceMap.track = Track.id AND Track.bgroup = ?''' 
+        #errors = self._db.executeRet (errorquery, (solver,group,))[0][0]
+
+        errorquery = ''' SELECT COUNT(*) FROM Result,TrackInstance,Track,TrackInstanceMap WHERE Result.solver = ? AND Result.result IS NOT NULL AND Result.instanceid = TrackInstance.id AND TrackInstance.expected != Result.result AND Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ?''' ### TODO ADD VERIFIED!!!
         errors = self._db.executeRet (errorquery, (solver,group,))[0][0]
 
 
+        invalidquery = ''' SELECT COUNT(*) FROM Result,TrackInstanceMap,Track WHERE Result.solver = ? AND Result.result IS NOT NULL AND Result.verified = false and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ?''' ### TODO ADD VERIFIED!!!
+        invalid = self._db.executeRet (invalidquery, (solver,group,))[0][0]
 
-        return (smtcalls,timeouted,satis,unk,nsatis,errors,time,total) 
+        return (smtcalls,timeouted,satis,unk,nsatis,errors+invalid,time,total) 
 
     def getSummaryForSolverGroupTotalTimeWOTimeout(self,solver,group):
         (smtcalls,timeouted,satis,unk,nsatis,errors,time,total) = self.getSummaryForSolverGroup(solver,group)
@@ -517,10 +522,13 @@ class ResultRepository:
         row = self._db.executeRet (query, (solver,group,))
         timeWO,totalWO = row[0]
 
+        crashquery = ''' SELECT COUNT(*) FROM Result,TrackInstanceMap,Track WHERE Result.solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? AND Result.result IS NULL AND Result.output LIKE '%SIG%' ''' ### TODO ADD VERIFIED!!!
+        crashs = self._db.executeRet (crashquery, (solver,group,))[0][0]
+
         if timeWO == None:
             timeWO = 0.0
 
-        return (smtcalls,timeouted,satis,unk,nsatis,errors,time,total,timeWO,totalWO)
+        return (smtcalls,timeouted,satis,unk,nsatis,errors,time,total,timeWO,totalWO,crashs)
 
     def getVerifiedCountForSolverGroup(self,solver,group):
         query = '''SELECT COUNT(*) FROM Result,TrackInstanceMap,Track WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? AND Result.verified = true'''

@@ -12,7 +12,7 @@ class TableGenerator:
         #self._groupTracks = self._res.getTrackInfo( )
 
     def _solverNameMap(self,name):
-        solvermapping = dict() #{ "cvc4" : "CVC4", "z3str4-overlaps-ds-7" : "Z3hydra-dynamic" , "z3str4-overlaps" : "Z3hydra-static", "z3str3" : "Z3str3", "z3seq" : "Z3Seq"}
+        solvermapping = { "cvc4" : "CVC4", "z3str4-ds" : "Dynamic Difficulty Estimation" , "z3str4-no-ds" : "Static Difficulty Estimation", "z3str3" : "Z3str3", "z3str4" : "Z3str4", "z3seq" : "Z3seq"}
         if name in solvermapping:
             return solvermapping[name]
         else:
@@ -34,16 +34,16 @@ class TableGenerator:
         
             for s in self._solvers:
                 if s not in totalSumData:
-                    totalSumData[s] = [0]*11
+                    totalSumData[s] = [0]*12
 
-                (smtcalls,timeouted,satis,unk,nsatis,errors,time,total,timeWO,totalWO) = self._res.getSummaryForSolverGroupTotalTimeWOTimeout (s,g)
+                (smtcalls,timeouted,satis,unk,nsatis,errors,time,total,timeWO,totalWO,crashs) = self._res.getSummaryForSolverGroupTotalTimeWOTimeout (s,g)
                 verified = self._res.getVerifiedCountForSolverGroup(s,g)
                 print(g,s,timeWO,totalWO,verified,satis)
                 classified = satis + nsatis -errors
 
                 #(smtcalls,timeouted,satis,unk,nsatis,errors,time,total) = self._res.getSummaryForSolverTrack (s,tid)
 
-                lines.append ("|{}|{}|{} ({})|{}|{}|{}|{}|{}|{:.2f}|{}|{:.2f}\n".format(self._solverNameMap(s),classified,satis,verified,nsatis,unk,errors,timeouted,total,time,totalWO,timeWO))
+                lines.append ("|{}|{}|{}|{}|{}|{}|{}|{}|{:.2f}|{}|{:.2f}\n".format(self._solverNameMap(s),classified,satis,nsatis,unk,errors,crashs,timeouted,total,time,timeWO))
                 #lines.append ("|{}|{}|{}|{}|{}|{}|{}|{}|{:.2f}|{}|{:.2f}\n".format(s,classified,satis,nsatis,unk,errors,timeouted,total,time,totalWO,timeWO))
 
                 #correctly,satis,nsatis,unk,errors,timeouted,total,time,totalWO,timeWO
@@ -59,6 +59,7 @@ class TableGenerator:
                 totalSumData[s][8]+=totalWO
                 totalSumData[s][9]+=timeWO
                 totalSumData[s][10]+=verified
+                totalSumData[s][11]+=crashs
 
                 best[s] = [classified,time,timeWO]
 
@@ -69,7 +70,7 @@ image::img/'''+g.lower().replace(" ", "")+'''.png[cactus]\n\n''')
 
             #self._output.write ('''\n\n[.text-center]
             #image::img/keys/'''+g.lower().replace(" ", "")+'''.png[keywords]\n\n''')
-            self._output.write ('''|===\n|Tool name |Correctly classified  |Declared satisfiable (Veriefied correctly) |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time|Total instances w/o TO |Total time w/o TO\n''')
+            self._output.write ('''|===\n|Tool name |Correctly classified  |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Program crashes| Timeout |Total instances |Total time |Total time w/o TO\n''')
             #self._output.write ('''|===\n|Tool name |Correctly classified  |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time|Total instances w/o TO |Total time w/o TO\n''')
             self._output.write ("".join (lines))
             self._output.write ("|===\n\n")
@@ -93,12 +94,12 @@ Best solver of this benchmark set '''+str(self._solverNameMap(current[3]))+''' c
         self._output.write("\n\n=== Total\n")
 
         for s in totalSumData:
-            (correctly,satis,nsatis,unk,errors,timeouted,total,time,totalWO,timeWO,verified) = totalSumData[s]
-            lines.append ("|{}|{}|{} ({})|{}|{}|{}|{}|{}|{:.2f}|{}|{:.2f}\n".format(self._solverNameMap(s),correctly,satis,verified,nsatis,unk,errors,timeouted,total,time,totalWO,timeWO))
+            (correctly,satis,nsatis,unk,errors,timeouted,total,time,totalWO,timeWO,verified,crashs) = totalSumData[s]
+            lines.append ("|{}|{}|{}|{}|{}|{}|{}|{}|{:.2f}|{}|{:.2f}\n".format(self._solverNameMap(s),correctly,satis,nsatis,unk,errors,crashs,timeouted,total,time,timeWO))
             #lines.append ("|{}|{}|{}|{}|{}|{}|{}|{}|{:.2f}|{}|{:.2f}\n".format(s,correctly,satis,nsatis,unk,errors,timeouted,total,time,totalWO,timeWO))
             #lines.append ("|{}|{}|{:.2f}|{:.2f}\n".format(s,totalSumData[s][0],totalSumData[s][1],totalSumData[s][2]))
 
-        self._output.write ('''|===\n|Tool name |Correctly classified |Declared satisfiable (Veriefied correctly) |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time|Total instances w/o TO |Total time w/o TO\n''')
+        self._output.write ('''|===\n|Tool name |Correctly classified  |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Program crashes| Timeout |Total instances |Total time |Total time w/o TO\n''')
         #self._output.write ('''|===\n|Tool name |Correctly classified |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time|Total instances w/o TO |Total time w/o TO\n''')
         self._output.write ("".join (lines))
         self._output.write ("|===\n\n")

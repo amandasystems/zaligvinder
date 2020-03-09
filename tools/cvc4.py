@@ -23,8 +23,11 @@ def run (eq,timeout,ploc,wd,solver="1",param="60"):
     # hack to insert (get-model), which is needed for cvc4 to output a model
     f=open(eq,"r")
     copy=open(smtfile,"w")
-    firstLine = True
+    firstLine = None 
     for l in f:
+        if not l.startswith(";") and firstLine == None:
+            firstLine = True
+    
         # set (set-logic ALL) if no logic was set
         if "(set-logic" not in l and firstLine:
             copy.write("(set-logic ALL)\n")    
@@ -40,7 +43,7 @@ def run (eq,timeout,ploc,wd,solver="1",param="60"):
 
     time = timer.Timer ()
     try:
-        out = subprocess.check_output ([path,"--lang","smt2","-m","--no-interactive","--no-interactive-prompt","--strings-exp","--tlimit-per",str(timeout)+"000",smtfile]).decode().strip()
+        out = subprocess.check_output ([path,"--lang","smt2","-m","--no-interactive","--no-interactive-prompt","--strings-exp","--produce-models","--tlimit-per",str(timeout)+"000",smtfile],timeout=timeout).decode().strip()
     except subprocess.TimeoutExpired:
         return utils.Result(None,timeout,True,1)
     except subprocess.CalledProcessError as e:
@@ -50,7 +53,12 @@ def run (eq,timeout,ploc,wd,solver="1",param="60"):
             return utils.Result(None,timeout,True,1)
         else:
             out = "Error in " + eq + ": " + str(e)
-            return utils.Result(None,time.getTime(),False,1,out)
+            if "SIG" in str(e):          
+                return utils.Result(None,time.getTime(),False,1,out)
+            else:
+                # treat unsupported operations as timeout:
+                return utils.Result(None,timeout,True,1,str(e))
+    
     time.stop ()
     shutil.rmtree (tempd)
     

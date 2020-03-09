@@ -27,7 +27,6 @@ class TheRunner:
     def runTestSetup (self,tracks,solvers,voter,summaries,outputfile,timeout,ploc,verifiers=dict()):
         for t in tracks:
             res = self.runTrack (t,solvers,outputfile,timeout,ploc)
-            print(outputfile)
             voter.voteOnResult (t,res,timeout,ploc,verifiers)
             for s in summaries:
                 s(t,res)

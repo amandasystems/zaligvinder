@@ -53,7 +53,6 @@ class TheRunner:
         for t in tracks:
             res = self.runTrack (t,solvers,outputfile,timeout,ploc)
             voter.voteOnResult (t,res,timeout,ploc,verifiers)
-
             for s in summaries:
                 s(t,res)
 

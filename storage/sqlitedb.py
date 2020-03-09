@@ -1,4 +1,4 @@
-import re
+import sys
 import sqlite3
 import utils
 
@@ -174,6 +174,10 @@ class ResultRepository:
         query = '''INSERT INTO Result (solver,instanceid,smtcalls,timeouted,result,time,output,model,verified) VALUES(?,?,?,?,?,?,?,?,?)'''
         tid = self.instancerepo.storeInstance ( instance)
         self._db.execute (query,(solver,tid,result.smtcalls,result.timeouted,result.result,result.time,result.output,result.model,result.verified))
+
+    def updateVerified(self,instanceid,solver,verified):
+        query = '''UPDATE Result SET verified = ? WHERE solver = ? AND instanceid = ?'''
+        self._db.execute(query,(verified,solver,instanceid,))
 
     def getSolvers (self):
         query = '''SELECT DISTINCT solver  FROM Result'''
@@ -457,7 +461,6 @@ class ResultRepository:
         query = '''SELECT Result.solver, Result.instanceid, Result.result FROM Result,TrackInstanceMap WHERE Result.instanceid = TrackInstanceMap.instance AND TrackInstanceMap.track = ? AND Result.result IS NOT NULL GROUP BY Result.instanceid,Result.result HAVING COUNT(Result.result) = 1'''
         return self._getUniquelyClassifiedInstancesHelper(query,str(trackid))
 
-
     def getInstanceResultForSolvers(self,instanceid,solvers):
         paramsStr = ', '.join("?" for s in solvers)
         querylist = [instanceid] + solvers
@@ -670,10 +673,18 @@ class SQLiteDB:
         self._trackrepo.storeTrack (track)
         self._resrepo.storeResult (result,solvername,trackinstance)
     
+    def progressMessage (self,cur,total):
+        sys.stdout.write ("\x1b[2K\r[ Update database  - {0}/{1} ]".format(cur+1,total))
+
 
     def postTrackUpdate (self,track,res):
-        for t in track.instances:
-            self._instancerepo.storeInstance(t)
-    
-        
+        sys.stdout.write("Starting post track update!\n")
+        totalCount = len(track.instances)
+        for i,t in enumerate(track.instances):
+            self.progressMessage(i,totalCount)
+            iid = self._instancerepo.storeInstance(t)
+            for s in res:
+                if res[s][i].result == True:
+                    self._resrepo.updateVerified(iid,s,res[s][i].verified)
+        sys.stdout.write("\n")        
 

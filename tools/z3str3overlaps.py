@@ -10,10 +10,10 @@ import timer
 
 #path = utils.findProgram ("Z3BINARY","z3")
 
-def run (eq,timeout,ploc,wd):
-    path = ploc.findProgram ("Z3Port")
+def run (params,eq,timeout,ploc,wd):
+    path = ploc.findProgram ("Z3Overlaps")
     if not path:
-        raise "Z3Port Not in Path"
+        raise "Z3BV Not in Path"
 
     tempd = tempfile.mkdtemp ()
     smtfile = os.path.join (tempd,"out.smt")
@@ -30,20 +30,22 @@ def run (eq,timeout,ploc,wd):
     copy.close() 
 
     time = timer.Timer ()
+    myerror = ""
     try:
-        out = subprocess.check_output ([path,"smt.string_solver=z3str3","dump_models=true","smt.str.fixed_length_iterations=5","smt.str.pre_milliseconds=2000",smtfile],timeout=timeout).decode().strip()
+        out = subprocess.check_output ([path,"smt.string_solver=z3str3","dump_models=true","smt.str.search_overlaps=true","smt.str.fixed_length_iterations=5","smt.str.pre_milliseconds=2500"]+params+[smtfile],timeout=timeout,stderr=subprocess.STDOUT).decode().strip()
     except subprocess.TimeoutExpired:
         return utils.Result(None,timeout,True,1)
-
+    
     except subprocess.CalledProcessError as e:
         time.stop()
         out = "Error in " + eq + ": " + str(e)
         return utils.Result(None,time.getTime(),False,1,out)
-    
-    time.stop()                    
+
+    time.stop()    
 
     if "NOT IMPLEMENTED YET!" in out and not time >= timeout:
-        out = "Error in " + eq + ": " + out 
+        out = "Error in " + eq + ": " + out    
+    
     
     shutil.rmtree (tempd)
     if "unsat" in out:
@@ -56,7 +58,12 @@ def run (eq,timeout,ploc,wd):
     return utils.Result(None,time.getTime  (),False,1,out)
 
 def addRunner (addto):
-    addto['z3str4'] = run
+    from functools import partial
+    params = { "sharing-on" : ["smt.str.share_constraints=true"],
+               "sharing-off" : ["smt.str.share_constraints=false"]}
+
+    for i in params:
+        addto['z3str4-murphy-'+str(i)] = partial(run,params[i])
 
 
 if __name__ == "__main__":

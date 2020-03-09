@@ -27,6 +27,9 @@
         "Z3BV" : {
             "path" : "/home/mku/tools/z3_bv/z3"
         },
+	"Z3Overlaps": {
+	    "path" : "/home/mku/tools/z3_overlaps/z3"
+	},
 	"cvc4" : {
 	    "path" : "/home/mku/tools/cvc4/cvc4"
 	},

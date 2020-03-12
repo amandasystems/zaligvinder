@@ -675,8 +675,8 @@ class SQLiteDB:
         for i,t in enumerate(track.instances):
             self.progressMessage(i,totalCount)
             iid = self._instancerepo.storeInstance(t)
-            for s in res:
-                if res[s][i].result == True:
-                    self._resrepo.updateVerified(iid,s,res[s][i].verified)
+            #for s in res:
+            #    if res[s][i].result == True:
+            #        self._resrepo.updateVerified(iid,s,res[s][i].verified)
         sys.stdout.write("\n")        
 

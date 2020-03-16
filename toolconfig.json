@@ -44,6 +44,14 @@
 	},
 	"Z3Str4" : {
 		"path" : "/home/mku/tools/z3str4/z3"
+	},
+        "Z3Str4True" : {
+		"path" : "/home/mku/tools/z3str4_probe_true/z3"
+	 },
+        "Z3Str4False" : {
+		                "path" : "/home/mku/tools/z3str4_probe_false/z3"
 	}
+
+
     }
 }

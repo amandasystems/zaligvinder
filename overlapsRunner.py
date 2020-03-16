@@ -8,6 +8,8 @@ import tools.z3seq
 import tools.z3str3
 import tools.cvc4
 import tools.z3str4
+import tools.z3str4_true
+import tools.z3str4_false
 import models.woorpje.track01
 
 import models.woorpje
@@ -26,10 +28,11 @@ import models.joacosuite
 import models.strangersuite
 import models.kauslersuite
 import models.banditfuzz
+import models.probe_test_models
 import startwebserver
 
 import summarygenerators
-"""tracks = (models.PyEx.getTrackData () +
+tracks = (models.PyEx.getTrackData () +
           models.pisa.getTrackData ("Pisa") +
           models.nornbenchmarks.getTrackData ("Norn") +
           models.light.getTrackData("Trau Light")+
@@ -47,9 +50,7 @@ import summarygenerators
           models.banditfuzz.getTrackData("BanditFuzz") +
         []
         )
-"""
-tracks = (models.woorpje.track01.getTrackData("woorpje") + [] )
-
+tracks  = (models.probe_test_models.getTrackData() + [])
 
 #solvers = {
 #    'z3str3-portfolio' : tools.z3str3portfolio.run,
@@ -63,7 +64,9 @@ tracks = (models.woorpje.track01.getTrackData("woorpje") + [] )
 smtsolvers = ["cvc4"]
 
 solvers = {}
-for s in [tools.z3str4
+for s in [tools.z3str4,
+          tools.z3str4_true,
+          tools.z3str4_false
           #tools.z3seq,
           #tools.z3str3,
           #tools.cvc4,
@@ -98,7 +101,7 @@ summaries = [
     summarygenerators.terminalResult,
     store.postTrackUpdate
 ]
-verifiers = {"cvc4": tools.cvc4,"z3seq" : tools.z3seq} # use cvc4 and the sequence solver as verifiers
-#verifiers = dict()
+#verifiers = {"cvc4": tools.cvc4,"z3seq" : tools.z3seq} # use cvc4 and the sequence solver as verifiers
+verifiers = dict()
 testrunner().runTestSetup (tracks,solvers,voting.MajorityVoter(),summaries,store,timeout,ploc,verifiers)
 startwebserver.Server (store.getDB ()).startServer ()

@@ -29,18 +29,18 @@ class TrackInstanceRepository:
         self._id = 1
         
     def createSchema (self):
-        query = '''Create Table IF NOT EXISTS TrackInstance (id INTEGER PRIMARY KEY, name TEXT,filepath TEXT,expected BOOLEAN)'''
+        query = '''Create Table IF NOT EXISTS TrackInstance (id INTEGER PRIMARY KEY, name TEXT,filepath TEXT,expected BOOLEAN, conjunctive BOOLEAN)'''
         self._db.execute (query)
 
     def storeInstance (self,trackinstance):
         if not hasattr (trackinstance,'dbid'):
-            query = '''INSERT INTO TrackInstance (id,name,filepath,expected) Values (?,?,?,?)'''
-            self._db.execute(query,(self._id,trackinstance.name,trackinstance.filepath,trackinstance.expected))
+            query = '''INSERT INTO TrackInstance (id,name,filepath,expected,conjunctive) Values (?,?,?,?,?)'''
+            self._db.execute(query,(self._id,trackinstance.name,trackinstance.filepath,trackinstance.expected,trackinstance.conjunctive))
             trackinstance.dbid = self._id
             self._id = self._id+1
         else:
-            query = '''UPDATE TrackInstance SET name = ?, filepath = ?, expected = ?  WHERE id = ?'''
-            self._db.execute(query,(trackinstance.name,trackinstance.filepath,trackinstance.expected,trackinstance.dbid,))
+            query = '''UPDATE TrackInstance SET name = ?, filepath = ?, expected = ?, conjunctive = ?  WHERE id = ?'''
+            self._db.execute(query,(trackinstance.name,trackinstance.filepath,trackinstance.expected,trackinstance.conjunctive,trackinstance.dbid,))
         
         return trackinstance.dbid
 
@@ -674,6 +674,14 @@ class SQLiteDB:
         totalCount = len(track.instances)
         for i,t in enumerate(track.instances):
             self.progressMessage(i,totalCount)
+                
+            # search for conjunctive fragement...
+            for s in res:
+                if "### CONJUNCTIVE: YES" in res[s][i].output and t.conjunctive == None:
+                    t.conjunctive = True
+                elif "### CONJUNCTIVE: NO" in res[s][i].output and t.conjunctive == None:
+                    t.conjunctive = False
+
             iid = self._instancerepo.storeInstance(t)
             #for s in res:
             #    if res[s][i].result == True:

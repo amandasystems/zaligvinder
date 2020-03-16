@@ -13,11 +13,12 @@ class Result:
 
         
 class TrackInstance:
-    def __init__ (self,name,filepath,exp  = None):
+    def __init__ (self,name,filepath,exp  = None, conjunctive = None):
         self.name = name
         self.filepath = filepath
         self.expected = exp
-        
+        self.conjunctive = conjunctive
+
 class Track:
     def __init__ (self,trackname,instances = [],bname = None):
         self.name = trackname

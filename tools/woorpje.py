@@ -14,30 +14,38 @@ def run (params,eq,timeout,ploc,wd):
     smtfile = os.path.join (tempd,"out.smt")
     time = timer.Timer ()
     myerror = ""
+    SMTSolverCalls = 0
+
+    new_params = [path,'--smtmodel',"x",'--solver', '4' ,'--smttimeout', '15']+params+[eq]
+    print(new_params)
+
     try:
             smtmodel = os.path.join (wd,"smtmodel.smt")
             time = timer.Timer ()
-            out = subprocess.check_output ([path, '--smtmodel',smtmodel,'--smttimeout', '15','--solver','4']+params+[eq],timeout=timeout)
+            #out = subprocess.check_output ([path, '--smtmodel',smtmodel,'--smttimeout', '15','--solver','4']+params+[eq],timeout=timeout)
+            p = subprocess.run([path,'--smtmodel',smtmodel,'--solver', '4' ,'--smttimeout', '15']+params+[eq],  stdout=subprocess.PIPE, encoding='ascii', universal_newlines = True,timeout=timeout)
+            
             time.stop ()
-            with open(smtmodel) as f:
-                    model = f.read()
-                    return utils.Result(True,time.getTime(),False,0,out,model)
+            output = p.stdout.splitlines()
+            for l in output:
+                if l.startswith("SMTCalls:"):
+                    SMTSolverCalls = [int(x) for x in l.split(" ") if x.isdigit()][0]
 
-    except subprocess.CalledProcessError as ex:
-            time.stop ()
-            #if ex.returncode == 0:
-            #    extractFile(eqfile,sfile)
-            if ex.returncode == 10 or ex.returncode == 20:
-                return utils.Result(None,time.getTime (),False,0,ex.output)
-            elif ex.returncode == 1:
-                return utils.Result(False,time.getTime (),False,0,ex.output)
-            elif ex.returncode == 134 or ex.returncode == 255:
-                return utils.Result(None,0,False,0,ex.output)
+
+            if p.returncode == 0:
+                with open(smtmodel) as f:
+                        model = f.read()
+                        return utils.Result(True,time.getTime(),False,SMTSolverCalls,"\n".join(output),model)
+
+            elif p.returncode == 10 or p.returncode == 20:
+                return utils.Result(None,time.getTime (),False,SMTSolverCalls,"\n".join(output) )
+            elif p.returncode == 1:
+                return utils.Result(False,time.getTime (),False,SMTSolverCalls,"\n".join(output))
             else:
-                return utils.Result(None,time.getTime (),False,0,ex.output)
-    except subprocess.TimeoutExpired:
-            #extractFile(eqfile,sfile)
-            return utils.Result(None,timeout,True,0)
+                return utils.Result(None,time.getTime (),False,SMTSolverCalls,"\n".join(output))
+    except Exception as  e:
+        time.stop ()
+        return utils.Result(None,timeout,True,SMTSolverCalls,str(e))
 
 def addRunner (addto):
     from functools import partial
@@ -65,7 +73,6 @@ def addRunner (addto):
                     paramList = ["-S",str(solvers[s])] + ["--levisheuristics",str(i)] + ["--"+str(p), str(v)]
                     solverName = 'woorpje-'+str(s)+'-'+str(h)+"-"+str(v)
                     addto[solverName] = partial(run,paramList)
-
 
 
 if __name__ == "__main__":

@@ -31,6 +31,8 @@ import startwebserver
 import models.kaluza.kaluzaWoorpje
 import models.stringfuzzWoorpje
 
+import models.woorpjeTest
+
 import summarygenerators
 tracks = (
           models.stringfuzzWoorpje.getTrackData("StringFuzz") + 
@@ -38,6 +40,8 @@ tracks = (
           models.woorpje.getTrackData ("Woorpje Word Equations") +
         []
         )
+
+tracks = (models.woorpjeTest.getTrackData("XXX"))
 
 solvers = {}
 for s in [tools.z3seq,

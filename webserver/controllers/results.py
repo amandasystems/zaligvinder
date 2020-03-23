@@ -166,6 +166,114 @@ class ResultController:
         else:
             return "exclamation-triangle"
 
+
+    def _conjunctivesAUX(self,results,solvers,unknowns=set()):
+        best_count = dict()
+        instance_count = len(results[list(results.keys())[0]])
+        for s in solvers:
+            best_count[s] = 0 # []
+
+        i = 0
+        for iid in results[list(results.keys())[0]]:
+            best = (None,None,20.0)
+            for s in results.keys():
+                thisResult = results[s][iid][0]
+                thisTime = results[s][iid][1]
+                thisFile = results[s][iid][2]
+
+                if best[0] == None or (thisResult != None and thisTime < best[2]):
+                    best = (s,thisResult,thisTime)
+
+
+            if iid in unknowns:
+                i+=1
+                print(i)
+
+            if best[1] != None: # and iid in unknowns:
+                #best_count[best[0]]+=[thisFile]
+                best_count[best[0]]+=1
+        print("LOLX : " +str(len(unknowns)))
+        return (best_count,instance_count)
+
+
+    def conjunctives(self,params):
+        conTrue,conFalse,conNone,total = 0,0,0,0
+        for bgroup in list(self._results.getTrackInfo ().keys()):
+            tup = self._results.getConjunctiveInfoPerGroup(bgroup)
+            conTrue+=tup[0]
+            conFalse+=tup[1]
+            conNone+=tup[2]
+            total+=tup[3]
+
+        probe_true_failed = 0
+        probe_false_failed = 0
+        unknown_not_classified = 0
+
+        ### get all unknown instances
+        print("----------")
+        print("mkdir probe_true probe_false probe_unknown_not_classified")
+
+        for bgroup in list(self._results.getTrackInfo ().keys()):
+            for t in self._results.getConjunctiveInfoPerSolverGroupClassifiedInstances("z3str4",bgroup,True,True):
+                print("cp " + t[2] + " ./probe_true/")
+                probe_true_failed+=1
+
+            for t in self._results.getConjunctiveInfoPerSolverGroupClassifiedInstances("z3str4",bgroup,False,True):
+                print("cp " + t[2] + " ./probe_false/")
+                probe_false_failed+=1
+
+            for t in self._results.getConjunctiveUnknownInstances("z3str4",bgroup,True):
+                print("cp " + t + " ./probe_unknown_not_classified/")
+
+        data = { "total" : total, "true" : conTrue, "false" : conFalse, "unknown" : conNone, "Unknown_probe_true" : probe_true_failed, "Unknown_probe_false" : probe_false_failed}
+        
+        
+        return webserver.views.jsonview.JSONView (data) 
+
+
+
+        #
+        solvers = ["z3seq","len-abs"]
+        group = list(self._results.getTrackInfo ().keys())[0]
+        results_true,results_false = self._results.splitSolverToProbe(solvers)
+        results = {"Probe_True" : results_true, "Probe_False" : results_false}
+
+        unknowns_z3str4 = self._results.getAllUnknownsForSolver("z3str4-fse")
+
+
+        data = dict()
+        for r in results.keys():
+            data[r] = dict()
+            best_count,instances_count = self._conjunctivesAUX(results[r],solvers,unknowns_z3str4)
+            data[r]["instances"] = instances_count
+            data[r]["solvers"] = best_count
+
+        """
+            for k in data:
+                for f in data[k]:
+                    print("cp " + f + " ./" + k + "/")
+
+
+
+
+        for bgroup in list(self._results.getTrackInfo ().keys()):
+            for t in self._results.getConjunctiveInfoPerSolverGroupClassifiedInstances("z3str4",bgroup,False,False):
+                totalClassified+=1
+        """
+
+        """
+        ff = "probe_true_solved_by_other_arm"
+
+        print("mkdir " + ff)
+
+        for t in self._results.getAllInstancesForSolverTrackResult(["z3str4-false","z3seq","z3str4-true"],2):
+            print("cp " + t + " ./" + ff + "/")
+
+        """
+
+
+        return webserver.views.jsonview.JSONView (data) 
+
     def getResultForSolvers(self,params):
         if "solvers" in params and "instance" in params:
             iid = params["instance"]
@@ -228,13 +336,19 @@ class ResultController:
 
     def getAllErrorsForSolver(self,params):
         if "solver" in params:
-            solver = params["solver"][0]
-            bgroups = list(self._results.getTrackInfo ().keys())
+            solvers = [params["solver"][0]]
+        else:
+            solvers = self._results.getSolvers()
 
+
+        bgroups = list(self._results.getTrackInfo ().keys())
+
+        data = dict()
+
+        for solver in solvers:
             invalidModel = []
             programError = []
             wrongUnsat = []
-
             for bgroup in bgroups:
                 results = self._results.getErrosForSolverGroup(solver,bgroup)
                 for (s,g,tname,instance,filepath,t,res,exp,model,verified,output) in results:
@@ -254,20 +368,20 @@ class ResultController:
                             programError+=[filepath]
                     else:
                         pass
-                        #raise Exception("This point should never be reached!")
-            data = {"invalidModel" : invalidModel,"wrongUnsat" : wrongUnsat,"programError" : programError}
+                    #raise Exception("This point should never be reached!")
+            data[solver] = {"invalidModel" : invalidModel,"wrongUnsat" : wrongUnsat,"programError" : programError}
 
-            # hack
-            """
-            print("----------")
-            print("mkdir invalidModel wrongUnsat programError")
-            for k in data:
-                for f in data[k]:
-                    print("cp " + f + " ./" + k + "/")
-            """
-            
-            #return data
-            return webserver.views.jsonview.JSONView (data)
+        # hack
+        """
+        print("----------")
+        print("mkdir invalidModel wrongUnsat programError")
+        for k in data:
+            for f in data[k]:
+                print("cp " + f + " ./" + k + "/")
+        """
+        
+        #return data
+        return webserver.views.jsonview.JSONView (data)
 
     def quickHack(self,params):
         dataSeq = self.getAllErrorsForSolver({"solver" : ["z3seq"]})

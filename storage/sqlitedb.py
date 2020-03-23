@@ -517,6 +517,104 @@ class ResultRepository:
 
         return (smtcalls,timeouted,satis,unk,nsatis,errors+invalid,time,total) 
 
+    def getBestWoorpjeSolvers(self,solvers,group=None,woorpjePrefix="woorpje-"):
+        allSolvers = self.getSolvers()
+        bestSolvers = []
+
+        for s in solvers:
+            best = None
+            for os in [ss for ss in allSolvers if ss.startswith(woorpjePrefix+s) and not ss.endswith("N")]:
+
+                if group == None:
+                    t = self.getSummaryForSolver(os)
+                else:
+                    t = self.getSummaryForSolverGroup(os,group)
+                classified = (t[2]+t[4])-t[5]
+                if best == None or best[1] < classified:
+                    best = (os,classified)
+            bestSolvers+=[best[0]]
+
+        return bestSolvers
+
+    def getPureWoorpjeSolvers(self,woorpjePrefix="woorpje-"):
+        return [s for s in self.getSolvers() if s.startswith(woorpjePrefix) and s.endswith("N")]
+
+
+    # conjunctive fragment infos
+    def getConjunctiveInfoPerGroup(self,group):
+        trueQuery = '''SELECT COUNT(TrackInstance.conjunctive) FROM TrackInstance,TrackInstanceMap,Track WHERE TrackInstance.conjunctive = true and TrackInstance.id = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? ''' 
+        conTrue = self._db.executeRet (trueQuery, (group,))[0][0]
+
+        falseQuery = '''SELECT COUNT(TrackInstance.conjunctive) FROM TrackInstance,TrackInstanceMap,Track WHERE TrackInstance.conjunctive = false and TrackInstance.id = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? ''' 
+        conFalse = self._db.executeRet (falseQuery, (group,))[0][0]
+
+        #unkQuery = '''SELECT COUNT(TrackInstance.conjunctive) FROM TrackInstance,TrackInstanceMap,Track WHERE (TrackInstance.conjunctive != false) and TrackInstance.id = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? ''' 
+        #conNone = self._db.executeRet (unkQuery, (group,))[0][0]
+
+        totalQuery = '''SELECT COUNT(TrackInstance.id) FROM TrackInstance,TrackInstanceMap,Track WHERE TrackInstance.id = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? ''' 
+        total = self._db.executeRet (totalQuery, (group,))[0][0]
+
+
+        testQ = '''SELECT TrackInstance.conjunctive FROM TrackInstance,TrackInstanceMap,Track WHERE TrackInstance.id = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? ''' 
+        test = self._db.executeRet (testQ, (group,))
+
+        conNone = sum([1 for t in test if t[0] == None])
+
+
+        return (conTrue,conFalse,conNone,total)
+
+    def getConjunctiveInfoPerSolverGroupClassifiedInstances(self,solver,group,probe=True,not_classified=True):
+        
+        if not_classified:
+            query = '''SELECT  Result.*,TrackInstance.filepath,TrackInstance.Name FROM TrackInstance,TrackInstanceMap,Track,Result WHERE Result.solver = ? AND Result.result IS NULL AND Result.instanceid = TrackInstanceMap.instance AND TrackInstance.conjunctive = ? and TrackInstance.id = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? ''' 
+        else:
+            query = '''SELECT  Result.*,TrackInstance.filepath,TrackInstance.Name FROM TrackInstance,TrackInstanceMap,Track,Result WHERE Result.solver = ? AND Result.result IS NOT NULL AND Result.instanceid = TrackInstanceMap.instance AND TrackInstance.conjunctive = ? and TrackInstance.id = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? ''' 
+        
+        rows = self._db.executeRet (query, (solver,probe,group,))
+        return [(t[0],t[1],t[9], t[10], utils.Result(t[4],t[5],t[3],t[2],t[6],t[7],t[8]) ,t[6]) for t in rows]
+
+    def getConjunctiveUnknownInstances(self,solver,group,not_classified=True):
+        if not_classified:
+            query = '''SELECT  TrackInstance.conjunctive,TrackInstance.filepath,TrackInstance.Name FROM TrackInstance,TrackInstanceMap,Track,Result WHERE Result.solver = ? AND Result.result IS NULL AND Result.instanceid = TrackInstanceMap.instance and TrackInstance.id = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? ''' 
+        else:
+            query = '''SELECT  TrackInstance.conjunctive,TrackInstance.filepath,TrackInstance.Name FROM TrackInstance,TrackInstanceMap,Track,Result WHERE Result.solver = ? AND Result.result IS NOT NULL AND Result.instanceid = TrackInstanceMap.instance and TrackInstance.id = TrackInstanceMap.instance  and TrackInstanceMap.track = Track.id and Track.bgroup = ? ''' 
+        rows = self._db.executeRet (query, (solver,group,))
+        return [t[1] for t in rows if t[0] == None]
+        
+    def getAllInstancesForSolverTrackResult(self,solvers,trackid,result=True):
+        results = dict()
+        solver = solvers[0]
+        for s in solvers:
+            query = '''SELECT  TrackInstance.filepath FROM TrackInstance,TrackInstanceMap,Result WHERE Result.solver = ? AND Result.result = ? AND Result.instanceid = TrackInstanceMap.instance AND TrackInstance.id = TrackInstanceMap.instance  and TrackInstanceMap.track = ? ''' 
+            results[s] = set([t[0] for t in self._db.executeRet (query, (s,result,trackid))])
+        instances = results[solver].copy()
+        for s in set(solvers).difference(set([solver])):
+            instances = instances.difference(results[s])
+
+        print("LOL: " + str(len(instances)))
+
+        return instances
+    ### conj end
+
+    def splitSolverToProbe(self,solvers):
+        results_true = dict()
+        results_false = dict()
+        solver = solvers[0]
+        for s in solvers:
+            query = '''SELECT  Result.instanceid,Result.result,Result.time,TrackInstance.filepath,TrackInstance.conjunctive FROM TrackInstance,TrackInstanceMap,Result WHERE Result.solver = ? AND Result.instanceid = TrackInstanceMap.instance AND TrackInstance.conjunctive = ? and TrackInstance.id = TrackInstanceMap.instance''' 
+            results_true[s] = dict()
+            results_false[s] = dict()
+            for t in self._db.executeRet (query, (s,True)):
+                results_true[s][t[0]] = (t[1],t[2],t[3])
+            for t in self._db.executeRet (query, (s,False)):
+                results_false[s][t[0]] = (t[1],t[2],t[3])
+        return (results_true,results_false)
+
+
+    def getAllUnknownsForSolver(self,solver):
+        query = '''SELECT  Result.instanceid FROM Result WHERE Result.solver = ? AND Result.result IS NULL'''
+        return set([t[0] for t in self._db.executeRet (query, (solver,))])
+
     def getSummaryForSolverGroupTotalTimeWOTimeout(self,solver,group):
         (smtcalls,timeouted,satis,unk,nsatis,errors,time,total) = self.getSummaryForSolverGroup(solver,group)
 

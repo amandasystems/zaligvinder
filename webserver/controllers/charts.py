@@ -15,8 +15,15 @@ class ChartController:
         solvermapping = { "cvc4" : "CVC4", "z3str4-ds" : "Dynamic Difficulty Estimation" , "z3str4-no-ds" : "Static Difficulty Estimation", "z3str3" : "Z3str3", "z3str4" : "Z3str4", "z3seq" : "Z3seq"}
         if name in solvermapping:
             return solvermapping[name]
+        if name.startswith("woorpje-hack"):
+            return "w-hack"+name[len("woorpje-hack"):]
         else:
             return name
+
+    def _woorpjeSolvers(self,woorpjePrefix,general_solvers,activeGroup=None):
+        woorpje_solvers = self._result.getPureWoorpjeSolvers()
+        best_solvers = self._result.getBestWoorpjeSolvers(general_solvers,activeGroup,woorpjePrefix)
+        return general_solvers+woorpje_solvers+best_solvers
 
     def generateCactus(self,params,to_zip=None,all_instances=False):
         no_unk = False
@@ -50,6 +57,14 @@ class ChartController:
 
         if "all" in params:
             all_instances = True
+
+        if "woorpjebest" in params:
+            woorpjePrefix = "woorpje-"
+            general_solvers = ["cvc4","z3seq","z3str3"]
+            if all_instances:
+                solvers = self._woorpjeSolvers(woorpjePrefix,general_solvers,None)
+            else: 
+                solvers = self._woorpjeSolvers(woorpjePrefix,general_solvers,activeGroup)
 
 
         for solv in solvers:
@@ -95,7 +110,7 @@ class ChartController:
 
 
                 # 4 color setup
-                colors = ["#364f6b","#3fc1c9","#ffb6b9","#fc5185"]
+                #colors = ["#364f6b","#3fc1c9","#ffb6b9","#fc5185"]
 
 
                 # extend the colors 
@@ -158,8 +173,18 @@ class ChartController:
             all_instances = False
             groups = list( self._result.getTrackInfo().keys() )
 
+        if "solver" in params:
+            solvers = params["solver"]
+        else:
+            solvers = self._result.getSolvers ()
+
+        if "woorpjebest" in params:
+            woorpjePrefix = "woorpje-"
+            general_solvers = ["cvc4","z3seq","z3str3"]
+            solvers = self._woorpjeSolvers(woorpjePrefix,general_solvers,None)
+
         for g in groups:
-            fileList.append(apply_fun({"format":["png"],"bgroup":[g]},tmpFolder,all_instances))
+            fileList.append(apply_fun({"format":["png"],"bgroup":[g], "solver":solvers},tmpFolder,all_instances))
 
         """
         with zipfile.ZipFile('out.zip', 'w') as zipMe:        

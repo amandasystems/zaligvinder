@@ -67,6 +67,12 @@ class Server:
         app.addEndpoint (webserver.routing.RegexMatch("z3/keywords/group/(?P<bgroup>[^/]+)"),self._tcontroller.getStringOperationDataForGroup)
         app.addEndpoint (webserver.routing.RegexMatch("z3/keywords/best"),self._rcontroller.getBestSolverForStringOperations)
 
+        app.addEndpoint (webserver.routing.RegexMatch("conjunctives"),self._rcontroller.conjunctives)
+
+
+        
+
+
         self._app = app
 
     def startServer (self):

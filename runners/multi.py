@@ -36,7 +36,7 @@ class TheRunner:
     def __init__(self,cores = 60):
         self._cores = cores
         
-    def runTrack (self,track,solvers,store,timeout,ploc,verifiers=dict()):
+    def runTrack (self,track,solvers,store,timeout,ploc,verifiers=[]):
         print (track)
         results = {}
         tname, files =track.name,track.instances

@@ -6,7 +6,7 @@ import sys
 from functools import reduce
 
 class MajorityVoter:
-    def voteOnResult (self,track,res,verifiers=dict()):
+    def voteOnResult (self,track,res,verifiers=[]):
         name,instances = track.name,track.instances
         for i,inst in enumerate(instances):
             if inst.expected == None:
@@ -14,7 +14,7 @@ class MajorityVoter:
 
 
                 satVerified = False
-                if len(list(verifiers.keys())) > 0:
+                if len(verifiers) > 0:
                     satVerified = reduce((lambda x, y: x or y), [r.verified for r in toolResults if r.result == True])
 
                 tts = [r for r in toolResults if r.result == True and r.verified != False]

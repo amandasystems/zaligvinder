@@ -45,23 +45,28 @@ class Verfier:
         copy.close()
         return smtfile
 
-    def getSolverRun(self,solvername):
-        if os.path.exists("tools/"+solvername+".py")
+    def getSolver(self,solvername):
+	import importlib
+  	if os.path.exists("tools/"+solvername+".py"):
+    		full_module_name = "tools." + solvername
+    		thisSolver = importlib.import_module(full_module_name)
+    		return thisSolver
+  	return None
 
     def verifyModel (self,res,ploc,filepath,timeout=0,verifiers=dict()):
-        print(os.path.exists("tools/cvc4.py"))
-        
-        
         assert(res.result == True)
 
-        verifierCount = len(list(verifiers.keys()))
+        verifierCount = len(verifiers)
         if verifierCount > 0:
             vRes = None
             foundModel = self._extractAssignment(res.model)
             tempd = tempfile.mkdtemp ()
             assertedInputFile = self._modifyInputFile(tempd,foundModel,filepath)
-            for v in verifiers:
-                thisRes = verifiers[v].run(assertedInputFile,timeout,ploc,os.path.abspath(".")).result
+            for vn in verifiers:
+                v = self.getSolver(vn)
+		if v == None:
+			continue
+		thisRes = v.run(assertedInputFile,timeout,ploc,os.path.abspath(".")).result
                 # work arround if we verified the model at least once
                 if (thisRes == True and vRes == None) or (thisRes == None and vRes == True):
                     vRes == True

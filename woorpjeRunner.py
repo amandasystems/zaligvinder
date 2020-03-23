@@ -59,7 +59,7 @@ summaries = [
     summarygenerators.terminalResult,
     store.postTrackUpdate
 ]
-#verifiers = {"cvc4": tools.cvc4,"z3seq" : tools.z3seq} # use cvc4 and the sequence solver as verifiers
-verifiers = dict()
+verifiers = ["cvc4","z3seq"] # use cvc4 and the sequence solver as verifiers
+#verifiers = dict()
 testrunner().runTestSetup (tracks,solvers,voting.MajorityVoter(),summaries,store,timeout,ploc,verifiers)
 startwebserver.Server (store.getDB ()).startServer ()

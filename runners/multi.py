@@ -21,9 +21,9 @@ def runSpecific (tup):
         result = func(model.filepath,timeout,ploc,tempd)
 
         # verification goes here
-        v = Verifier()
-        if result.result == True:
-            result = v.verifyModel (result,ploc,model.filepath,timeout,verifiers=dict()):
+        #v = Verifier()
+        # if result.result == True:
+        #     result = v.verifyModel (result,ploc,model.filepath,timeout,verifiers)
 
         shutil.rmtree (tempd)    
         return result
@@ -36,7 +36,7 @@ class TheRunner:
     def __init__(self,cores = 60):
         self._cores = cores
         
-    def runTrack (self,track,solvers,store,timeout,ploc,verifiers):
+    def runTrack (self,track,solvers,store,timeout,ploc,verifiers=dict()):
         print (track)
         results = {}
         tname, files =track.name,track.instances
@@ -58,9 +58,11 @@ class TheRunner:
         return results
 
     def runTestSetup (self,tracks,solvers,voter,summaries,outputfile,timeout,ploc,verifiers=dict()):
+        
+        
         for t in tracks:
             res = self.runTrack (t,solvers,outputfile,timeout,ploc,verifiers)
-            voter.voteOnResult (t,res,timeout,ploc,verifiers)
+            voter.voteOnResult (t,res,verifiers)
             for s in summaries:
                 s(t,res)
 

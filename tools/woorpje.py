@@ -15,10 +15,6 @@ def run (params,eq,timeout,ploc,wd):
     time = timer.Timer ()
     myerror = ""
     SMTSolverCalls = 0
-
-    new_params = [path,'--smtmodel',"x",'--solver', '4' ,'--smttimeout', '15']+params+[eq]
-    print(new_params)
-
     try:
             smtmodel = os.path.join (wd,"smtmodel.smt")
             time = timer.Timer ()

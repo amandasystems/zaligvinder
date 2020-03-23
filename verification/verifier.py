@@ -4,6 +4,10 @@ import shutil
 import re
 import sys
 
+
+# import all tools
+from tools import *
+
 class Verfier:
     def _extractAssignment(self,model):
         s = ""
@@ -41,7 +45,13 @@ class Verfier:
         copy.close()
         return smtfile
 
+    def getSolverRun(self,solvername):
+        if os.path.exists("tools/"+solvername+".py")
+
     def verifyModel (self,res,ploc,filepath,timeout=0,verifiers=dict()):
+        print(os.path.exists("tools/cvc4.py"))
+        
+        
         assert(res.result == True)
 
         verifierCount = len(list(verifiers.keys()))
@@ -55,7 +65,7 @@ class Verfier:
                 # work arround if we verified the model at least once
                 if (thisRes == True and vRes == None) or (thisRes == None and vRes == True):
                     vRes == True
-                else
+                else:
                     vRes == vRes and thisRes
             res.verified == vRes
             shutil.rmtree (tempd)

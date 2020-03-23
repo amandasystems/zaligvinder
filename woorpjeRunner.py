@@ -30,18 +30,16 @@ import startwebserver
 
 import models.kaluza.kaluzaWoorpje
 import models.stringfuzzWoorpje
-
+import models.woorpje.track03
 import models.woorpjeTest
 
 import summarygenerators
 tracks = (
-          models.stringfuzzWoorpje.getTrackData("StringFuzz") + 
-          models.kaluza.kaluzaWoorpje.getTrackData ("Kaluza") +
-          models.woorpje.getTrackData ("Woorpje Word Equations") +
+          #models.stringfuzzWoorpje.getTrackData("StringFuzz") + 
+          #models.kaluza.kaluzaWoorpje.getTrackData ("Kaluza") +
+          models.woorpje.track03.getTrackData ("Woorpje Word Equations") +
         []
         )
-
-tracks = (models.woorpjeTest.getTrackData("XXX"))
 
 solvers = {}
 for s in [tools.z3seq,
@@ -61,7 +59,7 @@ summaries = [
     summarygenerators.terminalResult,
     store.postTrackUpdate
 ]
-verifiers = {"cvc4": tools.cvc4,"z3seq" : tools.z3seq} # use cvc4 and the sequence solver as verifiers
-#verifiers = dict()
+#verifiers = {"cvc4": tools.cvc4,"z3seq" : tools.z3seq} # use cvc4 and the sequence solver as verifiers
+verifiers = dict()
 testrunner().runTestSetup (tracks,solvers,voting.MajorityVoter(),summaries,store,timeout,ploc,verifiers)
 startwebserver.Server (store.getDB ()).startServer ()

@@ -12,10 +12,12 @@ class MajorityVoter:
             if inst.expected == None:
                 toolResults = [r[i] for r in res.values ()]
 
-
+                
                 satVerified = False
                 if len(verifiers) > 0:
-                    satVerified = reduce((lambda x, y: x or y), [r.verified for r in toolResults if r.result == True])
+                    verifiedResults = [r.verified for r in toolResults if r.result == True]
+                    if len(verifiedResults) > 0:
+                        satVerified = reduce((lambda x, y: x or y), verifiedResults)
 
                 tts = [r for r in toolResults if r.result == True and r.verified != False]
                 ffs = [r for r in toolResults if r.result == False]

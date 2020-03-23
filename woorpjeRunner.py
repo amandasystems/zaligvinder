@@ -30,14 +30,14 @@ import startwebserver
 
 import models.kaluza.kaluzaWoorpje
 import models.stringfuzzWoorpje
-import models.woorpje.track03
+import models.woorpje
 import models.woorpjeTest
 
 import summarygenerators
 tracks = (
           #models.stringfuzzWoorpje.getTrackData("StringFuzz") + 
           #models.kaluza.kaluzaWoorpje.getTrackData ("Kaluza") +
-          models.woorpje.track03.getTrackData ("Woorpje Word Equations") +
+          models.woorpje.getTrackData ("Woorpje Word Equations") +
         []
         )
 

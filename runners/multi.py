@@ -5,6 +5,8 @@ import utils
 import tempfile
 import shutil
 
+import verification.verifier
+
 from multiprocessing import Pool
 from multiprocessing import current_process
 
@@ -13,10 +15,16 @@ def progressMessage (file,solver):
 
 def runSpecific (tup):
     try:
-        solvername,func,model,timeout,ploc = tup
+        solvername,func,model,timeout,ploc,verifiers = tup
         progressMessage (model,solvername)
         tempd = tempfile.mkdtemp ()
         result = func(model.filepath,timeout,ploc,tempd)
+
+        # verification goes here
+        v = Verifier()
+        if result.result == True:
+            result = v.verifyModel (result,ploc,model.filepath,timeout,verifiers=dict()):
+
         shutil.rmtree (tempd)    
         return result
     except Exception as e:
@@ -28,7 +36,7 @@ class TheRunner:
     def __init__(self,cores = 60):
         self._cores = cores
         
-    def runTrack (self,track,solvers,store,timeout,ploc):
+    def runTrack (self,track,solvers,store,timeout,ploc,verifiers):
         print (track)
         results = {}
         tname, files =track.name,track.instances
@@ -37,7 +45,7 @@ class TheRunner:
         tasks = []
         for solver,func in solvers.items():
             for i,n in enumerate(files):
-                tasks.append ((solver,func,n,timeout,ploc))
+                tasks.append ((solver,func,n,timeout,ploc,verifiers))
         with Pool (self._cores) as p:
             res = p.map (runSpecific,tasks)
         
@@ -51,7 +59,7 @@ class TheRunner:
 
     def runTestSetup (self,tracks,solvers,voter,summaries,outputfile,timeout,ploc,verifiers=dict()):
         for t in tracks:
-            res = self.runTrack (t,solvers,outputfile,timeout,ploc)
+            res = self.runTrack (t,solvers,outputfile,timeout,ploc,verifiers)
             voter.voteOnResult (t,res,timeout,ploc,verifiers)
             for s in summaries:
                 s(t,res)

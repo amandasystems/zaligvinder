@@ -46,12 +46,12 @@ class Verfier:
         return smtfile
 
     def getSolver(self,solvername):
-	import importlib
-  	if os.path.exists("tools/"+solvername+".py"):
-    		full_module_name = "tools." + solvername
-    		thisSolver = importlib.import_module(full_module_name)
-    		return thisSolver
-  	return None
+        import importlib
+        if os.path.exists("tools/"+solvername+".py"):
+            full_module_name = "tools." + solvername
+            thisSolver = importlib.import_module(full_module_name)
+            return thisSolver
+        return None
 
     def verifyModel (self,res,ploc,filepath,timeout=0,verifiers=dict()):
         assert(res.result == True)
@@ -64,8 +64,8 @@ class Verfier:
             assertedInputFile = self._modifyInputFile(tempd,foundModel,filepath)
             for vn in verifiers:
                 v = self.getSolver(vn)
-		if v == None:
-			continue
+                if v == None:
+                    continue
 		thisRes = v.run(assertedInputFile,timeout,ploc,os.path.abspath(".")).result
                 # work arround if we verified the model at least once
                 if (thisRes == True and vRes == None) or (thisRes == None and vRes == True):

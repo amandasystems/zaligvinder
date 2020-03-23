@@ -64,14 +64,14 @@ class Verfier:
             assertedInputFile = self._modifyInputFile(tempd,foundModel,filepath)
             for vn in verifiers:
                 v = self.getSolver(vn)
-            if v == None:
-                continue
-            thisRes = v.run(assertedInputFile,timeout,ploc,os.path.abspath(".")).result
-            # work arround if we verified the model at least once
-            if (thisRes == True and vRes == None) or (thisRes == None and vRes == True):
-                vRes == True
-            else:
-                vRes == vRes and thisRes
+                if v == None:
+                    continue
+                thisRes = v.run(assertedInputFile,timeout,ploc,os.path.abspath(".")).result
+                # work arround if we verified the model at least once
+                if (thisRes == True and vRes == None) or (thisRes == None and vRes == True):
+                    vRes == True
+                else:
+                    vRes == vRes and thisRes
             res.verified == vRes
             shutil.rmtree (tempd)
         return res

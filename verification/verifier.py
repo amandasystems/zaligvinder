@@ -46,12 +46,12 @@ class Verfier:
         return smtfile
 
     def getSolver(self,solvername):
-	import importlib
-  	if os.path.exists("tools/"+solvername+".py"):
-        full_module_name = "tools." + solvername
-        thisSolver = importlib.import_module(full_module_name)
-        return thisSolver
-  	return None
+    	import importlib
+      	if os.path.exists("tools/"+solvername+".py"):
+            full_module_name = "tools." + solvername
+            thisSolver = importlib.import_module(full_module_name)
+            return thisSolver
+      	return None
 
     def verifyModel (self,res,ploc,filepath,timeout=0,verifiers=dict()):
         assert(res.result == True)

@@ -1,4 +1,3 @@
-import tools.woorpje2smt
 import subprocess
 import tempfile
 import os

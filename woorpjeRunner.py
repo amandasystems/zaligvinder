@@ -37,14 +37,14 @@ import summarygenerators
 tracks = (
           #models.stringfuzzWoorpje.getTrackData("StringFuzz") + 
           #models.kaluza.kaluzaWoorpje.getTrackData ("Kaluza") +
-          models.woorpje.getTrackData ("Woorpje Word Equations") +
+          models.woorpjeTest.getTrackData ("Woorpje Word Equations") +
         []
         )
 
 solvers = {}
-for s in [tools.z3seq,
-          tools.z3str3,
-          tools.cvc4,
+for s in [#tools.z3seq,
+          #tools.z3str3,
+          #tools.cvc4,
           tools.woorpje
 ]:
     s.addRunner (solvers)

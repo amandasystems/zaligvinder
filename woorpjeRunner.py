@@ -8,7 +8,9 @@ import tools.z3seq
 import tools.z3str3
 import tools.cvc4
 import tools.woorpje
-import models.woorpje.track01
+import tools.woorpjeHack
+
+import models.woorpje.track02
 
 import models.woorpje
 #import models.kaluza
@@ -30,14 +32,14 @@ import startwebserver
 
 import models.kaluza.kaluzaWoorpje
 import models.stringfuzzWoorpje
-import models.woorpje.track03
+import models.woorpje
 import models.woorpjeTest
 
 import summarygenerators
 tracks = (
-          #models.stringfuzzWoorpje.getTrackData("StringFuzz") + 
-          #models.kaluza.kaluzaWoorpje.getTrackData ("Kaluza") +
-          models.woorpje.track03.getTrackData ("Woorpje Word Equations") +
+          models.stringfuzzWoorpje.getTrackData("StringFuzz") + 
+          models.kaluza.kaluzaWoorpje.getTrackData ("Kaluza") +
+          models.woorpje.getTrackData ("Woorpje Word Equations") +
         []
         )
 
@@ -45,7 +47,8 @@ solvers = {}
 for s in [tools.z3seq,
           tools.z3str3,
           tools.cvc4,
-          tools.woorpje
+          tools.woorpje,
+          #tools.woorpjeHack
 ]:
     s.addRunner (solvers)
 

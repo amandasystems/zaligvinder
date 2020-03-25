@@ -8,13 +8,41 @@ import sys
 # import all tools
 from tools import *
 
-class Verfier:
+class Verifier:
     def _extractAssignment(self,model):
         s = ""
         for l in model:
             s+=l.rstrip("\n")
 
         return s[len("(model"):-1]
+
+    def _translateSMTFile(self,filepath):
+        f=open(filepath,"r")
+        matchingBraces = 0
+        firstMatchFound = False
+        currentWord = ""
+        in_qutation = False
+        previous_char = None
+        for l in f:
+            if l.startswith(";"):
+                continue
+            for a in l:
+                if a == "(" and not in_qutation:
+                    matchingBraces+=1
+                    firstMatchFound = True
+                if a == ")" and not in_qutation:
+                    matchingBraces-=1
+
+                if firstMatchFound == True:
+                    if a == '"' and not previous_char == '\\':
+                        in_qutation = not in_qutation
+                    previous_char = a
+                    currentWord+=a
+
+                if matchingBraces == 0 and len(currentWord) > 0 and firstMatchFound:
+                    yield currentWord
+                    currentWord = ""
+        f.close()
 
     def _modifyInputFile(self,tempd,model,filepath):
         smtfile = os.path.join (tempd,"out.smt")
@@ -55,7 +83,6 @@ class Verfier:
 
     def verifyModel (self,res,ploc,filepath,timeout=0,verifiers=dict()):
         assert(res.result == True)
-
         verifierCount = len(verifiers)
         if verifierCount > 0:
             vRes = None
@@ -67,11 +94,14 @@ class Verfier:
                 if v == None:
                     continue
                 thisRes = v.run(assertedInputFile,timeout,ploc,os.path.abspath(".")).result
+                
                 # work arround if we verified the model at least once
                 if (thisRes == True and vRes == None) or (thisRes == None and vRes == True):
-                    vRes == True
+                    vRes = True
+                elif (thisRes == False and vRes == None) or (thisRes == None and vRes == False):
+                    vRes = False
                 else:
-                    vRes == vRes and thisRes
-            res.verified == vRes
+                    vRes = vRes and thisRes
+            res.verified = vRes
             shutil.rmtree (tempd)
         return res

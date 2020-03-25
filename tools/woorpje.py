@@ -30,7 +30,12 @@ def run (params,eq,timeout,ploc,wd):
 
             if p.returncode == 0:
                 with open(smtmodel) as f:
-                        model = f.read()
+                        #model = f.read()
+                        model = ""
+                        for l in f:
+                            #model += "".join(l.split("_")) 
+                            model+=l.replace("(define-fun _", "(define-fun ", 1).replace("_()", "()", 1) + "\n"
+                        
                         return utils.Result(True,time.getTime(),False,SMTSolverCalls,"\n".join(output),model)
 
             elif p.returncode == 10 or p.returncode == 20:

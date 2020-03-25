@@ -10,13 +10,13 @@ def calculateErrors (track,res):
         errors[solver] = 0
         for i,k in enumerate(mres):
             inst = instances[i]
-            if inst.expected != None and k.result != None:
-                #Only count errors if we have an expected value and this solver gave an answer
+            if k.result != None: #inst.expected != None and k.result != None:
+                # count and error if the expected result differs or an invalid model was produced
                 if inst.expected != k.result or k.verified == False:
                     errors[solver]+=1
                 # Count as error if a solver produced a wrong model
                 if inst.expected == k.result and k.verified == False:
-                    errors[solver]+1
+                    errors[solver]+=1
     return errors
 
 def calculateErrorsOld(res):

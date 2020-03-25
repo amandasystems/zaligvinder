@@ -21,9 +21,9 @@ def runSpecific (tup):
         result = func(model.filepath,timeout,ploc,tempd)
 
         # verification goes here
-        #v = Verifier()
-        # if result.result == True:
-        #     result = v.verifyModel (result,ploc,model.filepath,timeout,verifiers)
+        v = verification.verifier.Verifier()
+        if result.result == True:
+             result = v.verifyModel (result,ploc,model.filepath,timeout,verifiers)
 
         shutil.rmtree (tempd)    
         return result

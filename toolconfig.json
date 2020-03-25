@@ -6,6 +6,9 @@
 	"woorpjeSMT" : {
 	    "path" : "/home/mku/tools/woorpje/woorpjeSMT"
 	},
+	"woorpjeSMTHack" : {
+            "path" : "/home/mku/tools/woorpje/woorpjeStringFuzzSMT"
+        },
 	"woorpje2SMT" : {
 	    "path" : "/home/mku/tools/woorpje/woorpje2SMT"
 	},

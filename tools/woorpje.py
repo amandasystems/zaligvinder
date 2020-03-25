@@ -33,8 +33,8 @@ def run (params,eq,timeout,ploc,wd):
                         #model = f.read()
                         model = ""
                         for l in f:
-                            model += "".join(l.split("_")) 
-                        
+                            #model += "".join(l.split("_")) 
+                            model+=l.replace("(define-fun _", "(define-fun ", 1).replace("_()", "()", 1) + "\n"
                         
                         return utils.Result(True,time.getTime(),False,SMTSolverCalls,"\n".join(output),model)
 

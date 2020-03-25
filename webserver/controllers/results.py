@@ -234,6 +234,7 @@ class ResultController:
             invalidModel = []
             programError = []
             wrongUnsat = []
+            unverifiedSat = []
 
             for bgroup in bgroups:
                 results = self._results.getErrosForSolverGroup(solver,bgroup)
@@ -241,7 +242,7 @@ class ResultController:
                     if verified == False:
                         invalidModel+=[filepath]
                     elif res != exp and res != None:
-                        wrongUnsat+=[filepath]
+                        wrongUnsat+=[(filepath,"Result: " + str(res), "Expected: " + str(exp))]
                     elif "Error" in output:
                         #print(t,res)
                         #print(output)
@@ -254,8 +255,15 @@ class ResultController:
                             programError+=[filepath]
                     else:
                         pass
+
+                for (s,g,tname,instance,filepath,t,res,exp,model,verified,output) in self._results.getAllUnverifiedSATForSolverGroup(solver,bgroup):
+                    unverifiedSat+=[filepath]
+
+
+
+
                         #raise Exception("This point should never be reached!")
-            data = {"invalidModel" : invalidModel,"wrongUnsat" : wrongUnsat,"programError" : programError}
+            data = {"invalidModel" : invalidModel,"wrongClassified" : wrongUnsat,"programError" : programError, "unverifiedSat" : unverifiedSat}
 
             # hack
             """

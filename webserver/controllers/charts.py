@@ -12,11 +12,18 @@ class ChartController:
         self._track = track
 
     def _solverNameMap(self,name):
-        solvermapping = dict() #{ "cvc4" : "CVC4", "z3str4-overlaps-ds-7" : "Z3hydra-dynamic" , "z3str4-overlaps" : "Z3hydra-static", "z3str3" : "Z3str3", "z3seq" : "Z3Seq"}
+        solvermapping = { "cvc4" : "CVC4", "z3str4-ds" : "Dynamic Difficulty Estimation" , "z3str4-no-ds" : "Static Difficulty Estimation", "z3str3" : "Z3str3", "z3str4" : "Z3str4", "z3seq" : "Z3seq"}
         if name in solvermapping:
             return solvermapping[name]
+        if name.startswith("woorpje-hack"):
+            return "w-hack"+name[len("woorpje-hack"):]
         else:
             return name
+
+    def _woorpjeSolvers(self,woorpjePrefix,general_solvers,activeGroup=None):
+        woorpje_solvers = self._result.getPureWoorpjeSolvers()
+        best_solvers = self._result.getBestWoorpjeSolvers(general_solvers,activeGroup,woorpjePrefix)
+        return general_solvers+woorpje_solvers+best_solvers
 
     def generateCactus(self,params,to_zip=None,all_instances=False):
         no_unk = False
@@ -50,6 +57,14 @@ class ChartController:
 
         if "all" in params:
             all_instances = True
+
+        if "woorpjebest" in params:
+            woorpjePrefix = "woorpje-"
+            general_solvers = ["cvc4","z3seq","z3str3"]
+            if all_instances:
+                solvers = self._woorpjeSolvers(woorpjePrefix,general_solvers,None)
+            else: 
+                solvers = self._woorpjeSolvers(woorpjePrefix,general_solvers,activeGroup)
 
 
         for solv in solvers:
@@ -92,6 +107,11 @@ class ChartController:
                 # colour setup
                 colors = ["#25333D","#0065AB","#8939AD","#007E7A","#CD3517","#318700","#80746D","#FF9A69","#00D4B8","#85C81A", #none_5_z3str3
                   "#AC75C6","#0F1E82","#A3EDF6","#FFB38F","#49AFD9",]
+
+
+                # 4 color setup
+                #colors = ["#364f6b","#3fc1c9","#ffb6b9","#fc5185"]
+
 
                 # extend the colors 
                 r = lambda: random.randint(0,255)
@@ -153,8 +173,18 @@ class ChartController:
             all_instances = False
             groups = list( self._result.getTrackInfo().keys() )
 
+        if "solver" in params:
+            solvers = params["solver"]
+        else:
+            solvers = self._result.getSolvers ()
+
+        if "woorpjebest" in params:
+            woorpjePrefix = "woorpje-"
+            general_solvers = ["cvc4","z3seq","z3str3"]
+            solvers = self._woorpjeSolvers(woorpjePrefix,general_solvers,None)
+
         for g in groups:
-            fileList.append(apply_fun({"format":["png"],"bgroup":[g]},tmpFolder,all_instances))
+            fileList.append(apply_fun({"format":["png"],"bgroup":[g], "solver":solvers},tmpFolder,all_instances))
 
         """
         with zipfile.ZipFile('out.zip', 'w') as zipMe:        
@@ -479,6 +509,15 @@ class ChartController:
                 colors = ["#25333D","#0065AB","#8939AD","#007E7A","#CD3517","#318700","#80746D","#FF9A69","#00D4B8","#85C81A", #none_5_z3str3
                   "#AC75C6","#0F1E82","#A3EDF6","#FFB38F","#49AFD9",]
 
+                # grey setup
+                #colors = ["#8a8a8a","#4a4a4a","#c9c9c9","#d6d6d6","#b0b0b0"]
+
+                # 4 color setup
+                # seq, str3, cvc4, str4
+                #colors = ["#364f6b","#3fc1c9","#ffb6b9","#fc5185"]
+
+                colors = ["#fc5185","#ffb6b9","#3fc1c9","#ffb6b9"]
+
                 # extend the colors 
                 r = lambda: random.randint(0,255)
                 colorGen = lambda : '#%02X%02X%02X' % (r(),r(),r())
@@ -518,7 +557,7 @@ class ChartController:
                 max_y = 20#max([max(dataY_a),max(dataY_b)])
 
                 #ax.plot ([0,max_x],[0,max_y],'-',linewidth=0.25,color=next(it_cols))#,marker='.')
-                next(it_cols)
+                #next(it_cols)
                 ax.scatter (dataX_a,dataY_a,linewidth=0.01,color=next(it_cols),marker='.')
                 ax.scatter (dataX_b,dataY_b,linewidth=0.01,color=next(it_cols),marker='.')
                 #ax.fill_between(range(0,len(data)),data, color=current_color,alpha=0.15)
@@ -548,7 +587,3 @@ class ChartController:
                     return webserver.views.PNGView.PNGView (buf)
             else:
                 return webserver.views.TextView.ErrorText ("Unknown format")
-            
-
-
-

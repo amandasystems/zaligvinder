@@ -1,8 +1,9 @@
 import os
 import ui
 import latex.summ_table
-
+import latex.summ_table_woorpje
 import latex.summ_table_all
+import latex.cactus
 import markdown.summ_table
 import storage
         
@@ -21,7 +22,9 @@ print (finalui.groups,finalui.solvers,finalui.loc,finalui.tableStyle)
 
 if finalui.tableStyle == "Markdown":
 	table = markdown.summ_table.TableGenerator (results,track,finalui.solvers,finalui.groups)
+elif finalui.tableStyle == "Cactus":
+	table = latex.cactus.CactusGenerator (results,track,finalui.solvers,finalui.groups)
 else:
-	table = latex.summ_table_all.TableGenerator (results,track,finalui.solvers,finalui.groups)
+	table = latex.summ_table_woorpje.TableGenerator (results,track,finalui.solvers,finalui.groups)
 with open(finalui.loc,'w') as f:
     table.generateTable (f)

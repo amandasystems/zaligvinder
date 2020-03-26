@@ -12,7 +12,7 @@ class CactusGenerator:
         self._solvers = solvers or self._res.getSolvers ()
         self._groups = groups or [tup[0] for tup in list(self._track.getAllGroups ())]
 
-        self._maxPoints = 50
+        self._maxPoints = 100
 
 
     def _solverNameMap(self,name):
@@ -51,9 +51,9 @@ class CactusGenerator:
         
     def getData (self):
         groups = self._groups
-        all_instances = False
+        all_instances = True
         rdata = {}
-        woorpjebest = True
+        woorpjebest = False
         print (groups)
 
         # setup solver colours
@@ -65,7 +65,7 @@ class CactusGenerator:
             fillbetween = []
 
             if woorpjebest:
-                woorpjePrefix = "woorpje-"#hack-"
+                woorpjePrefix = "woorpje-"#-hack-"
                 general_solvers = ["cvc4","z3seq","z3str3"]
                 if all_instances:
                     self._solvers = self._woorpjeSolvers(woorpjePrefix,general_solvers,None)
@@ -123,7 +123,7 @@ class CactusGenerator:
                 # \usepackage{pgfplots}
                 # \usepgfplotslibrary{fillbetween}
                 fillbetween+=['\\path[name path=axis'+str(solv.replace('_','').replace('.',''))+'] (axis cs:0,0) -- (axis cs:'+str(ll[len(ll)-1][0])+',0);\n']
-                fillbetween+=['\\addplot [thick,color=colour'+str(solv.replace('_','').replace('.',''))+',fill=colour'+str(solv.replace('_','').replace('.',''))+',fill opacity=0.05] fill between [of=path'+str(solv.replace('_','').replace('.',''))+' and axis'+str(solv.replace('_','').replace('.',''))+'];\n']
+                fillbetween+=['\\addplot [thick,color=colour'+str(solv.replace('_','').replace('.',''))+',fill=colour'+str(solv.replace('_','').replace('.',''))+',fill opacity=0.1] fill between [of=path'+str(solv.replace('_','').replace('.',''))+' and axis'+str(solv.replace('_','').replace('.',''))+'];\n']
 
 
                 output+='\\addlegendentry{'+str(solv)+'}\n'

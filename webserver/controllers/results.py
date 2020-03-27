@@ -197,6 +197,22 @@ class ResultController:
 
 
     def conjunctives(self,params):
+        (conTrue,conFalse,conNone) = self._results.groupFilesByConjunctives()
+
+        print("----------")
+        print("mkdir probe_true probe_false probe_unknown")
+        for f in conTrue:
+            print("cp " + f + " ./probe_true/")
+        for f in conFalse:
+            print("cp " + f + " ./probe_false/")
+        for f in conNone:
+            print("cp " + f + " ./probe_unknown/")
+
+
+        print("........")
+
+
+        return webserver.views.jsonview.JSONView({})
         conTrue,conFalse,conNone,total = 0,0,0,0
         for bgroup in list(self._results.getTrackInfo ().keys()):
             tup = self._results.getConjunctiveInfoPerGroup(bgroup)

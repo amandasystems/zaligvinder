@@ -563,6 +563,18 @@ class ResultRepository:
 
         return (conTrue,conFalse,conNone,total)
 
+    def groupFilesByConjunctives(self):
+        trueQuery = '''SELECT TrackInstance.filepath FROM TrackInstance WHERE TrackInstance.conjunctive = true''' 
+        conTrue = [t[0] for t in self._db.executeRet (trueQuery)]
+
+        falseQuery = '''SELECT TrackInstance.filepath FROM TrackInstance WHERE TrackInstance.conjunctive = false''' 
+        conFalse =  [t[0] for t in self._db.executeRet (falseQuery)]
+
+        noneQuery = '''SELECT TrackInstance.filepath FROM TrackInstance WHERE TrackInstance.conjunctive IS NULL''' 
+        conNone =  [t[0] for t in self._db.executeRet (noneQuery)]
+
+        return (conTrue,conFalse,conNone)
+
     def getConjunctiveInfoPerSolverGroupClassifiedInstances(self,solver,group,probe=True,not_classified=True):
         
         if not_classified:

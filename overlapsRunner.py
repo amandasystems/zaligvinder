@@ -6,13 +6,15 @@ import storage
 import voting.majority as voting
 import tools.z3seq
 import tools.z3str3
+import tools.z3str4
+import tools.cvc4
 import tools.dummy
 import tools.z3str3length
 #import models.woorpje.track01
 
 import models.woorpje
 import models.kaluza
-import models.PyEx
+import models.PyEx_New
 import models.pisa
 import models.nornbenchmarks
 import models.stringfuzz
@@ -29,7 +31,7 @@ import models.banditfuzz
 import startwebserver
 
 import summarygenerators
-tracks = (models.PyEx.getTrackData () +
+tracks = (models.PyEx_New.getTrackData () +
           models.pisa.getTrackData ("Pisa") +
           models.nornbenchmarks.getTrackData ("Norn") +
           models.light.getTrackData("Trau Light")+
@@ -51,11 +53,11 @@ tracks = (models.PyEx.getTrackData () +
 import models.probetrue
 import models.probefalse
 import models.probeunknown
-tracks = (models.probetrue.getTrackData()+
+"""tracks = (models.probetrue.getTrackData()+
           models.probefalse.getTrackData()+
           models.probeunknown.getTrackData()+
         [])
-
+"""
 
 #solvers = {
 #    'z3str3-portfolio' : tools.z3str3portfolio.run,
@@ -69,9 +71,11 @@ tracks = (models.probetrue.getTrackData()+
 smtsolvers = ["cvc4"]
 
 solvers = {}
-for s in [tools.z3seq,
+for s in [tools.cvc4,
+          tools.z3seq,
           tools.z3str3,
-          tools.z3str3length,
+          tools.z3str4
+          #tools.z3str3length,
           #tools.z3str4multi,
           #tools.z3str4murphy,
           #tools.z3str4federico,

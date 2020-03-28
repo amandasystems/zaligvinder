@@ -13,7 +13,7 @@
 	    "path" : "/home/mku/tools/woorpje/woorpje2SMT"
 	},
 	"Z3" : {
-	    "path" : "/home/mku/tools/woorpje_tools/z3"
+	    "path" : "/home/mku/tools/z3/z3"
 	},
 	"Z3Port" : {
 	    "path" : "/home/mku/tools/z3_fed/z3"

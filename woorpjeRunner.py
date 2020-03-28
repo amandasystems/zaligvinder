@@ -44,11 +44,11 @@ tracks = (
         )
 
 solvers = {}
-for s in [tools.z3seq,
-          tools.z3str3,
+for s in [#tools.z3seq,
+          #tools.z3str3,
           tools.cvc4,
           tools.woorpje,
-          #tools.woorpjeHack
+          tools.woorpjeHack
 ]:
     s.addRunner (solvers)
 

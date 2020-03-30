@@ -110,7 +110,7 @@ class ChartController:
 
 
                 # 4 color setup
-                #colors = ["#364f6b","#3fc1c9","#ffb6b9","#fc5185"]
+                colors = ["#364f6b","#3fc1c9","#ffb6b9","#fc5185"]
 
 
                 # extend the colors 
@@ -469,6 +469,17 @@ class ChartController:
                             filePaths[solvers[0]] += [t[3][len("/home/mku/wordbenchmarks/"):]]
                         else: 
                             filePaths[solvers[1]] += [t[3][len("/home/mku/wordbenchmarks/"):]]
+
+        # hack for not doing on the fly removal
+        to_remove = []
+        for iid in data.keys():
+            if len(data[iid]) == 1:
+                to_remove+=[iid]
+
+        for iid in to_remove:
+            del data[iid]
+
+
         print(len(data.values()))
         """
         print("start copy!")

@@ -195,6 +195,11 @@ class ResultController:
         print("LOLX : " +str(len(unknowns)))
         return (best_count,instance_count)
 
+    def _getNewFileName(self,f):
+        f = f[len("/home/mku/wordy/models/"):]
+        return "".join(["_"+x for x in f.split("/")])[1:]
+
+
 
     def conjunctives(self,params):
         (conTrue,conFalse,conNone) = self._results.groupFilesByConjunctives()
@@ -202,12 +207,15 @@ class ResultController:
         print("----------")
         print("mkdir probe_true probe_false probe_unknown")
         for f in conTrue:
-            print("cp " + f + " ./probe_true/")
+            print("cp " + f + " ./probe_true/"+self._getNewFileName(f))
         for f in conFalse:
-            print("cp " + f + " ./probe_false/")
+            print("cp " + f + " ./probe_false/"+self._getNewFileName(f))
         for f in conNone:
-            print("cp " + f + " ./probe_unknown/")
+            print("cp " + f + " ./probe_unknown/"+self._getNewFileName(f))
 
+
+
+        # /home/mku/wordy/models/ -- cp to SetName_TrackName_InstanceName.smt
 
         print("........")
 

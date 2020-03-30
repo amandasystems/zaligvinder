@@ -243,7 +243,7 @@ class ResultRepository:
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2])) for t in rows]
 
     def getResultForSolverGroupAndFilePath (self,solver,group):
-        query = '''SELECT Result.*,TrackInstance.filepath FROM Result,TrackInstanceMap,Track,TrackInstance WHERE solver = ? and Result.instanceid = TrackInstanceMap.instance and TrackInstanceMap.track = Track.id and Track.bgroup = ? and TrackInstance.id = TrackInstanceMap.instance ORDER BY time ASC '''
+        query = '''SELECT Result.*,TrackInstance.filepath FROM Result,TrackInstanceMap,Track,TrackInstance WHERE solver = ? and Result.result IS NOT NULL and Result.instanceid = TrackInstanceMap.instance and TrackInstanceMap.track = Track.id and Track.bgroup = ? and TrackInstance.id = TrackInstanceMap.instance ORDER BY time ASC '''
         rows = self._db.executeRet (query,(solver,group,))
         #print(rows)
         return [(t[0],t[1],utils.Result(t[4],t[5],t[3],t[2]),t[9]) for t in rows]

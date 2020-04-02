@@ -14,7 +14,7 @@ import tools.z3str3length
 
 import models.woorpje
 import models.kaluza
-import models.PyEx_New
+import models.PyEx_All
 import models.pisa
 import models.nornbenchmarks
 import models.stringfuzz
@@ -31,7 +31,7 @@ import models.banditfuzz
 import startwebserver
 
 import summarygenerators
-tracks = (models.PyEx_New.getTrackData () +
+tracks = (models.PyEx_All.getTrackData () +
           models.pisa.getTrackData ("Pisa") +
           models.nornbenchmarks.getTrackData ("Norn") +
           models.light.getTrackData("Trau Light")+
@@ -53,11 +53,10 @@ tracks = (models.PyEx_New.getTrackData () +
 import models.probetrue
 import models.probefalse
 import models.probeunknown
-"""tracks = (models.probetrue.getTrackData()+
+tracks = (models.probetrue.getTrackData()+
           models.probefalse.getTrackData()+
           models.probeunknown.getTrackData()+
         [])
-"""
 
 #solvers = {
 #    'z3str3-portfolio' : tools.z3str3portfolio.run,
@@ -71,9 +70,9 @@ import models.probeunknown
 smtsolvers = ["cvc4"]
 
 solvers = {}
-for s in [tools.cvc4,
-          tools.z3seq,
-          tools.z3str3,
+for s in [#tools.cvc4,
+          #tools.z3seq,
+          #tools.z3str3,
           tools.z3str4
           #tools.z3str3length,
           #tools.z3str4multi,
@@ -101,7 +100,7 @@ summaries = [summarygenerators.terminalResult
 timeout = 20 
 ploc = utils.JSONProgramConfig ()
 
-store = storage.SQLiteDB ("probetest")
+store = storage.SQLiteDB ("new_z3_run_pyex_all")
 summaries = [
     summarygenerators.terminalResult,
     store.postTrackUpdate

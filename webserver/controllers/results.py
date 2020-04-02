@@ -227,11 +227,6 @@ class ResultController:
 
 
     def getAllErrorsForSolver(self,params):
-        bgroup = list(self._results.getTrackInfo ().keys())[0]
-        print(self._results.getIdealSolverResultsForGroup(bgroup))
-
-        return webserver.views.jsonview.JSONView({})
-
         if "solver" in params:
             solver = params["solver"][0]
             bgroups = list(self._results.getTrackInfo ().keys())

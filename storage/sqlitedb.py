@@ -293,6 +293,13 @@ class ResultRepository:
         else:
             return None
 
+    def getIdealSolverResultsForGroup(self,bgroup):
+        query = '''SELECT Result.instanceid,MIN(Result.time) FROM Result,TrackInstanceMap,TrackInstance,Track WHERE Result.result IS NOT NULL AND Result.instanceid = TrackInstanceMap.instance and TrackInstanceMap.track = Track.id and TrackInstance.id = Result.instanceid and Track.bgroup = ? AND TrackInstance.expected = Result.result AND Result.verified IS NOT false GROUP BY Result.instanceid'''
+        rows = [t[1] for t in self._db.executeRet (query,(bgroup,))]
+        rows.sort()
+
+        return rows
+
     # faster classification
     def get2ComparisonTrackResultsFasterClassified(self,trackid,solver1,solver2):
         query = '''SELECT Result.solver, Result.instanceid, Result.timeouted, Result.result, TrackInstance.expected,Result.time FROM Result,TrackInstance,TrackInstanceMap WHERE Result.instanceid = TrackInstanceMap.instance AND TrackInstanceMap.track = ? AND TrackInstance.id = Result.instanceid AND Result.solver = ?'''

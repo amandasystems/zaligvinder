@@ -27,6 +27,7 @@ class ChartController:
 
     def generateCactus(self,params,to_zip=None,all_instances=False):
         no_unk = False
+        ideal_solver = True
 
         # WRITE A FUNCTION FOR THIS!
         #solvermapping = { "cvc4" : "CVC4", "z3str4-overlaps-ds-7" : "Z3hydra-dynamic" , "z3str4-overlaps-murphy" : "Z3hydra-static"}
@@ -65,6 +66,29 @@ class ChartController:
                 solvers = self._woorpjeSolvers(woorpjePrefix,general_solvers,None)
             else: 
                 solvers = self._woorpjeSolvers(woorpjePrefix,general_solvers,activeGroup)
+
+
+        if ideal_solver and not no_unk:
+            l = []
+            s = 0
+            result = []
+            if all_instances:
+                for g in list(self._result.getTrackInfo().keys()):
+                    result+=self._result.getIdealSolverResultsForGroup(g)
+                result.sort()
+            else:
+                result = self._result.getIdealSolverResultsForGroup(activeGroup)
+
+
+            for i,t in enumerate(result):
+                s = s+t
+                l.append ({"x" : i,
+                           "instance" : "",
+                           "time" : t,
+                           "y" : s
+                })
+            rdata["ideal"] = l
+
 
 
         for solv in solvers:

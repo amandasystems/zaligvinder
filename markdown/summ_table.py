@@ -19,13 +19,19 @@ class TableGenerator:
             return name
 
     def getData (self):
+        show_ideal_solver = True
         groups = self._groups
         #print (groups)
         
         totalSumData = dict()
+        totalIdealData = [0,0,0,0,0,0,0,0.0,0.0,0.0,0]
+
 
         for i,g in enumerate(groups):
             best = dict()
+
+            total_instances = 0
+
             self._output.write ("=== "+g+"\n")
             #for (tid,tname) in self._groupTracks[g]:
             #totalSumData = dict()
@@ -40,11 +46,11 @@ class TableGenerator:
                 verified = self._res.getVerifiedCountForSolverGroup(s,g)
                 print(g,s,timeWO,totalWO,verified,satis)
                 classified = satis + nsatis -errors
-
+                total_instances = total
                 #(smtcalls,timeouted,satis,unk,nsatis,errors,time,total) = self._res.getSummaryForSolverTrack (s,tid)
 
-                lines.append ("|{}|{}|{} ({})|{}|{}|{}|{}|{}|{:.2f}|{}|{:.2f}\n".format(self._solverNameMap(s),classified,satis,verified,nsatis,unk,errors,timeouted,total,time,totalWO,timeWO))
-                #lines.append ("|{}|{}|{}|{}|{}|{}|{}|{}|{:.2f}|{}|{:.2f}\n".format(s,classified,satis,nsatis,unk,errors,timeouted,total,time,totalWO,timeWO))
+                #lines.append ("|{}|{}|{} ({})|{}|{}|{}|{}|{}|{:.2f}|{}|{:.2f}\n".format(self._solverNameMap(s),classified,satis,verified,nsatis,unk,errors,timeouted,total,time,totalWO,timeWO))
+                lines.append ("|{}|{}|{}|{}|{}|{}|{}|{}|{:.2f}|{}|{:.2f}\n".format(s,classified,satis,nsatis,unk,errors,timeouted,total,time,totalWO,timeWO))
 
                 #correctly,satis,nsatis,unk,errors,timeouted,total,time,totalWO,timeWO
                 
@@ -64,13 +70,38 @@ class TableGenerator:
 
             #self._output.write ("=== "+g+"\n")
 
+            if show_ideal_solver:
+                l = []
+                s = 0
+                result = self._res.getIdealSolverResultsForGroup(g)
+                Isatis = 0
+                Insatis = 0
+                Itime = 0
+                for i,t in enumerate(result):
+                    Itime = Itime+t[2]
+                    if t[1] == True:
+                        Isatis+=1
+                    elif t[1] == False:
+                        Insatis+=1
+
+                lines.append ("|{}|{}|{}|{}|{}|{}|{}|{}|{:.2f}|{}|{:.2f}\n".format("Ideal",Insatis+Isatis,Isatis,Insatis,total_instances-(Insatis+Isatis),0,0,total_instances,Itime,Insatis+Isatis,Itime))
+                totalIdealData[0]+=Insatis+Isatis
+                totalIdealData[1]+=Isatis
+                totalIdealData[2]+=Insatis
+                totalIdealData[3]+=total_instances-(Insatis+Isatis)
+                totalIdealData[6]+=total_instances
+                totalIdealData[7]+=Itime
+                totalIdealData[8]+=Insatis+Isatis
+                totalIdealData[9]+=Itime
+
+
             self._output.write ('''\n\n[.text-center]
 image::img/'''+g.lower().replace(" ", "")+'''.png[cactus]\n\n''')
 
             #self._output.write ('''\n\n[.text-center]
             #image::img/keys/'''+g.lower().replace(" ", "")+'''.png[keywords]\n\n''')
-            self._output.write ('''|===\n|Tool name |Correctly classified  |Declared satisfiable (Veriefied correctly) |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time|Total instances w/o TO |Total time w/o TO\n''')
-            #self._output.write ('''|===\n|Tool name |Correctly classified  |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time|Total instances w/o TO |Total time w/o TO\n''')
+            #self._output.write ('''|===\n|Tool name |Correctly classified  |Declared satisfiable (Veriefied correctly) |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time|Total instances w/o TO |Total time w/o TO\n''')
+            self._output.write ('''|===\n|Tool name |Correctly classified  |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time|Total instances w/o TO |Total time w/o TO\n''')
             self._output.write ("".join (lines))
             self._output.write ("|===\n\n")
 
@@ -92,14 +123,17 @@ Best solver of this benchmark set '''+str(self._solverNameMap(current[3]))+''' c
         lines = []
         self._output.write("\n\n=== Total\n")
 
+        if show_ideal_solver:
+            totalSumData["ideal_solver"] = totalIdealData
+
         for s in totalSumData:
             (correctly,satis,nsatis,unk,errors,timeouted,total,time,totalWO,timeWO,verified) = totalSumData[s]
-            lines.append ("|{}|{}|{} ({})|{}|{}|{}|{}|{}|{:.2f}|{}|{:.2f}\n".format(self._solverNameMap(s),correctly,satis,verified,nsatis,unk,errors,timeouted,total,time,totalWO,timeWO))
+            lines.append ("|{}|{}|{}|{}|{}|{}|{}|{}|{}|{:.2f}|{:.2f}\n".format(self._solverNameMap(s),correctly,satis,nsatis,unk,errors,timeouted,total,time,totalWO,timeWO))
             #lines.append ("|{}|{}|{}|{}|{}|{}|{}|{}|{:.2f}|{}|{:.2f}\n".format(s,correctly,satis,nsatis,unk,errors,timeouted,total,time,totalWO,timeWO))
             #lines.append ("|{}|{}|{:.2f}|{:.2f}\n".format(s,totalSumData[s][0],totalSumData[s][1],totalSumData[s][2]))
 
-        self._output.write ('''|===\n|Tool name |Correctly classified |Declared satisfiable (Veriefied correctly) |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time|Total instances w/o TO |Total time w/o TO\n''')
-        #self._output.write ('''|===\n|Tool name |Correctly classified |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time|Total instances w/o TO |Total time w/o TO\n''')
+        #self._output.write ('''|===\n|Tool name |Correctly classified |Declared satisfiable (Veriefied correctly) |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time|Total instances w/o TO |Total time w/o TO\n''')
+        self._output.write ('''|===\n|Tool name |Correctly classified |Declared satisfiable |Declared unsatisfiable |Declared unknown |Error |Timeout |Total instances |Total time|Total instances w/o TO |Total time w/o TO\n''')
         self._output.write ("".join (lines))
         self._output.write ("|===\n\n")
 

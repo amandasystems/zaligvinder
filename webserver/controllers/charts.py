@@ -75,16 +75,16 @@ class ChartController:
             if all_instances:
                 for g in list(self._result.getTrackInfo().keys()):
                     result+=self._result.getIdealSolverResultsForGroup(g)
-                result.sort()
+                result.sort(key=lambda t: t[2])
             else:
                 result = self._result.getIdealSolverResultsForGroup(activeGroup)
 
 
             for i,t in enumerate(result):
-                s = s+t
+                s = s+t[2]
                 l.append ({"x" : i,
-                           "instance" : "",
-                           "time" : t,
+                           "instance" : t[1],
+                           "time" : t[2],
                            "y" : s
                 })
             rdata["ideal"] = l

@@ -294,9 +294,9 @@ class ResultRepository:
             return None
 
     def getIdealSolverResultsForGroup(self,bgroup):
-        query = '''SELECT Result.instanceid,MIN(Result.time) FROM Result,TrackInstanceMap,TrackInstance,Track WHERE Result.result IS NOT NULL AND Result.instanceid = TrackInstanceMap.instance and TrackInstanceMap.track = Track.id and TrackInstance.id = Result.instanceid and Track.bgroup = ? AND TrackInstance.expected = Result.result AND Result.verified IS NOT false GROUP BY Result.instanceid'''
-        rows = [t[1] for t in self._db.executeRet (query,(bgroup,))]
-        rows.sort()
+        query = '''SELECT Result.instanceid,Result.Result,MIN(Result.time) FROM Result,TrackInstanceMap,TrackInstance,Track WHERE Result.result IS NOT NULL AND Result.instanceid = TrackInstanceMap.instance and TrackInstanceMap.track = Track.id and TrackInstance.id = Result.instanceid and Track.bgroup = ? AND TrackInstance.expected = Result.result AND Result.verified IS NOT false GROUP BY Result.instanceid'''
+        rows = [t for t in self._db.executeRet (query,(bgroup,))]
+        rows.sort(key=lambda t: t[2])
 
         return rows
 

@@ -26,12 +26,12 @@ def run (eq,timeout,ploc,wd,solver="1",param="60"):
     for l in f:
         if not l.startswith(";") and firstLine == None:
             firstLine = True
-    
         # set (set-logic ALL) if no logic was set
         if "(set-logic" not in l and firstLine:
             copy.write("(set-logic ALL)\n")    
-        
-        firstLine = False 
+       
+        if firstLine:
+            firstLine = False 
         
         if "(get-model)" not in l:
             copy.write(l)

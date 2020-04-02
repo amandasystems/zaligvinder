@@ -66,10 +66,10 @@ class TableGenerator:
                     rdata[solverName][heuristic][parameter] = dict()
 
                 # store data
-                rdata[solverName][heuristic][parameter]["classified"] = classified
-                rdata[solverName][heuristic][parameter]["unknown"] = unk
-                rdata[solverName][heuristic][parameter]["timeouted"] = timeouted
-                rdata[solverName][heuristic][parameter]["errors"] = errors
+                rdata[solverName][heuristic][parameter]["classified"] = str(classified)+" ("+str(round((100/total)*classified, 2))+"\\%)"
+                #rdata[solverName][heuristic][parameter]["unknown"] = unk
+                rdata[solverName][heuristic][parameter]["timeouted"] = str(timeouted)+" ("+str(round((100/total)*timeouted, 2))+"\\%)"
+                rdata[solverName][heuristic][parameter]["errors"] = str(errors)+" ("+str(round((100/total)*errors, 2))+"\\%)"
                 rdata[solverName][heuristic][parameter]["smtcalls"] = smtcalls if heuristic != "--" else "--"
                 rdata[solverName][heuristic][parameter]["time"] = str(round(time, 2))
 
@@ -91,7 +91,7 @@ class TableGenerator:
             header_build = False
             for s in rdata.keys():
                 solver_rows[s] = dict()
-                for h in rdata[s].keys():
+                for h in [ "2", "4", "3", "1", "5", "--"]: #rdata[s].keys():
                     current_parameters = list(rdata[s][h].keys())
                     parameter_count = len(current_parameters)
 
@@ -133,7 +133,8 @@ class TableGenerator:
                 self._output.write(devide_rule+"\n")
             self._output.write('\\end{tabular}')
             #   \caption{Summary benchmark data for \textsc{StringFuzzBench} (600 Benchmarks) with extra rule: (\faCheck: correctly classified, \faBomb: incorrectly classified \faCodeFork: calls to the external solver, \faClockO: total time in seconds)} \label{tab:results3_hack}\vspace*{-0.3cm} 
-            self._output.write('}\\caption{Summary benchmark data for \\textsc{'+str(g)+'} ('+str(total_instances)+' Benchmarks): (\\faCheck: correctly classified, \\faQuestion: unknown, \\faHourglassEnd: timeouted instances, \\faBomb: incorrectly classified \\faCodeFork: calls to the external solver, \\faClockO: total time in seconds)}\\label{tab:'+str(g)+'results}\\vspace*{-0.3cm} ')
+            #self._output.write('}\\caption{Summary benchmark data for \\textsc{'+str(g)+'} ('+str(total_instances)+' Benchmarks): (\\faCheck: correctly classified, \\faQuestion: unknown, \\faHourglassEnd: timeouted instances, \\faBomb: incorrectly classified \\faCodeFork: calls to the external solver, \\faClockO: total time in seconds)}\\label{tab:'+str(g)+'results}\\vspace*{-0.3cm} ')
+            self._output.write('}\\caption{Summary benchmark data for \\textsc{'+str(g)+'} ('+str(total_instances)+' Benchmarks): (\\faCheck: correctly classified, \\faHourglassEnd: timeouted instances, \\faBomb: incorrectly classified \\faCodeFork: calls to the external solver, \\faClockO: total time in seconds)}\\label{tab:'+str(g)+'results}\\vspace*{-0.3cm} ')
             self._output.write('\\end{table*}')
 
     

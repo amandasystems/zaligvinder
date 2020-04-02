@@ -11,8 +11,8 @@ class CactusGenerator:
         self._track  = track
         self._solvers = solvers or self._res.getSolvers ()
         self._groups = groups or [tup[0] for tup in list(self._track.getAllGroups ())]
-
         self._maxPoints = 100
+        self._startPoints = 13500
 
 
     def _solverNameMap(self,name):
@@ -53,7 +53,7 @@ class CactusGenerator:
         groups = self._groups
         all_instances = True
         rdata = {}
-        woorpjebest = False
+        woorpjebest = True
         print (groups)
 
         # setup solver colours
@@ -90,18 +90,19 @@ class CactusGenerator:
                 # accumulate points
                 ll = []
                 total_points = len(l)
-                accumulation_count = round(total_points/(self._maxPoints-2))
-                i = 1
+
+                accumulation_count = round((total_points-self._startPoints)/(self._maxPoints-2))
+                i = self._startPoints+1
                 j = 1
-                ll.append((1,l[0]["y"]))
+                ll.append((self._startPoints+1,l[self._startPoints]["y"]))
                 while True:
-                    if j*accumulation_count+1 < total_points:
-                        x = statistics.mean([value["x"] for value in l[i:(accumulation_count*j+1)]])
-                        y = statistics.mean([value["y"] for value in l[i:(accumulation_count*j+1)]])
+                    if j*accumulation_count+1 < (total_points-self._startPoints):
+                        x = statistics.mean([value["x"] for value in l[i:self._startPoints+(accumulation_count*j+1)]])
+                        y = statistics.mean([value["y"] for value in l[i:self._startPoints+(accumulation_count*j+1)]])
                         ll.append((x,y))
                         i=accumulation_count+i 
                     else: 
-                        if i < total_points-1:
+                        if i < ((total_points-self._startPoints)-1):
 
                             x = statistics.mean([value["x"] for value in l[i:total_points-1]])
                             y = statistics.mean([value["y"] for value in l[i:total_points-1]])

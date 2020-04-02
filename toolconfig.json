@@ -12,8 +12,11 @@
 	"woorpje2SMT" : {
 	    "path" : "/home/mku/tools/woorpje/woorpje2SMT"
 	},
+	"Z3str4" : {
+	   "path" : "/home/mku/tools/z3str4/build/z3"
+	},
 	"Z3" : {
-	    "path" : "/home/mku/tools/woorpje_tools/z3"
+	    "path" : "/home/mku/tools/z3/z3"
 	},
 	"Z3Port" : {
 	    "path" : "/home/mku/tools/z3_fed/z3"
@@ -34,7 +37,7 @@
 	    "path" : "/home/mku/tools/z3_overlaps/z3"
 	},
 	"cvc4" : {
-	    "path" : "/home/mku/tools/woorpje_tools/cvc4"
+	    "path" : "/home/mku/tools/cvc4/cvc4"
 	},
 	"norn" : {
 	    "path" : "/path/to/norn"

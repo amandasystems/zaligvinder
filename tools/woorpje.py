@@ -61,6 +61,12 @@ def addRunner (addto):
 
     paramList = []
 
+
+    paramList = ["-S","1"] + ["--levisheuristics","4"]
+    addto["woorpje"] = partial(run,paramList)
+    return 0
+
+
     for i,h in enumerate(heuristics):       # heuristic name
         for s in solvers:                   # assisting solver
             p = heuristics[h]          # paramter for heuristic

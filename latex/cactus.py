@@ -53,7 +53,7 @@ class CactusGenerator:
         groups = self._groups
         all_instances = True
         rdata = {}
-        woorpjebest = True
+        woorpjebest = False
         print (groups)
 
         # setup solver colours

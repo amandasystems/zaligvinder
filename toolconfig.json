@@ -13,14 +13,38 @@
 	    "path" : "/home/mku/tools/woorpje/woorpje2SMT"
 	},
 	"Z3str4" : {
-	   "path" : "/home/mku/tools/z3str4/build/z3"
+	   "path" : "/home/mku/tools/z3_fed/z3"
+	},
+	"Z3str4Old" : {
+           "path" : "/home/mku/tools/z3_fed_old/z3"
+        },
+	"Z3str4Reg" : {
+	   "path" : "/home/mku/tools/z3_mur/z3str4_old_seq/z3"
+	},
+	"Z3FSE" : {
+		"path" : "/home/mku/tools/z3str4_FSE/z3"
 	},
 	"Z3" : {
-	    "path" : "/home/mku/tools/z3/z3"
+	    "path" : "/home/mku/tools/z3_smtlib2.6/z3"
 	},
+	"Z3NewIndexOf" : {
+	    "path" : "/home/mku/tools/z3_mur/new-indexof-axioms/z3"
+	},
+	"Z3RemoveCtxDepAnalysis" : {
+	     "path" : "/home/mku/tools/z3_mur/remove-ctx-dep-analysis/z3"
+	},
+	 "Z3SeqAxioms" : {
+             "path" : "/home/mku/tools/z3_mur/seq-axioms/z3"
+        },
+	"Z3Old" : {
+            "path" : "/home/mku/tools/z3_old/z3"
+        },
 	"Z3Port" : {
 	    "path" : "/home/mku/tools/z3_fed/z3"
 	},
+	"Z3str4Murphy" : {
+            "path" : "/home/mku/tools/z3_mur/z3str4/z3"
+        },
 	"Z3PortProbe" : {
 	    "path" : "/home/mku/tools/z3_fed_noprobe/z3"
         },
@@ -37,7 +61,7 @@
 	    "path" : "/home/mku/tools/z3_overlaps/z3"
 	},
 	"cvc4" : {
-	    "path" : "/home/mku/tools/cvc4/cvc4"
+	    "path" : "/home/mku/tools/cvc4/cvc4-2020-05-11-x86_64-linux-opt"
 	},
 	"norn" : {
 	    "path" : "/path/to/norn"

@@ -10,7 +10,7 @@ import timer
 #path = utils.findProgram ("Z3BINARY","z3")
 
 def run (eq,timeout,ploc,wd):
-    path = ploc.findProgram ("Z3Port")
+    path = ploc.findProgram ("Z3str4")
     if not path:
         raise "Z3Port Not in Path"
 

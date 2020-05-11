@@ -10,13 +10,13 @@ def calculateErrors (track,res):
         errors[solver] = 0
         for i,k in enumerate(mres):
             inst = instances[i]
-            if k.result != None: #inst.expected != None and k.result != None:
-                # count and error if the expected result differs or an invalid model was produced
+            if inst.expected != None and k.result != None:
+                #Only count errors if we have an expected value and this solver gave an answer
                 if inst.expected != k.result or k.verified == False:
                     errors[solver]+=1
                 # Count as error if a solver produced a wrong model
                 if inst.expected == k.result and k.verified == False:
-                    errors[solver]+=1
+                    errors[solver]+1
     return errors
 
 def calculateErrorsOld(res):
@@ -78,9 +78,12 @@ def terminalResult (track,res):
         t = sum([i.time for i in res[n] ])
         two = sum([i.time for i in res[n] if i.timeouted != True])
         #cort = sum([i[0][1] for i in zip([(j.result,j.time) for j in res[n]],ref) if i[0][0] == i[1] and i[1] != None])
+        conjunctives = sum([1 for i in res[n] if "### CONJUNCTIVE: YES" in i.output])
+        not_conjunctives = sum([1 for i in res[n] if "### CONJUNCTIVE: NO" in i.output])
+        simple_solved = sum([1 for i in res[n] if "### CONJUNCTIVE:" not in i.output])
         error = errors[n] 
-        table.append ([n,sat,nsat,unk,to,error,smtcalls,t,two])
-    print(tabulate.tabulate(table,["Solver", "Satis", "NSatis", "Unknown", "Timeout", "Errors",  "SMT Solver Calls", "Total Time", "Total Time w/o Timeout"]))
+        table.append ([n,sat,nsat,unk,to,error,smtcalls,conjunctives,not_conjunctives,simple_solved,t,two])
+    print(tabulate.tabulate(table,["Solver", "Satis", "NSatis", "Unknown", "Timeout", "Errors",  "SMT Solver Calls", "Probe True", "Probe False","Solved by Simplifier", "Total Time", "Total Time w/o Timeout"]))
 
 def cactusPlot (track,res):
     name,files = track.name,track.instances

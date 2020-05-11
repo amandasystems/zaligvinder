@@ -12,6 +12,9 @@ import tools.dummy
 import tools.z3str3length
 #import models.woorpje.track01
 
+import tools.z3str4FSE
+import tools.z3seqtimeout
+
 import models.woorpje
 import models.kaluza
 import models.PyEx_All
@@ -28,35 +31,45 @@ import models.joacosuite
 import models.strangersuite
 import models.kauslersuite
 import models.banditfuzz
+import models.SMTLIB
 import startwebserver
 
 import summarygenerators
-tracks = (models.PyEx_All.getTrackData () +
-          models.pisa.getTrackData ("Pisa") +
-          models.nornbenchmarks.getTrackData ("Norn") +
-          models.light.getTrackData("Trau Light")+
-          models.Leetcode.getTrackData ("Leetcode Strings") + 
-          models.appscan.getTrackData ( "IBM Appscan") + 
-          models.slothtests.getTrackData ("Sloth") +
-          models.woorpje.getTrackData ("Woorpje Word Equations") +
-          models.kaluza.getTrackData ("Kaluza") +
-          models.stringfuzz.getTrackData ("StringFuzz") +
-          models.z3_regression.getTrackData("z3Str3 Regression")+
-          models.cashewsuite.getTrackData ("Cashew") + 
-          models.joacosuite.getTrackData ("JOACO") +
-          models.strangersuite.getTrackData ("Stranger") +
-          models.kauslersuite.getTrackData ("Kausler") +
-          models.banditfuzz.getTrackData("BanditFuzz") +
+tracks = (models.SMTLIB.getTrackData() +
+          #models.PyEx_All.getTrackData () +
+          #models.pisa.getTrackData ("Pisa") +
+          #models.nornbenchmarks.getTrackData ("Norn") +
+          #models.light.getTrackData("Trau Light")+
+          #models.Leetcode.getTrackData ("Leetcode Strings") + 
+          #models.appscan.getTrackData ( "IBM Appscan") + 
+          #models.slothtests.getTrackData ("Sloth") +
+          #models.woorpje.getTrackData ("Woorpje Word Equations") +
+          #models.kaluza.getTrackData ("Kaluza") +
+          #models.stringfuzz.getTrackData ("StringFuzz") +
+          #models.z3_regression.getTrackData("z3Str3 Regression")+
+          #models.cashewsuite.getTrackData ("Cashew") + 
+          #models.joacosuite.getTrackData ("JOACO") +
+          #models.strangersuite.getTrackData ("Stranger") +
+          #models.kauslersuite.getTrackData ("Kausler") +
+          #models.banditfuzz.getTrackData("BanditFuzz") +
         []
         )
 
 import models.probetrue
 import models.probefalse
 import models.probeunknown
-tracks = (models.probetrue.getTrackData()+
-          models.probefalse.getTrackData()+
-          models.probeunknown.getTrackData()+
-        [])
+import models.arrvsseq
+import tools.z3str4Arms
+import tools.z3str4FSEArms
+import tools.z3str3Multi
+import tools.z3str4Reg
+import models.test
+#tracks = (models.test.getTrackData()+
+#          #models.probetrue.getTrackData()+
+#          models.probefalse.getTrackData()+
+#          #models.probeunknown.getTrackData()+
+#          #models.arrvsseq.getTrackData()+
+#          [])
 
 #solvers = {
 #    'z3str3-portfolio' : tools.z3str3portfolio.run,
@@ -71,9 +84,23 @@ smtsolvers = ["cvc4"]
 
 solvers = {}
 for s in [#tools.cvc4,
+          #tools.z3str3Multi
+          #tools.z3str4FSEArms,
+          #tools.z3str4Arms,
+          tools.z3str4Reg,
+          #tools.z3str3Multi
+          #tools.cvc4,
           #tools.z3seq,
           #tools.z3str3,
-          tools.z3str4
+          #tools.z3seq_old,
+          #tools.z3str4,
+          #tools.z3str4arith
+          #tools.z3str4_old,
+          #tools.z3str4FSE
+          #tools.z3seqtimeout
+          #tools.z3str3,
+          #tools.z3str4,
+          #tools.z3str4FSE,
           #tools.z3str3length,
           #tools.z3str4multi,
           #tools.z3str4murphy,
@@ -107,5 +134,6 @@ summaries = [
 ]
 #verifiers = {"cvc4": tools.cvc4,"z3seq" : tools.z3seq} # use cvc4 and the sequence solver as verifiers
 verifiers = ["cvc4","z3seq"]
+#verifiers = []
 testrunner().runTestSetup (tracks,solvers,voting.MajorityVoter(),summaries,store,timeout,ploc,verifiers)
 startwebserver.Server (store.getDB ()).startServer ()

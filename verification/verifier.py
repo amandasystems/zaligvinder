@@ -17,6 +17,12 @@ class Verifier:
         return s[len("(model"):-1]
 
     def _translateSMTFile(self,filepath):
+        
+        setLogicPresent = False
+        #with open(filepath) as flc:
+        #    if '(set-logic' in flc.read():
+        #        yield "(set-logic ALL)\n"
+        
         f=open(filepath,"r")
         matchingBraces = 0
         firstMatchFound = False
@@ -47,6 +53,7 @@ class Verifier:
     def _modifyInputFile(self,tempd,model,filepath):
         smtfile = os.path.join (tempd,"out.smt")
         copy=open(smtfile,"w")
+
         firstLine = None
         declareBlockReached = False
         for l in self._translateSMTFile(filepath):
@@ -54,8 +61,8 @@ class Verifier:
                 firstLine = True
 
             # set (set-logic ALL) if no logic was set
-            if "(set-logic" not in l and firstLine:
-                copy.write("(set-logic ALL)\n")    
+            #if "(set-logic" not in l and firstLine:
+            #    copy.write("(set-logic ALL)\n")    
             
             if firstLine:
                 firstLine = False

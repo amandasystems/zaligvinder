@@ -1,7 +1,0 @@
-(set-logic QF_S)
-(declare-fun _var_0xINPUT_102935_() String)
-(declare-fun __woorpje_diseq_pref0_() String)
-(declare-fun __woorpje_diseq_suf_l0_() String)
-(declare-fun __woorpje_diseq_suf_r0_() String)
-(assert (=(str.++  "iDBGE5i1D5" "")(str.++ _var_0xINPUT_102935_  "")) )
-(check-sat)

@@ -21,8 +21,9 @@ def run (eq,timeout,ploc,wd,solver="1",param="60"):
     setLogicPresent = False
     #set logic present?
     with open(eq) as flc:
-        if '(set-logic' in flc.read():
-            setLogicPresent = True
+        for l in flc:
+            if not l.startswith(";") and '(set-logic' in l:
+                setLogicPresent = True
 
     # hack to insert (get-model), which is needed for cvc4 to output a model
     f=open(eq,"r")

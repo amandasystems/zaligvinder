@@ -21,14 +21,20 @@
 	"Z3str4Reg" : {
 	   "path" : "/home/mku/tools/z3_mur/z3str4_old_seq/z3"
 	},
+	"Z3str4RegBug" : {
+           "path" : "/home/mku/tools/z3_mur/z3str4_old_seq_bug/z3"
+        },
 	"Z3FSE" : {
 		"path" : "/home/mku/tools/z3str4_FSE/z3"
 	},
 	"Z3" : {
-	    "path" : "/home/mku/tools/z3_smtlib2.6/z3"
+	    "path" : "/home/mku/tools/z3/z3"
 	},
-	"Z3NewIndexOf" : {
-	    "path" : "/home/mku/tools/z3_mur/new-indexof-axioms/z3"
+	"Z3Mku" : {
+	    "path" : "/home/mku/tools/z3_mku/build/z3"
+	},
+	"Z3Unicode" : {
+	    "path" : "/home/mku/tools/z3_mur/unicode-strings/z3"
 	},
 	"Z3RemoveCtxDepAnalysis" : {
 	     "path" : "/home/mku/tools/z3_mur/remove-ctx-dep-analysis/z3"
@@ -61,7 +67,7 @@
 	    "path" : "/home/mku/tools/z3_overlaps/z3"
 	},
 	"cvc4" : {
-	    "path" : "/home/mku/tools/cvc4/cvc4-2020-05-11-x86_64-linux-opt"
+	    "path" : "/home/mku/tools/cvc4/cvc4"
 	},
 	"norn" : {
 	    "path" : "/path/to/norn"

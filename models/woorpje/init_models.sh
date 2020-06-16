@@ -5,7 +5,8 @@ i=1
 for d in */
 do
 	if [[ ${d%/} =~ .*pycache.* ]]; then
-    	echo 'stupid cache'
+    		echo ''
+		#echo 'Ignoring python cache directory'
     else
     	dirs[i++]="${d%/}"
     fi
@@ -38,7 +39,8 @@ i=1
 for d in */
 do
 	if [[ ${d%/} =~ .*pycache.* ]]; then
-    	echo 'stupid cache'
+    		echo ''
+		#echo 'stupid cache'
     else
     	dirs[i++]="${d%/}"
     fi
@@ -59,7 +61,7 @@ echo 'def getTrackData (bname = None):' >> $dir/__init__.py
 echo '    filest = []' >> $dir/__init__.py
 echo '    for root, dirs, files in os.walk(dir_path, topdown=False):' >> $dir/__init__.py
 echo '        for name in files:' >> $dir/__init__.py
-echo '            if (name.endswith (".smt2") or name.endswith(".smt")) and not name.startswith("."):' >> $dir/__init__.py
+echo '            if (name.endswith (".smt2") or name.endswith(".smt") or name.endswith(".smt25")) and not name.startswith("."):' >> $dir/__init__.py
 echo '                filest.append(utils.TrackInstance(name,os.path.join (root,name)))' >> $dir/__init__.py
 echo '' >> $dir/__init__.py                
 echo '    return [utils.Track("'${dir}'",filest,bname)]' >> $dir/__init__.py

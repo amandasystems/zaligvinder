@@ -13,16 +13,17 @@ def getTrackData (bname = None):
     import models.SMTLIB.sygusqgenqueriesnoreeQFS
     res = []
     for k in [
-    		  #models.SMTLIB.Jiangslent,
-    		  #models.SMTLIB.JiangslogQFS,
-    		  #models.SMTLIB.KeplerQFSLIA,
-    		  #models.SMTLIB.fullstrintpyconbytecvc4QFSLIA,
-    		  #models.SMTLIB.fullstrintpyconbytetraucQFSLIA,
-    		  #models.SMTLIB.fullstrintpyconbytez3seqQFSLIA,
-    		  #models.SMTLIB.fullstrintpyconbytez3strQFSLIA,
-    		  #models.SMTLIB.strpredsmallrw,
-                  #models.SMTLIB.strtermsmallrw,
-    		  #models.SMTLIB.sygusqgenqueriesQFS,
+    		  models.SMTLIB.Jiangslent,
+    		  models.SMTLIB.JiangslogQFS,
+    		  models.SMTLIB.KeplerQFSLIA,
+    		  models.SMTLIB.fullstrintpyconbytecvc4QFSLIA,
+    		  models.SMTLIB.fullstrintpyconbytetraucQFSLIA,
+    		  models.SMTLIB.fullstrintpyconbytez3seqQFSLIA,
+    		  models.SMTLIB.fullstrintpyconbytez3strQFSLIA,
+    		  models.SMTLIB.strpredsmallrw,
+    		  models.SMTLIB.strtermsmallrw,
+    		  models.SMTLIB.sygusqgen,
+    		  models.SMTLIB.sygusqgenqueriesQFS,
     		  models.SMTLIB.sygusqgenqueriesnoreeQFS,
               ]:
         res = res+k.getTrackData (bname or "SMTLIB")

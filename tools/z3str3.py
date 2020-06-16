@@ -33,7 +33,6 @@ def run (eq,timeout,ploc,wd):
         out = subprocess.check_output ([path,"smt.string_solver=z3str3","dump_models=true",smtfile],timeout=timeout).decode().strip()
     except subprocess.TimeoutExpired:
         return utils.Result(None,timeout,True,1)
-    
     except subprocess.CalledProcessError as e:
         time.stop()
         out = "Error in " + eq + ": " + str(e)
@@ -43,14 +42,13 @@ def run (eq,timeout,ploc,wd):
 
     if "NOT IMPLEMENTED YET!" in out and not time >= timeout:
         out = "Error in " + eq + ": " + out    
-
     shutil.rmtree (tempd)
     if "unsat" in out:
         return utils.Result(False,time.getTime (),False,1,out)
     elif "sat" in out:
         return utils.Result(True,time.getTime(),False,1,out,"\n".join(out.split("\n")[1:]))
     elif time.getTime() >= timeout:
-        return utils.Result(None,timeout,True,1)
+        return utils.Result(None,timeout,True,1)    
     return utils.Result(None,time.getTime  (),False,1,out)
 
 def addRunner (addto):

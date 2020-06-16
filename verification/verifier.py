@@ -19,6 +19,14 @@ class Verifier:
     def _translateSMTFile(self,filepath):
         
         setLogicPresent = False
+        #set logic present?
+        #with open(filepath) as flc:
+        #    if '(set-logic' in flc.read():
+        #        setLogicPresent = True
+
+        #if not setLogicPresent:
+        #    yield "(set-logic ALL)\n"
+        
         #with open(filepath) as flc:
         #    if '(set-logic' in flc.read():
         #        yield "(set-logic ALL)\n"

@@ -19,7 +19,7 @@
            "path" : "/home/mku/tools/z3_fed_old/z3"
         },
 	"Z3str4Reg" : {
-	   "path" : "/home/mku/tools/z3_mur/z3str4_old_seq/z3"
+	   "path" : "/home/mku/tools/z3_mur/portfolio_tactic/z3"
 	},
 	"Z3str4RegBug" : {
            "path" : "/home/mku/tools/z3_mur/z3str4_old_seq_bug/z3"
@@ -28,7 +28,7 @@
 		"path" : "/home/mku/tools/z3str4_FSE/z3"
 	},
 	"Z3" : {
-	    "path" : "/home/mku/tools/z3/z3"
+	    "path" : "/home/mku/tools/z3Bin/bin/z3"
 	},
 	"Z3Mku" : {
 	    "path" : "/home/mku/tools/z3_mku/build/z3"

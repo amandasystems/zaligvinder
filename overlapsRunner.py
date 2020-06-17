@@ -36,30 +36,32 @@ import models.banditfuzz
 
 import models.SMTCompQFS
 import models.SMTCompQFSLIA
+import models.RegExBenchmarks
 
 import startwebserver
 
 
 import summarygenerators
-tracks = (models.PyEx_All.getTrackData () +
+tracks = (#models.PyEx_All.getTrackData () +
           #models.SMTCompQFS.getTrackData() +
           #models.SMTCompQFSLIA.getTrackData() + 
           #models.SMTLIB_UCHAR.getTrackData() +
-          models.pisa.getTrackData ("Pisa") +
-          models.nornbenchmarks.getTrackData ("Norn") +
-          models.light.getTrackData("Trau Light")+
-          models.Leetcode.getTrackData ("Leetcode Strings") + 
-          models.appscan.getTrackData ( "IBM Appscan") + 
-          models.slothtests.getTrackData ("Sloth") +
-          models.woorpje.getTrackData ("Woorpje Word Equations") +
-          models.kaluza.getTrackData ("Kaluza") +
-          models.stringfuzz.getTrackData ("StringFuzz") +
-          models.z3_regression.getTrackData("z3Str3 Regression")+
-          models.cashewsuite.getTrackData ("Cashew") + 
-          models.joacosuite.getTrackData ("JOACO") +
-          models.strangersuite.getTrackData ("Stranger") +
-          models.kauslersuite.getTrackData ("Kausler") +
-          models.banditfuzz.getTrackData("BanditFuzz") +
+          #models.pisa.getTrackData ("Pisa") +
+          #models.nornbenchmarks.getTrackData ("Norn") +
+          #models.light.getTrackData("Trau Light")+
+          #models.Leetcode.getTrackData ("Leetcode Strings") + 
+          #models.appscan.getTrackData ( "IBM Appscan") + 
+          #models.slothtests.getTrackData ("Sloth") +
+          #models.woorpje.getTrackData ("Woorpje Word Equations") +
+          #models.kaluza.getTrackData ("Kaluza") +
+          #models.stringfuzz.getTrackData ("StringFuzz") +
+          #models.z3_regression.getTrackData("z3Str3 Regression")+
+          #models.cashewsuite.getTrackData ("Cashew") + 
+          #models.joacosuite.getTrackData ("JOACO") +
+          #models.strangersuite.getTrackData ("Stranger") +
+          #models.kauslersuite.getTrackData ("Kausler") +
+          #models.banditfuzz.getTrackData("BanditFuzz") +
+          models.RegExBenchmarks.getTrackData("RegEx") +
         []
         )
 
@@ -73,12 +75,12 @@ import tools.z3str3Multi
 import tools.z3str4Reg
 import tools.z3str3Mku
 import models.mku
-tracks = (models.mku.getTrackData()+
+#tracks = (models.mku.getTrackData()+
 #          #models.probetrue.getTrackData()+
 #          models.probefalse.getTrackData()+
 #          #models.probeunknown.getTrackData()+
 #          #models.arrvsseq.getTrackData()+
-          [])
+#          [])
 
 #solvers = {
 #    'z3str3-portfolio' : tools.z3str3portfolio.run,
@@ -94,13 +96,13 @@ smtsolvers = ["cvc4"]
 solvers = {}
 for s in [tools.cvc4,
           tools.z3str3,
-          tools.z3str3Mku
+          #tools.z3str3Mku
           #tools.z3str3Multi
           #tools.z3str4FSEArms,
           #tools.z3str4Arms,
           #tools.z3str4RegBug,
           #tools.z3str3Multi
-          #tools.z3str4Reg,
+          tools.z3str4Reg,
           #tools.z3str3Multi
           #tools.cvc4,
           #tools.z3seq,

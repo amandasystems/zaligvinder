@@ -19,10 +19,10 @@
            "path" : "/home/mku/tools/z3_fed_old/z3"
         },
 	"Z3str4Reg" : {
-	   "path" : "/home/mku/tools/z3_mur/portfolio_tactic/z3"
+	   "path" : "/home/mku/tools/z3_mur/z3"
 	},
 	"Z3str4RegBug" : {
-           "path" : "/home/mku/tools/z3_mur/z3str4_old_seq_bug/z3"
+           "path" : "/home/mku/tools/z3_mur/z3"
         },
 	"Z3FSE" : {
 		"path" : "/home/mku/tools/z3str4_FSE/z3"
@@ -43,7 +43,7 @@
              "path" : "/home/mku/tools/z3_mur/seq-axioms/z3"
         },
 	"Z3Old" : {
-            "path" : "/home/mku/tools/z3_old/z3"
+            "path" : "/home/mku/tools/z3_711023d5/z3"
         },
 	"Z3Port" : {
 	    "path" : "/home/mku/tools/z3_fed/z3"
@@ -68,6 +68,9 @@
 	},
 	"cvc4" : {
 	    "path" : "/home/mku/tools/cvc4/cvc4"
+	},
+	"cvc4_16" : {
+	    "path" : "/home/mku/tools/cvc4_16/cvc4_16"
 	},
 	"norn" : {
 	    "path" : "/path/to/norn"

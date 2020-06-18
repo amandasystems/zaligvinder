@@ -33,7 +33,7 @@ def runSpecific (tup):
         return utils.Result(None,timeout,True,0,str(e))
     
 class TheRunner:
-    def __init__(self,cores = 60):
+    def __init__(self,cores = 120):
         self._cores = cores
         
     def runTrack (self,track,solvers,store,timeout,ploc,verifiers=[]):

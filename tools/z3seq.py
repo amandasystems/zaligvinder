@@ -43,6 +43,9 @@ def run (eq,timeout,ploc,wd):
     if "NOT IMPLEMENTED YET!" in out and not time >= timeout:
         out = "Error in " + eq + ": " + out    
     shutil.rmtree (tempd)
+    
+    #print(smtfile)
+    
     if "unsat" in out:
         return utils.Result(False,time.getTime (),False,1,out)
     elif "sat" in out:

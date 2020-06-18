@@ -81,7 +81,8 @@ class Verifier:
             elif declareBlockReached == True:
                 copy.write("\n"+model+"\n")
                 declareBlockReached = None
-            elif "(get-model)" not in l:
+            
+            if declareBlockReached == None and "(get-model)" not in l:
                 copy.write(l+"\n")
 
         copy.write("\n(get-model)")
@@ -109,7 +110,7 @@ class Verifier:
                 if v == None:
                     continue
                 thisRes = v.run(assertedInputFile,timeout,ploc,os.path.abspath(".")).result
-                
+
                 # work arround if we verified the model at least once
                 if (thisRes == True and vRes == None) or (thisRes == None and vRes == True):
                     vRes = True

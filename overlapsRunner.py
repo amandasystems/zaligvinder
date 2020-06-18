@@ -6,14 +6,9 @@ import storage
 import voting.majority as voting
 import tools.z3seq
 import tools.z3str3
-import tools.z3str4
 import tools.cvc4
 import tools.dummy
-import tools.z3str3length
 #import models.woorpje.track01
-
-import tools.z3str4FSE
-import tools.z3seqtimeout
 
 import models.woorpje
 import models.kaluza
@@ -33,12 +28,12 @@ import models.kauslersuite
 import models.banditfuzz
 #import models.SMTLIB
 #import models.SMTLIB_UCHAR
-
-import models.SMTCompQFS
-import models.SMTCompQFSLIA
 import models.RegExBenchmarks
-
 import startwebserver
+
+
+import tools.cvc4_16
+import tools.z3str3_old
 
 
 import summarygenerators
@@ -65,17 +60,11 @@ tracks = (#models.PyEx_All.getTrackData () +
         []
         )
 
-import models.probetrue
-import models.probefalse
-import models.probeunknown
-import models.arrvsseq
-import tools.z3str4Arms
-import tools.z3str4FSEArms
-import tools.z3str3Multi
-import tools.z3str4Reg
-import tools.z3str3Mku
-import models.mku
-#tracks = (models.mku.getTrackData()+
+
+#import models.unknown
+
+
+#tracks = (models.unknown.getTrackData()+
 #          #models.probetrue.getTrackData()+
 #          models.probefalse.getTrackData()+
 #          #models.probeunknown.getTrackData()+
@@ -94,8 +83,10 @@ import models.mku
 smtsolvers = ["cvc4"]
 
 solvers = {}
-for s in [tools.cvc4,
+for s in [tools.cvc4_16,
+          tools.cvc4,
           tools.z3str3,
+          tools.z3str3_old,
           #tools.z3str3Mku
           #tools.z3str3Multi
           #tools.z3str4FSEArms,

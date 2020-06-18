@@ -17,5 +17,5 @@
 (assert (str.in.re var_4 (re.++ (re.* (str.to.re "a")) (str.to.re "b"))))
 (assert (str.in.re var_4 (re.* (re.range "a" "u"))))
 (assert (not (str.in.re (str.++ "a" var_4 "b" ) (re.* (str.to.re "b")))))
-(assert (and (<= 0  (str.len var_4)) (not (not (exists ((v Int)) (= (* v 2 ) (+ (str.len var_4) 2 )))))))
+(assert (and (<= 0  (str.len var_4)) (not (not (= (* v 2 ) (+ (str.len var_4) 2 ))))))
 (check-sat)

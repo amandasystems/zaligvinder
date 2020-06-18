@@ -13,7 +13,8 @@
 (declare-fun var_10 () String)
 (declare-fun var_11 () String)
 (declare-fun var_12 () String)
+(declare-fun v () Int)
 
 (assert (str.in.re var_0 (re.++ (re.++ (re.++ (re.* (re.union (str.to.re "a") (str.to.re "b"))) (str.to.re "b")) (str.to.re "a")) (re.* (re.union (str.to.re "a") (str.to.re "b"))))))
-(assert (and (<= 0  (str.len var_0)) (not (not (exists ((v Int)) (= (* v 2 ) (+ (str.len var_0) 2 )))))))
+(assert (and (<= 0  (str.len var_0)) (not (not (= (* v 2 ) (+ (str.len var_0) 2 ))))))
 (check-sat)

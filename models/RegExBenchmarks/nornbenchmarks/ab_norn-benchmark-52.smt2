@@ -13,9 +13,10 @@
 (declare-fun var_10 () String)
 (declare-fun var_11 () String)
 (declare-fun var_12 () String)
+(declare-fun v () Int)
 
 (assert (str.in.re var_4 (re.* (str.to.re "b"))))
 (assert (str.in.re var_4 (str.to.re "")))
 (assert (str.in.re var_4 (re.* (re.range "a" "u"))))
-(assert (and (and (and (and (and (and (<= (+ (+ (str.len var_3) (* (- 1)  (str.len var_4))) (- 1) ) 0 ) (<= 0  (+ (+ (str.len var_3) (* (- 1)  (str.len var_4))) (- 1) ))) (and (<= (+ (str.len var_0) (- 1) ) 0 ) (<= 0  (+ (str.len var_0) (- 1) )))) (and (<= (+ (str.len var_1) (- 1) ) 0 ) (<= 0  (+ (str.len var_1) (- 1) )))) (and (<= (+ (+ (str.len var_2) (* (- 1)  (str.len var_4))) (- 2) ) 0 ) (<= 0  (+ (+ (str.len var_2) (* (- 1)  (str.len var_4))) (- 2) )))) (<= 0  (+ (str.len var_3) (- 2) ))) (not (not (exists ((v Int)) (= (* v 2 ) (+ (str.len var_3) 2 )))))))
+(assert (and (and (and (and (and (and (<= (+ (+ (str.len var_3) (* (- 1)  (str.len var_4))) (- 1) ) 0 ) (<= 0  (+ (+ (str.len var_3) (* (- 1)  (str.len var_4))) (- 1) ))) (and (<= (+ (str.len var_0) (- 1) ) 0 ) (<= 0  (+ (str.len var_0) (- 1) )))) (and (<= (+ (str.len var_1) (- 1) ) 0 ) (<= 0  (+ (str.len var_1) (- 1) )))) (and (<= (+ (+ (str.len var_2) (* (- 1)  (str.len var_4))) (- 2) ) 0 ) (<= 0  (+ (+ (str.len var_2) (* (- 1)  (str.len var_4))) (- 2) )))) (<= 0  (+ (str.len var_3) (- 2) ))) (not (not (= (* v 2 ) (+ (str.len var_3) 2 ))))))
 (check-sat)

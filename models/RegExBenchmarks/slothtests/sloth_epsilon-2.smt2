@@ -1,6 +1,4 @@
 (set-logic QF_S)
-(set-option :strings-exp true)
-(set-option :produce-models true)
 (declare-fun sigmaStar_2 () String)
 (declare-fun epsilon () String)
 (declare-fun x_3 () String)

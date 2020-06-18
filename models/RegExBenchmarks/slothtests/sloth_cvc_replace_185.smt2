@@ -1,6 +1,4 @@
 (set-logic QF_S)
-(set-option :strings-exp true)
-(set-option :produce-models true)
 (declare-fun sigmaStar_0 () String)
 (declare-fun sigmaStar_1 () String)
 (declare-fun literal_20 () String)

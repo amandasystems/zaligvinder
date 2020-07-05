@@ -9,5 +9,3 @@
 ;sat
 (assert (str.in.re x (re.* (re.range "a" "u"))))
 (check-sat)
-
-(check-sat)

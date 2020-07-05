@@ -21,8 +21,8 @@
 	"Z3str4Reg" : {
 	   "path" : "/home/mku/tools/z3_mur/z3"
 	},
-	"Z3str4RegBug" : {
-           "path" : "/home/mku/tools/z3_mur/z3"
+	"Z3str4RegNew" : {
+           "path" : "/home/mku/tools/z3_murNew/z3"
         },
 	"Z3FSE" : {
 		"path" : "/home/mku/tools/z3str4_FSE/z3"
@@ -67,8 +67,11 @@
 	    "path" : "/home/mku/tools/z3_overlaps/z3"
 	},
 	"cvc4" : {
-	    "path" : "/home/mku/tools/cvc4/cvc4"
+	    "path" : "/home/mku/tools/cvc4/cvc4_18"
 	},
+	"cvc417" : {
+            "path" : "/home/mku/tools/cvc4/cvc4"
+        },
 	"cvc4_16" : {
 	    "path" : "/home/mku/tools/cvc4_16/cvc4_16"
 	},

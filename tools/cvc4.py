@@ -5,6 +5,7 @@ import shutil
 import sys
 import timer
 import utils
+import re
 
 #path = shutil.which ("cvc4")
 #path = utils.findProgram ("CVC4BINARY","cvc4")
@@ -31,7 +32,7 @@ def run (eq,timeout,ploc,wd,solver="1",param="60"):
     firstLine = None 
     
     if not setLogicPresent:
-        copy.write("(set-logic ALL)\n")
+        copy.write("(set-logic QF_SLIA)\n")
 
 
     for l in f:
@@ -46,15 +47,17 @@ def run (eq,timeout,ploc,wd,solver="1",param="60"):
             firstLine = False 
         
         if "(get-model)" not in l:
+            if "(set-logic" in l:
+                l = re.sub('\(set-logic.*?\)', '(set-logic QF_SLIA)', l)
             copy.write(l)
 
-    copy.write("\n(get-model)")
+    #copy.write("\n(get-model)")
     f.close()
     copy.close() 
 
     time = timer.Timer ()
     try:
-        out = subprocess.check_output ([path,"--lang","smt2","--no-interactive","--no-interactive-prompt","--strings-exp","--dump-models","--tlimit-per",str(timeout)+"000",smtfile],timeout=timeout).decode().strip()
+        out = subprocess.check_output ([path,"--lang","smtlib2.5","--no-interactive","--no-interactive-prompt","--strings-exp","--dump-models","--tlimit-per",str(timeout)+"000",smtfile],timeout=timeout).decode().strip()
     except subprocess.TimeoutExpired:
         return utils.Result(None,timeout,True,1)
     except subprocess.CalledProcessError as e:
@@ -83,7 +86,7 @@ def run (eq,timeout,ploc,wd,solver="1",param="60"):
     return utils.Result(None,time.getTime  (),False,1,out)
 
 def addRunner (addto):
-    addto['cvc4-17'] = run
+    addto['CVC4-18'] = run
 
 
 if __name__ == "__main__":

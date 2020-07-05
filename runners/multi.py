@@ -19,11 +19,10 @@ def runSpecific (tup):
         progressMessage (model,solvername)
         tempd = tempfile.mkdtemp ()
         result = func(model.filepath,timeout,ploc,tempd)
-
         # verification goes here
         v = verification.verifier.Verifier()
         if result.result == True:
-             result = v.verifyModel (result,ploc,model.filepath,timeout,verifiers)
+            result = v.verifyModel (result,ploc,model.filepath,timeout,verifiers)
 
         shutil.rmtree (tempd)    
         return result
@@ -57,9 +56,7 @@ class TheRunner:
         
         return results
 
-    def runTestSetup (self,tracks,solvers,voter,summaries,outputfile,timeout,ploc,verifiers=dict()):
-        
-        
+    def runTestSetup (self,tracks,solvers,voter,summaries,outputfile,timeout,ploc,verifiers=[]):
         for t in tracks:
             res = self.runTrack (t,solvers,outputfile,timeout,ploc,verifiers)
             voter.voteOnResult (t,res,verifiers)

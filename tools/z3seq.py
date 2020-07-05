@@ -55,7 +55,7 @@ def run (eq,timeout,ploc,wd):
     return utils.Result(None,time.getTime  (),False,1,out)
 
 def addRunner (addto):
-    addto['z3seq'] = run
+    addto['Z3seq-488'] = run
 
 
 if __name__ == "__main__":

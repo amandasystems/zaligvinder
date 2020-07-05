@@ -48,20 +48,22 @@ class Verifier:
                     matchingBraces-=1
 
                 if firstMatchFound == True:
-                    if a == '"' and not previous_char == '\\':
+                    if a == '"':# and not previous_char == '\\':
                         in_qutation = not in_qutation
                     previous_char = a
                     currentWord+=a
 
                 if matchingBraces == 0 and len(currentWord) > 0 and firstMatchFound:
                     yield currentWord
+                    firstMatchFound = False
                     currentWord = ""
         f.close()
 
     def _modifyInputFile(self,tempd,model,filepath):
         smtfile = os.path.join (tempd,"out.smt")
         copy=open(smtfile,"w")
-
+       
+        logicSet=False
         firstLine = None
         declareBlockReached = False
         for l in self._translateSMTFile(filepath):
@@ -70,8 +72,10 @@ class Verifier:
 
             # set (set-logic ALL) if no logic was set
             #if "(set-logic" not in l and firstLine:
-            #    copy.write("(set-logic ALL)\n")    
-            
+            if not logicSet:
+                copy.write("(set-logic ALL)\n")    
+                logicSet = True
+
             if firstLine:
                 firstLine = False
 
@@ -85,7 +89,7 @@ class Verifier:
             if declareBlockReached == None and "(get-model)" not in l:
                 copy.write(l+"\n")
 
-        copy.write("\n(get-model)")
+        #copy.write("\n(get-model)")
         copy.close()
         return smtfile
 
@@ -102,13 +106,26 @@ class Verifier:
         verifierCount = len(verifiers)
         if verifierCount > 0:
             vRes = None
-            foundModel = self._extractAssignment(res.model)
+            foundModel = self._extractAssignment(res.model)#.replace("\\u{9}","\x09")
+
+            ####
+            import re
+            #m = re.fullmatch(r,"\\u{(.*?)}",foundModel)
+            #print(m)
+            
+            foundModel = re.sub('u{(.)}', r'x0\1', foundModel)
+            foundModel = re.sub('u{(..)}', r'x\1', foundModel)  
+            ####
+
             tempd = tempfile.mkdtemp ()
             assertedInputFile = self._modifyInputFile(tempd,foundModel,filepath)
+            
             for vn in verifiers:
                 v = self.getSolver(vn)
                 if v == None:
                     continue
+                
+                
                 thisRes = v.run(assertedInputFile,timeout,ploc,os.path.abspath(".")).result
 
                 # work arround if we verified the model at least once

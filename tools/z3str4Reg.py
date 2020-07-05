@@ -30,7 +30,7 @@ def run(params,eq,timeout,ploc,wd): #(params,eq,timeout,ploc,wd):
 
     time = timer.Timer ()
     try:
-        out = subprocess.check_output ([path]+["smt.string_solver=z3str3","smt.str.tactic=regex","smt.str.search_overlaps=true"]+params+["dump_models=true",smtfile],timeout=timeout).decode().strip()
+        out = subprocess.check_output ([path]+["smt.string_solver=z3str3","smt.str.search_overlaps=true"]+params+["dump_models=true",smtfile],timeout=timeout).decode().strip()
         #out = subprocess.check_output ([path]+params+["dump_models=true",smtfile],timeout=timeout).decode().strip()
             
 
@@ -68,13 +68,13 @@ def addRunner (addto):
                #"no-overlaps" : ["smt.string_solver=z3str3","smt.str.tactic=z3str4","smt.arith.solver=2"],
                #"no-overlaps-len-default" : ["smt.string_solver=z3str3","smt.str.tactic=z3str4"],
                #"overlaps" : ["smt.string_solver=z3str3","smt.str.tactic=z3str4","smt.str.search_overlaps=true","smt.arith.solver=2"] 
-               "arith-2" : ["smt.arith.solver=2"],
-               "arith-default" : []
+               "las" : ["smt.arith.solver=2","smt.str.tactic=regex"],
+               ##"no-las" : ["smt.arith.solver=2","smt.str.tactic=arr"] 
                
             }
 
     for i in params.keys():
-        addto['Z3str3-RegEx-'+str(i)] = partial(run,params[i])
+        addto['Z3str3-RegEx-e7c2b95ce-'+str(i)] = partial(run,params[i])
 
 if __name__ == "__main__":
     print(run (sys.argv[1],None))

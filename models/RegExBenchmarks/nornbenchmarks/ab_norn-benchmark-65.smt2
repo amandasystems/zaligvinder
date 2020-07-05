@@ -13,6 +13,7 @@
 (declare-fun var_10 () String)
 (declare-fun var_11 () String)
 (declare-fun var_12 () String)
+(declare-fun v () Int)
 
 (assert (str.in.re var_4 (re.++ (re.* (str.to.re "a")) (str.to.re "b"))))
 (assert (str.in.re var_4 (re.* (re.range "a" "u"))))

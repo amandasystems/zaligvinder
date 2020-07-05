@@ -29,11 +29,15 @@ import models.banditfuzz
 #import models.SMTLIB
 #import models.SMTLIB_UCHAR
 import models.RegExBenchmarks
+import models.stringfuzzregextransformed
+import models.stringfuzzregexgenerated
 import startwebserver
 
 
 import tools.cvc4_16
+import tools.cvc4_17
 import tools.z3str3_old
+import models.stringfuzzkillers
 
 
 import summarygenerators
@@ -56,13 +60,16 @@ tracks = (#models.PyEx_All.getTrackData () +
           #models.strangersuite.getTrackData ("Stranger") +
           #models.kauslersuite.getTrackData ("Kausler") +
           #models.banditfuzz.getTrackData("BanditFuzz") +
-          models.RegExBenchmarks.getTrackData("RegEx") +
+          models.stringfuzzregexgenerated.getTrackData()+
+          models.stringfuzzregextransformed.getTrackData()+
+          models.stringfuzzkillers.getTrackData("StringFuzz RegEx New")+ 
+          models.RegExBenchmarks.getTrackData("RegEx Collected") +
         []
         )
 
 
-#import models.unknown
-
+import models.unknown
+import tools.z3str4RegNew
 
 #tracks = (models.unknown.getTrackData()+
 #          #models.probetrue.getTrackData()+
@@ -83,9 +90,10 @@ tracks = (#models.PyEx_All.getTrackData () +
 smtsolvers = ["cvc4"]
 
 solvers = {}
-for s in [tools.cvc4_16,
-          tools.cvc4,
-          tools.z3str3,
+for s in [tools.cvc4,
+          tools.cvc4_17,
+          #tools.z3str3,
+          tools.z3seq,
           tools.z3str3_old,
           #tools.z3str3Mku
           #tools.z3str3Multi
@@ -93,6 +101,7 @@ for s in [tools.cvc4_16,
           #tools.z3str4Arms,
           #tools.z3str4RegBug,
           #tools.z3str3Multi
+          tools.z3str4RegNew,
           tools.z3str4Reg,
           #tools.z3str3Multi
           #tools.cvc4,

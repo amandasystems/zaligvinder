@@ -27,7 +27,8 @@ class ChartController:
 
     def generateCactus(self,params,to_zip=None,all_instances=False):
         no_unk = False
-        ideal_solver = True
+        ideal_solver = False # True
+        ideal_solver_of = ["z3str4-arrangement","z3str4-lenabs","z3str4-seq"]
 
         # WRITE A FUNCTION FOR THIS!
         #solvermapping = { "cvc4" : "CVC4", "z3str4-overlaps-ds-7" : "Z3hydra-dynamic" , "z3str4-overlaps-murphy" : "Z3hydra-static"}
@@ -45,6 +46,7 @@ class ChartController:
         avtracks = self._result.getTrackIds()
         activeGroup = list( self._result.getTrackInfo().keys() )[0]
         activeTrack = None
+        start_at = 0
 
         # fetch solvers
         if "solver" in params:
@@ -58,6 +60,9 @@ class ChartController:
 
         if "all" in params:
             all_instances = True
+
+        if "start" in params:
+            start_at = int(params["start"][0])
 
         if "woorpjebest" in params:
             woorpjePrefix = "woorpje-"
@@ -74,10 +79,12 @@ class ChartController:
             result = []
             if all_instances:
                 for g in list(self._result.getTrackInfo().keys()):
-                    result+=self._result.getIdealSolverResultsForGroup(g)
+                    result+=self._result.getIdealSolverResultsForGroup(g,ideal_solver_of)
                 result.sort(key=lambda t: t[2])
             else:
-                result = self._result.getIdealSolverResultsForGroup(activeGroup)
+                result = self._result.getIdealSolverResultsForGroup(activeGroup,ideal_solver_of)
+
+                print(len(result))
 
 
             for i,t in enumerate(result):
@@ -87,6 +94,7 @@ class ChartController:
                            "time" : t[2],
                            "y" : s
                 })
+
             rdata["ideal"] = l
 
 
@@ -136,6 +144,9 @@ class ChartController:
                 # 4 color setup
                 #colors = ["#364f6b","#3fc1c9","#ffb6b9","#fc5185"]
 
+                # berkley colours
+                #colors = ["#c5820e","#003262","#3b7ea1","#feb516"]
+
 
                 # extend the colors 
                 r = lambda: random.randint(0,255)
@@ -157,10 +168,10 @@ class ChartController:
 
                 for p in rdata.keys():
                     current_color = next(it_cols)
-                    data = [i["y"] for i in rdata[p]]
-                    ax.plot (range(0,len(data)),data,'-',linewidth=2.5,label=self._solverNameMap(p),color=current_color)#,marker='.')
-                    ax.fill_between(range(0,len(data)),data, color=current_color,alpha=0.15)
-                    lgd = ax.legend(fancybox=True,bbox_to_anchor=(0., 1.02, 1., .102), loc='lower left', ncol=2, mode="expand", borderaxespad=0.,frameon=False)#loc='upper left', bbox_to_anchor=(0, 0, 0, 0))#bbox_to_anchor=(0.4, 1.1))
+                    data = [i["y"] for i in rdata[p] if i["x"] >= start_at]
+                    ax.plot (range(start_at,len(data)+start_at),data,'-',linewidth=2.5,label=self._solverNameMap(p),color=current_color)#,marker='.')
+                    ax.fill_between(range(start_at,len(data)+start_at),data, color=current_color,alpha=0.15)
+                    lgd = ax.legend(fancybox=True,bbox_to_anchor=(0., 1.02, 1., .102), loc='lower left', ncol=2, mode="expand", borderaxespad=0.,frameon=False,prop={'size': 6})#loc='upper left', bbox_to_anchor=(0, 0, 0, 0))#bbox_to_anchor=(0.4, 1.1))
                     ax.spines['top'].set_visible(False)
                     ax.spines['right'].set_visible(False)
                     ax.spines['bottom'].set_visible(False)
@@ -174,11 +185,12 @@ class ChartController:
                     else:
                         name = activeGroup
                     fileName = name.lower().replace(" ", "")+'.png'
-                    fig.savefig(to_zip+"/"+fileName,format="png",dpi=160,prop=fontP,bbox_extra_artists=(lgd,), bbox_inches='tight')
                     #fig.savefig(to_zip+"/"+fileName,format="png",dpi=160,prop=fontP,bbox_extra_artists=(lgd,), bbox_inches='tight')
+                    fig.savefig(to_zip+"/"+fileName,format="png",dpi=320,prop=fontP,bbox_extra_artists=(lgd,), bbox_inches='tight')
                     return to_zip+"/"+fileName 
                 else:
-                    fig.savefig(buf, format="png",dpi=160,prop=fontP,bbox_extra_artists=(lgd,), bbox_inches='tight')
+                    #fig.savefig(buf, format="png",dpi=160,prop=fontP,bbox_extra_artists=(lgd,), bbox_inches='tight')
+                    fig.savefig(buf, format="png",dpi=320,prop=fontP,bbox_extra_artists=(lgd,), bbox_inches='tight')
                     return webserver.views.PNGView.PNGView (buf)
             else:
                 return webserver.views.TextView.ErrorText ("Unknown format")

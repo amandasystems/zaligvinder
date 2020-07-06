@@ -250,7 +250,7 @@ class BenchmarkTrackView(BaseView):
                          self._rankingTable.javascript(),
                          self._distribution.javascript (),
                          self._pie.javascript (),
-                         self._cactusunk.javascript (),
+                         #self._cactusunk.javascript (),
                          self._cactusnunk.javascript (),
                          
         ])
@@ -264,7 +264,7 @@ class BenchmarkTrackView(BaseView):
           addRankingTable();
           setupDistChart ();
           setupPieChart ();
-          setupCactuscactus_unk ();
+          //setupCactuscactus_unk ();
           setupCactuscactus_nunk ();
         }</script>'''
         sendto.write (bytes(top3,"utf8"))
@@ -282,7 +282,7 @@ class BenchmarkTrackView(BaseView):
         self.genRankingTable (sendto)
         sendto.write (bytes(self._distribution.html(),"utf8"))
         sendto.write (bytes(self._pie.html(),"utf8"))
-        sendto.write (bytes(self._cactusunk.html(),"utf8"))
+        #sendto.write (bytes(self._cactusunk.html(),"utf8"))
         sendto.write (bytes(self._cactusnunk.html(),"utf8"))
         sendto.write (bytes('''</div>''',"utf8"))
         self.genSideNavigation (sendto)

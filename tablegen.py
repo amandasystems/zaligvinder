@@ -25,6 +25,7 @@ if finalui.tableStyle == "Markdown":
 elif finalui.tableStyle == "Cactus":
 	table = latex.cactus.CactusGenerator (results,track,finalui.solvers,finalui.groups)
 else:
-	table = latex.summ_table_woorpje.TableGenerator (results,track,finalui.solvers,finalui.groups)
+	table = latex.summ_table_all.TableGenerator (results,track,finalui.solvers,finalui.groups)
+	#table = latex.summ_table_woorpje.TableGenerator (results,track,finalui.solvers,finalui.groups)
 with open(finalui.loc,'w') as f:
     table.generateTable (f)

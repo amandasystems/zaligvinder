@@ -23,11 +23,14 @@ class TableGenerator:
             self._output.write ("}\n\\hline\n")
             self._output.write ("" + solverLayout + "\\\\ \n  \\hline\\hline \n")
         
-    def getData (self):
+    def getData (self,all=True,group=None):
         output = ["sat ","unsat ","\\hline \n unknown ","timeout ","soundness error ","program crashes ","\\hline \n Total correct ", "Time (s) ", "Time w/o timeouts (s) "]
         key = ["sat","unsat","unk","timeout","errorsTotal","crash","totalClassified","time","timeWO"]
         for s in self._solvers:
-            res = self._res.getSummaryForSolverTable (s)
+            if not all:
+                res = self._res.getSummaryForSolverGroupTable(s,group)
+            else:
+                res = self._res.getSummaryForSolverTable (s)
             res["totalClassified"] = res["sat"]+res["unsat"]-(res["error"]+res["invalid"])
             res["errorsTotal"] = res["error"]+res["invalid"]
             for i in range(0,len(output)):
@@ -40,11 +43,21 @@ class TableGenerator:
         self._output.write ("\\end{tabular}\n\n")
     
     def generateTable (self,output):
+        all = False
         self._output = output
-        self.genTableHeader ()
-        self.getData ()
-        self.genTableFooter ()
-        
+
+        if all:
+            self.genTableHeader ()
+            self.getData ()
+            self.genTableFooter ()
+        else:
+            for g in self._groups:
+                self._output.write(g+"\n\n")
+                self.genTableHeader ()
+                self.getData (all,g)
+                self.genTableFooter ()
+
+
 if __name__ == "__main__":
     import sys
     import storage.sqlitedb

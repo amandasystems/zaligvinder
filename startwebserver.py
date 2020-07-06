@@ -66,6 +66,10 @@ class Server:
         app.addEndpoint (webserver.routing.RegexMatch("z3/keywords/track/(?P<track>\d+)"),self._tcontroller.getStringOperationDataForTrack)
         app.addEndpoint (webserver.routing.RegexMatch("z3/keywords/group/(?P<bgroup>[^/]+)"),self._tcontroller.getStringOperationDataForGroup)
         app.addEndpoint (webserver.routing.RegexMatch("z3/keywords/best"),self._rcontroller.getBestSolverForStringOperations)
+        app.addEndpoint (webserver.routing.RegexMatch("z3/faster"),self._rcontroller.compareSequenceSolverAndArrangement)
+
+
+        
 
         self._app = app
 

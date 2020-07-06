@@ -47,6 +47,9 @@ class ResultController:
         return webserver.views.jsonview.JSONView (res)
 
     def getRanks(self,params):
+        timout = 20
+
+
         if "track" in params and int(params["track"]) != 0:
             data = self._results.getTrackInstancesClassification (params["track"])
         else:
@@ -66,6 +69,7 @@ class ResultController:
                 if solv not in summaryData:
                     summaryData[solv] = 0
 
+                """
                 # Points:
                 # Timeouted: -1 point
                 # Error: -5 Points
@@ -82,11 +86,25 @@ class ResultController:
                 else:
                     i+=1
                     summaryData[solv]+=(int(5/(i+1)))
+                """
+
+
+                ### PAR 2 Score
+                # The solvers will ranked using the PAR-2 scheme: The score of a solver is defined as the sum of all runtimes for solved instances + 2*timeout for unsolved instances, lowest score wins.
+
+
+
+                if not to and not unk and not error:
+                    summaryData[solv]+=time
+                elif error:
+                    summaryData[solv]+=(timout*5)
+                else:
+                    summaryData[solv]+=(timout*2)
 
         return webserver.views.jsonview.JSONView ([{"solver" : solv,
-                                                    "points" : points,
+                                                    "points" : round(points,2),
                                                 }
-                                                   for solv, points in sorted(summaryData.items(), key=lambda item: item[1], reverse=True)])
+                                                   for solv, points in sorted(summaryData.items(), key=lambda item: item[1], reverse=False)])
 
 
     def getReferenceResult (self,params):
@@ -225,11 +243,18 @@ class ResultController:
         else:
             return webserver.views.jsonview.JSONView ({"Error" : "Missing parameter"})
 
-
     def getAllErrorsForSolver(self,params):
         if "solver" in params:
             solver = params["solver"][0]
             bgroups = list(self._results.getTrackInfo ().keys())
+
+            """
+            instances = self._results.getAllUnknownFilesForSolver(solver)
+            print("mkdir unknown")
+            for i in instances:
+                print("cp " + i + " unknown")
+            return webserver.views.jsonview.JSONView ([])
+            """
 
             invalidModel = []
             programError = []
@@ -242,7 +267,7 @@ class ResultController:
                     if verified == False:
                         invalidModel+=[filepath]
                     elif res != exp and res != None:
-                        wrongUnsat+=[(filepath,"Result: " + str(res), "Expected: " + str(exp))]
+                        wrongUnsat+=[filepath] #(filepath,"Result: " + str(res), "Expected: " + str(exp))]
                     elif "Error" in output:
                         #print(t,res)
                         #print(output)
@@ -266,13 +291,13 @@ class ResultController:
             data = {"invalidModel" : invalidModel,"wrongClassified" : wrongUnsat,"programError" : programError, "unverifiedSat" : unverifiedSat}
 
             # hack
-            """
+            
             print("----------")
             print("mkdir invalidModel wrongUnsat programError")
             for k in data:
                 for f in data[k]:
                     print("cp " + f + " ./" + k + "/")
-            """
+            
             
             #return data
             return webserver.views.jsonview.JSONView (data)
@@ -385,6 +410,67 @@ class ResultController:
             return webserver.views.jsonview.JSONView ("")
         else:
             return webserver.views.jsonview.JSONView ({"Error" : "Missing parameter"})
+
+
+
+    def compareSequenceSolverAndArrangement(self,params):
+        solver1 = "Z3str3-RegEx-las"
+        solver2 = "Z3str3-RegEx-8fe9bcf3-las"
+
+        dataSolver1 = self._results.getResultForSolverGroup(solver1,"RegEx Collected")#Stringfuzz RegEx Transformed")       # self._results.getResultForSolver(solver1)
+        dataSolver2 = self._results.getResultForSolverGroup(solver2,"RegEx Collected")#Stringfuzz RegEx Transformed")     # self._results.getResultForSolver(solver2) 
+        data = dict()
+
+        for t in dataSolver1:
+            if t[1] not in data:
+                data[t[1]] = {solver1 : None, solver2 : None}
+            data[t[1]][solver1] = t[2]
+
+        for t in dataSolver2:
+            data[t[1]][solver2] = t[2]
+
+        faster = {str(solver1) : [], str(solver2) : []}
+        gap = 15
+
+        #print("mkdir "+str(solver1)+"_faster "+str(solver1)+"_faster_unknown "+str(solver2)+"_faster "+str(solver2)+"_faster_unknown")
+        print("mkdir solvable")
+        for iid in data.keys():
+            if data[iid][solver1].result != None and data[iid][solver2].result == None:
+                print("cp " + str(self._results.getFilePath(iid)) + " ./solvable/")
+
+
+
+
+        return webserver.views.jsonview.JSONView ("")
+
+
+        for iid in data.keys():
+            if data[iid][solver1].result != None and data[iid][solver2].result != None:
+                if data[iid][solver1].time + gap <= data[iid][solver2].time:
+                    faster[solver1]+=[iid]
+                    print("cp " + str(self._results.getFilePath(iid)) + " ./"+str(solver1)+"_faster/")
+
+                elif data[iid][solver1].time  >= data[iid][solver2].time + gap:
+                    faster[solver2]+=[iid]
+                    print("cp " + str(self._results.getFilePath(iid)) + " ./"+str(solver2)+"_faster/")
+
+            elif data[iid][solver1].result != None:
+                faster[solver1]+=[iid]
+                print("cp " + str(self._results.getFilePath(iid)) + " ./"+str(solver1)+"_faster_unknown/")
+
+            elif data[iid][solver2].result != None:
+                faster[solver2]+=[iid] 
+                print("cp " + str(self._results.getFilePath(iid)) + " ./"+str(solver2)+"_faster_unknown/")
+
+
+        #print(faster)
+
+        return webserver.views.jsonview.JSONView ("")
+
+
+
+
+
 
 
 

@@ -12,7 +12,7 @@ class CactusGenerator:
         self._solvers = solvers or self._res.getSolvers ()
         self._groups = groups or [tup[0] for tup in list(self._track.getAllGroups ())]
         self._maxPoints = 100
-        self._startPoints = 13500
+        self._startPoints = 0 # 13500
 
 
     def _solverNameMap(self,name):
@@ -51,7 +51,7 @@ class CactusGenerator:
         
     def getData (self):
         groups = self._groups
-        all_instances = True
+        all_instances = False
         rdata = {}
         woorpjebest = False
         print (groups)

@@ -25,7 +25,7 @@ class ChartController:
         best_solvers = self._result.getBestWoorpjeSolvers(general_solvers,activeGroup,woorpjePrefix)
         return general_solvers+woorpje_solvers+best_solvers
 
-    def generateCactus(self,params,to_zip=None,all_instances=False):
+    def generateCactus(self,params,to_zip=None,all_instances=False,cummulative=True):
         no_unk = False
         ideal_solver = False # True
         ideal_solver_of = ["z3str4-arrangement","z3str4-lenabs","z3str4-seq"]
@@ -60,6 +60,10 @@ class ChartController:
 
         if "all" in params:
             all_instances = True
+
+        # do not sum up in cacuts
+        if "single" in params:
+            cummulative = False
 
         if "start" in params:
             start_at = int(params["start"][0])
@@ -116,7 +120,11 @@ class ChartController:
 
             s = 0
             for i,data in enumerate(res):
-                s = s+data[2].time
+                if cummulative:
+                    s = s+data[2].time
+                else:
+                    s = data[2].time 
+
                 l.append ({"x" : i,
                               "instance" : data[1],
                               "time" : data[2].time,
@@ -201,6 +209,8 @@ class ChartController:
         import shutil
         tmpFolder = tempfile.mkdtemp()
         fileList = []
+        cummulative = True
+
 
         if "all" in params:
             all_instances = True
@@ -219,8 +229,12 @@ class ChartController:
             general_solvers = ["cvc4","z3seq","z3str3"]
             solvers = self._woorpjeSolvers(woorpjePrefix,general_solvers,None)
 
+        # do not sum up in cacuts
+        if "single" in params:
+            cummulative = False
+
         for g in groups:
-            fileList.append(apply_fun({"format":["png"],"bgroup":[g], "solver":solvers},tmpFolder,all_instances))
+            fileList.append(apply_fun({"format":["png"],"bgroup":[g], "solver":solvers},tmpFolder,all_instances,cummulative))
 
         """
         with zipfile.ZipFile('out.zip', 'w') as zipMe:        

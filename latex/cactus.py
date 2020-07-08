@@ -47,11 +47,12 @@ class CactusGenerator:
         return solver_colours
         
     def genTableHeader (self,group):
-            self._output.write ('\\resizebox{.45\\textwidth}{!}{\\begin{tikzpicture}\\begin{axis}[title='+str(group)+',xlabel=Solved instances,ylabel=Time (seconds),,legend columns=2,legend style={nodes={scale=0.5, transform shape}, fill=none,anchor=east,align=center },axis line style={draw=none}, xtick pos=left, ytick pos=left, ymajorgrids=true, legend style={draw=none}]')
+            self._output.write ('\\resizebox{.45\\textwidth}{!}{\\pgfplotsset{scaled x ticks=false}\\pgfplotsset{scaled y ticks=false}\\begin{tikzpicture}\\begin{axis}[title='+str(group)+',xlabel=Solved instances,ylabel=Time (seconds),,legend columns=2,legend style={nodes={scale=0.5, transform shape}, fill=none,anchor=east,align=center },axis line style={draw=none}, xtick pos=left, ytick pos=left, ymajorgrids=true, legend style={draw=none}]')
         
     def getData (self):
         groups = self._groups
-        all_instances = False
+        all_instances = True
+        cummulative = False # sum up the times
         rdata = {}
         woorpjebest = False
         print (groups)
@@ -76,12 +77,22 @@ class CactusGenerator:
                 # Fetch the Data
                 l = []
                 if all_instances:
-                    res = self._res.getResultForSolverNoUnk(solv)
+                    res = []
+                    #res = self._res.getResultForSolverNoUnk(solv)
+                    for g in groups:
+                       res+=self._res.getResultForSolverGroupNoUnk(solv,g) 
+
+                    ### sort
+                    res.sort(key = lambda r: r[2].time)
                 else:
                     res = self._res.getResultForSolverGroupNoUnk(solv,g)
                 s = 0
                 for i,data in enumerate(res):
-                    s = s+data[2].time
+                    if cummulative:
+                        s = s+data[2].time
+                    else:
+                        s = data[2].time 
+                    
                     l.append ({"x" : i,
                                "instance" : data[1],
                                "time" : data[2].time,

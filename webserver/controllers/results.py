@@ -414,8 +414,8 @@ class ResultController:
 
 
     def compareSequenceSolverAndArrangement(self,params):
-        solver1 = "Z3str3-RegEx-las"
-        solver2 = "Z3str3-RegEx-8fe9bcf3-las"
+        solver1 = "CVC4-18"
+        solver2 = "Z3str3-RegEx-fa4a14cd-no-las"
 
         dataSolver1 = self._results.getResultForSolverGroup(solver1,"RegEx Collected")#Stringfuzz RegEx Transformed")       # self._results.getResultForSolver(solver1)
         dataSolver2 = self._results.getResultForSolverGroup(solver2,"RegEx Collected")#Stringfuzz RegEx Transformed")     # self._results.getResultForSolver(solver2) 
@@ -432,11 +432,13 @@ class ResultController:
         faster = {str(solver1) : [], str(solver2) : []}
         gap = 15
 
+        folderName = solver1+"_solves-"+solver2+"_not"
+
         #print("mkdir "+str(solver1)+"_faster "+str(solver1)+"_faster_unknown "+str(solver2)+"_faster "+str(solver2)+"_faster_unknown")
-        print("mkdir solvable")
+        print("mkdir "+folderName)
         for iid in data.keys():
             if data[iid][solver1].result != None and data[iid][solver2].result == None:
-                print("cp " + str(self._results.getFilePath(iid)) + " ./solvable/")
+                print("cp " + str(self._results.getFilePath(iid)) + " ./"+folderName+"/")
 
 
 

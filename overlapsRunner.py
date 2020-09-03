@@ -41,28 +41,28 @@ import models.stringfuzzkillers
 
 
 import summarygenerators
-tracks = (#models.PyEx_All.getTrackData () +
+tracks = (models.PyEx_All.getTrackData () +
           #models.SMTCompQFS.getTrackData() +
           #models.SMTCompQFSLIA.getTrackData() + 
           #models.SMTLIB_UCHAR.getTrackData() +
-          #models.pisa.getTrackData ("Pisa") +
-          #models.nornbenchmarks.getTrackData ("Norn") +
-          #models.light.getTrackData("Trau Light")+
-          #models.Leetcode.getTrackData ("Leetcode Strings") + 
-          #models.appscan.getTrackData ( "IBM Appscan") + 
-          #models.slothtests.getTrackData ("Sloth") +
-          #models.woorpje.getTrackData ("Woorpje Word Equations") +
-          #models.kaluza.getTrackData ("Kaluza") +
-          #models.stringfuzz.getTrackData ("StringFuzz") +
-          #models.z3_regression.getTrackData("z3Str3 Regression")+
-          #models.cashewsuite.getTrackData ("Cashew") + 
-          #models.joacosuite.getTrackData ("JOACO") +
-          #models.strangersuite.getTrackData ("Stranger") +
-          #models.kauslersuite.getTrackData ("Kausler") +
-          #models.banditfuzz.getTrackData("BanditFuzz") +
+          models.pisa.getTrackData ("Pisa") +
+          models.nornbenchmarks.getTrackData ("Norn") +
+          models.light.getTrackData("Trau Light")+
+          models.Leetcode.getTrackData ("Leetcode Strings") + 
+          models.appscan.getTrackData ( "IBM Appscan") + 
+          models.slothtests.getTrackData ("Sloth") +
+          models.woorpje.getTrackData ("Woorpje Word Equations") +
+          models.kaluza.getTrackData ("Kaluza") +
+          models.stringfuzz.getTrackData ("StringFuzz") +
+          models.z3_regression.getTrackData("z3Str3 Regression")+
+          models.cashewsuite.getTrackData ("Cashew") + 
+          models.joacosuite.getTrackData ("JOACO") +
+          models.strangersuite.getTrackData ("Stranger") +
+          models.kauslersuite.getTrackData ("Kausler") +
+          models.banditfuzz.getTrackData("BanditFuzz") +
           models.stringfuzzregexgenerated.getTrackData()+
           models.stringfuzzregextransformed.getTrackData()+
-          models.stringfuzzkillers.getTrackData("StringFuzz RegEx New")+ 
+          #models.stringfuzzkillers.getTrackData("StringFuzz RegEx Variants")+ 
           models.RegExBenchmarks.getTrackData("RegEx Collected") +
         []
         )
@@ -70,6 +70,8 @@ tracks = (#models.PyEx_All.getTrackData () +
 
 import models.unknown
 import tools.z3str4RegNew
+import tools.z3seqbin
+import tools.z3str3dev
 
 #tracks = (models.unknown.getTrackData()+
 #          #models.probetrue.getTrackData()+
@@ -93,16 +95,18 @@ solvers = {}
 for s in [tools.cvc4,
           tools.cvc4_17,
           #tools.z3str3,
+          #tools.z3seqbin,
           tools.z3seq,
-          tools.z3str3_old,
+          tools.z3str3,
+          tools.z3str3dev,
           #tools.z3str3Mku
           #tools.z3str3Multi
           #tools.z3str4FSEArms,
           #tools.z3str4Arms,
           #tools.z3str4RegBug,
           #tools.z3str3Multi
-          tools.z3str4RegNew,
-          tools.z3str4Reg,
+          #tools.z3str4RegNew,
+          #tools.z3str4Reg,
           #tools.z3str3Multi
           #tools.cvc4,
           #tools.z3seq,
@@ -142,7 +146,7 @@ summaries = [summarygenerators.terminalResult
 timeout = 20 
 ploc = utils.JSONProgramConfig ()
 
-store = storage.SQLiteDB ("new_z3_run_pyex_all")
+store = storage.SQLiteDB ("z3Reg")
 summaries = [
     summarygenerators.terminalResult,
     store.postTrackUpdate

@@ -86,8 +86,8 @@ def run (eq,timeout,ploc,wd,solver="1",param="60"):
     return utils.Result(None,time.getTime  (),False,1,out)
 
 def addRunner (addto):
-    addto['CVC4-18'] = run
-
+    #addto['CVC4-18'] = run
+    addto['CVC4'] = run
 
 if __name__ == "__main__":
     print(run (sys.argv[1],None))

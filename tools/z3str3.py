@@ -52,7 +52,7 @@ def run (eq,timeout,ploc,wd):
     return utils.Result(None,time.getTime  (),False,1,out)
 
 def addRunner (addto):
-    addto['Z3str3-bin'] = run
+    addto['Z3str3'] = run
 
 
 if __name__ == "__main__":

@@ -24,17 +24,23 @@
 	"Z3str4RegNew" : {
            "path" : "/home/mku/tools/z3_murNew/z3"
         },
+        "RegexSolver" : {
+           "path" : "/home/mku/tools/RegexSolver/z3"
+        },
 	"Z3FSE" : {
 		"path" : "/home/mku/tools/z3str4_FSE/z3"
 	},
 	"Z3" : {
-	    "path" : "/home/mku/tools/z3Bin/bin/z3"
+	    "path" : "/home/mku/tools/z3/z3"
 	},
+	"Z3Bin" : {
+            "path" : "/home/mku/tools/z3Bin/bin/z3"
+        },
 	"Z3Mku" : {
 	    "path" : "/home/mku/tools/z3_mku/build/z3"
 	},
-	"Z3Unicode" : {
-	    "path" : "/home/mku/tools/z3_mur/unicode-strings/z3"
+	"Z3Dev" : {
+	    "path" : "/home/mku/tools/z3_59e9c87/z3"
 	},
 	"Z3RemoveCtxDepAnalysis" : {
 	     "path" : "/home/mku/tools/z3_mur/remove-ctx-dep-analysis/z3"

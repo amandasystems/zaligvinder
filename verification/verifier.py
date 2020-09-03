@@ -120,10 +120,6 @@ class Verifier:
             tempd = tempfile.mkdtemp ()
             assertedInputFile = self._modifyInputFile(tempd,foundModel,filepath)
            
-            print(filepath)
-            print(assertedInputFile)
-
-
             for vn in verifiers:
                 v = self.getSolver(vn)
                 if v == None:
@@ -140,5 +136,5 @@ class Verifier:
                 else:
                     vRes = vRes and thisRes
             res.verified = vRes
-            #shutil.rmtree (tempd)
+            shutil.rmtree (tempd)
         return res

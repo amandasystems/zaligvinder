@@ -31,12 +31,15 @@ import models.banditfuzz
 import models.RegExBenchmarks
 import models.stringfuzzregextransformed
 import models.stringfuzzregexgenerated
+import models.automatark25
 import startwebserver
 
 
 import tools.cvc4_16
 import tools.cvc4_17
 import tools.z3str3_old
+import tools.ostrich
+import tools.z3seqbin488
 import models.stringfuzzkillers
 
 
@@ -60,18 +63,20 @@ tracks = (models.PyEx_All.getTrackData () +
           models.strangersuite.getTrackData ("Stranger") +
           models.kauslersuite.getTrackData ("Kausler") +
           models.banditfuzz.getTrackData("BanditFuzz") +
+          models.automatark25.getTrackData()+
           models.stringfuzzregexgenerated.getTrackData()+
           models.stringfuzzregextransformed.getTrackData()+
-          #models.stringfuzzkillers.getTrackData("StringFuzz RegEx Variants")+ 
-          models.RegExBenchmarks.getTrackData("RegEx Collected") +
+          #models.RegExBenchmarks.getTrackData("RegEx Collected") +
         []
         )
 
 
 import models.unknown
 import tools.z3str4RegNew
+import tools.z3str4Reg
 import tools.z3seqbin
 import tools.z3str3dev
+import tools.z3tacas
 
 #tracks = (models.unknown.getTrackData()+
 #          #models.probetrue.getTrackData()+
@@ -93,12 +98,14 @@ smtsolvers = ["cvc4"]
 
 solvers = {}
 for s in [tools.cvc4,
-          tools.cvc4_17,
+          #tools.ostrich,
+          #tools.cvc4_17,
           #tools.z3str3,
           #tools.z3seqbin,
-          tools.z3seq,
-          tools.z3str3,
-          tools.z3str3dev,
+          #tools.z3seqbin488,
+          #tools.z3seq,
+          #tools.z3str3_old,
+          #tools.z3str3dev,
           #tools.z3str3Mku
           #tools.z3str3Multi
           #tools.z3str4FSEArms,
@@ -106,9 +113,12 @@ for s in [tools.cvc4,
           #tools.z3str4RegBug,
           #tools.z3str3Multi
           #tools.z3str4RegNew,
+          #tools.trau,
+          tools.z3str4Reg,
+          #tools.z3tacas,
           #tools.z3str4Reg,
           #tools.z3str3Multi
-          #tools.cvc4,
+          #:qtools.cvc4,
           #tools.z3seq,
           #tools.z3str3,
           #tools.z3seq_old,
@@ -135,7 +145,6 @@ for s in [tools.cvc4,
           #tools.z3str2,
           #tools.z3str3length,
           #tools.woorpjeSMT
-          #tools.trau,
           #tools.dummy
 ]:
     s.addRunner (solvers)

@@ -19,7 +19,7 @@
            "path" : "/home/mku/tools/z3_fed_old/z3"
         },
 	"Z3str4Reg" : {
-	   "path" : "/home/mku/tools/z3_mur/z3"
+	   "path" : "/home/mku/tools/z3_murNewest/z3"
 	},
 	"Z3str4RegNew" : {
            "path" : "/home/mku/tools/z3_murNew/z3"
@@ -33,9 +33,15 @@
 	"Z3" : {
 	    "path" : "/home/mku/tools/z3/z3"
 	},
+	"Z3Tacas" : {
+            "path" : "/home/mku/tools/z3_tacas/z3"
+        },
 	"Z3Bin" : {
             "path" : "/home/mku/tools/z3Bin/bin/z3"
         },
+	"Z3Bin488" : {
+		"path" : "/home/mku/tools/z3Bin/bin488/z3"
+	},
 	"Z3Mku" : {
 	    "path" : "/home/mku/tools/z3_mku/build/z3"
 	},
@@ -85,7 +91,11 @@
 	    "path" : "/path/to/norn"
 	},
 	"Trau" : {
-	    "path" : "/home/mku/tools/trau/z3"
+	    "path" : "/home/mku/tools/z3_TRAU/z3"
+	},
+	"Ostrich" : {
+	    "path" : "/home/mku/share/tool_source/ostrich/ostrich-bin-1.0.1/ostrich"
 	}
+
     }
 }

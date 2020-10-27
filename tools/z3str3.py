@@ -35,7 +35,7 @@ def run (eq,timeout,ploc,wd):
         return utils.Result(None,timeout,True,1)
     except subprocess.CalledProcessError as e:
         time.stop()
-        out = "Error in " + eq + ": " + str(e)
+        out = "Error in " + eq + ": " + str(e.output)
         return utils.Result(None,time.getTime(),False,1,out)
 
     time.stop()    
@@ -52,7 +52,7 @@ def run (eq,timeout,ploc,wd):
     return utils.Result(None,time.getTime  (),False,1,out)
 
 def addRunner (addto):
-    addto['Z3str3'] = run
+    addto['Z3str3_6cc52e0'] = run
 
 
 if __name__ == "__main__":

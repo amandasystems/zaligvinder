@@ -53,7 +53,14 @@ def run (eq,timeout,ploc,wd):
         return utils.Result(True,time.getTime(),False,1,out,"\n".join(out.split("\n")[1:]))
     elif time.getTime() >= timeout:
         return utils.Result(None,timeout,True,1)
-    return utils.Result(None,time.getTime  (),False,1,out)
+    elif "unknown" in out:
+        return utils.Result(None,time.getTime  (),False,1,out)
+    else:
+        # must be an error
+        return utils.Result(None,time.getTime (), False,1,f"Error in {eq} # stdout: {out}")
+
+
+
 
 def addRunner (addto):
     addto['trau'] = run

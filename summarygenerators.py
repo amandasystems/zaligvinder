@@ -73,18 +73,19 @@ def terminalResult (track,res):
         smtcalls = sum([i.smtcalls for i in res[n]])
         sat = sum([1 for i in res[n] if True == i.result])
         nsat = sum([1 for i in res[n] if False == i.result])
-        unk = sum([1 for i in res[n] if None == i.result and i.timeouted != True])   
+        unk = sum([1 for i in res[n] if None == i.result and i.timeouted != True and not i.output.startswith("Error in")])   
         to = sum([1 for i in res[n] if None == i.result and i.timeouted == True])
         t = sum([i.time for i in res[n] ])
         two = sum([i.time for i in res[n] if i.timeouted != True])
         verified = sum([1 for i in res[n] if i.verified == True])
+        crashes = sum([1 for i in res[n] if i.output.startswith("Error in")])
         #cort = sum([i[0][1] for i in zip([(j.result,j.time) for j in res[n]],ref) if i[0][0] == i[1] and i[1] != None])
         #conjunctives = sum([1 for i in res[n] if "### CONJUNCTIVE: YES" in i.output])
         #not_conjunctives = sum([1 for i in res[n] if "### CONJUNCTIVE: NO" in i.output])
         #simple_solved = sum([1 for i in res[n] if "### CONJUNCTIVE:" not in i.output])
         error = errors[n] 
-        table.append ([n,sat,nsat,unk,to,error,verified,t,two])
-    print(tabulate.tabulate(table,["Solver", "Satis", "NSatis", "Unknown", "Timeout", "Errors", "Verified", "Total Time", "Total Time w/o Timeout"]))
+        table.append ([n,sat,nsat,unk,to,error,verified,crashes,t,two])
+    print(tabulate.tabulate(table,["Solver", "Satis", "NSatis", "Unknown", "Timeout", "Errors", "Verified", "Crashes", "Total Time", "Total Time w/o Timeout"]))
 
 def cactusPlot (track,res):
     name,files = track.name,track.instances

@@ -8,13 +8,14 @@ class DBPTest:
     def cdl_entry(self,params):
         solvers = self._result.getSolvers ()
         data = self._result.getTrackInfo ()
+        instanceCount = self._result.getInstancesCount()
         benchmarks = data.keys()
         tracks = []
 
         for b in benchmarks:
             tracks += data[b]
 
-        return webserver.views.charts.base.EntryView (benchmarks,tracks,solvers)
+        return webserver.views.charts.base.EntryView (benchmarks,tracks,solvers,instanceCount)
         
     def cdl_test (self,params):
         #solvers = self._result.getSolvers ()

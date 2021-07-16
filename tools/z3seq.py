@@ -1,4 +1,3 @@
-import tools.woorpje2smt
 import subprocess
 import tempfile
 import os
@@ -11,7 +10,7 @@ import timer
 #path = utils.findProgram ("Z3BINARY","z3")
 
 def run (eq,timeout,ploc,wd):
-    path = ploc.findProgram ("Z3")
+    path = ploc.findProgram ("Z3Bin")
     if not path:
         raise "Z3 Not in Path"
 
@@ -33,24 +32,30 @@ def run (eq,timeout,ploc,wd):
     try:
         out = subprocess.check_output ([path,"smt.string_solver=seq","dump_models=true",smtfile],timeout=timeout).decode().strip()
     except subprocess.TimeoutExpired:
-        return utils.Result(None,timeout,True,1)
+        return utils.Result(None,timeout*1000,True,1)
     except subprocess.CalledProcessError as e:
+        time.stop()
         out = "Error in " + eq + ": " + str(e)
-        return utils.Result(None,timeout,False,1,out)
+        return utils.Result(None,time.getTime_ms(),False,1,out)
 
     time.stop()    
 
     if "NOT IMPLEMENTED YET!" in out and not time >= timeout:
         out = "Error in " + eq + ": " + out    
     shutil.rmtree (tempd)
+    
+    #print(smtfile)
+    
     if "unsat" in out:
-        return utils.Result(False,time.getTime (),False,1,out)
+        return utils.Result(False,time.getTime_ms(),False,1,out)
     elif "sat" in out:
-        return utils.Result(True,time.getTime(),False,1,out,"\n".join(out.split("\n")[1:]))
-    return utils.Result(None,time.getTime  (),False,1,out)
+        return utils.Result(True,time.getTime_ms(),False,1,out,"\n".join(out.split("\n")[1:]))
+    elif time.getTime() >= timeout:
+        return utils.Result(None,timeout*1000,True,1)    
+    return utils.Result(None,time.getTime_ms(),False,1,out)
 
 def addRunner (addto):
-    addto['z3seq'] = run
+    addto['Z3seq'] = run
 
 
 if __name__ == "__main__":

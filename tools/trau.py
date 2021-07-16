@@ -1,4 +1,3 @@
-import tools.woorpje2smt
 import subprocess
 import tempfile
 import os
@@ -16,7 +15,7 @@ def run (eq,timeout,ploc,wd):
         raise "Trau Not in Path"
 
     tempd = tempfile.mkdtemp ()
-    smtfile = os.path.join (tempd,"out.smt")
+    smtfile = os.path.join (tempd,"out_trau.smt")
     #tools.woorpje2smt.run (eq,smtfile,ploc)
 
 
@@ -36,13 +35,11 @@ def run (eq,timeout,ploc,wd):
     try:
         out = subprocess.check_output ([path,"smt.string_solver=trau","dump_models=true",smtfile],timeout=timeout).decode().strip()
     except subprocess.TimeoutExpired:
-        return utils.Result(None,timeout,True,1)
-    except subprocess.CalledProcessError:
-        return utils.Result(None,timeout,False,1)
-
+        return utils.Result(None,timeout*1000,True,1)
     except subprocess.CalledProcessError as e:
+        time.stop()
         out = "Error in " + eq + ": " + str(e)
-        return utils.Result(None,timeout,False,1,out)
+        return utils.Result(None,time.getTime_ms(),False,1,out)
 
     time.stop()    
 
@@ -51,13 +48,22 @@ def run (eq,timeout,ploc,wd):
         
     shutil.rmtree (tempd)
     if "unsat" in out:
-        return utils.Result(False,time.getTime (),False,1,out)
+        return utils.Result(False,time.getTime_ms (),False,1,out)
     elif "sat" in out:
-        return utils.Result(True,time.getTime(),False,1,out,"\n".join(out.split("\n")[1:]))
-    return utils.Result(None,time.getTime  (),False,1,out)
+        return utils.Result(True,time.getTime_ms(),False,1,out,"\n".join(out.split("\n")[1:]))
+    elif time.getTime() >= timeout:
+        return utils.Result(None,timeout*1000,True,1)
+    elif "unknown" in out:
+        return utils.Result(None,time.getTime_ms  (),False,1,out)
+    else:
+        # must be an error
+        return utils.Result(None,time.getTime_ms (), False,1,f"Error in {eq} # stdout: {out}")
+
+
+
 
 def addRunner (addto):
-    addto['trau'] = run
+    addto['Z3Trau'] = run
 
 
 if __name__ == "__main__":

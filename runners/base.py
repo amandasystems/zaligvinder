@@ -1,7 +1,5 @@
-#!/usr/bin/python3
 import os
 import sys
-import utils
 
 def progressMessage (track,file,solver,cur,total):
     sys.stdout.write ("\x1b[2K\r[ {0}  {1} {2} - {3}/{4}]".format(track,file,solver,cur+1,total))
@@ -22,9 +20,9 @@ class TheRunner:
         sys.stdout.write ("\n")
         return results
 
-    def runTestSetup (self,tracks,solvers,voter,summaries,outputfile,timeout,ploc):
+    def runTestSetup (self,tracks,solvers,voter,summaries,outputfile,timeout,ploc,verifiers=dict()):
         for t in tracks:
             res = self.runTrack (t,solvers,outputfile,timeout,ploc)
-            voter.voteOnResult (t,res)
+            voter.voteOnResult (t,res,verifiers)
             for s in summaries:
                 s(t,res)

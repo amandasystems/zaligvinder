@@ -296,15 +296,18 @@ The first cactus plot lists all instances of a track / benchmark set. It gives a
 <p>We distribute the source of ZaligVinder <a href="https://git.zs.informatik.uni-kiel.de/dbp/wordbenchmarks">here</a>. The results shown on this website are available as SQLite database file for ZaligVinder. You can download it <a href="https://www.informatik.uni-kiel.de/~mku/zaligvinder/ZaligVinder_AST20_database.tar.gz">here</a>.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_a_comparison_on_the_collection_of_benchmarks">A comparison on the collection of benchmarks</h3>
+</div>
+</div>
+<div class="sect1">
+
+<h2 id="_a_comparison_on_the_collection_of_benchmarks">A comparison on the collection of benchmarks</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Within the paper we gather sets of benchmarks from literature. They are a available <a href="https://git.zs.informatik.uni-kiel.de/dbp/wordbenchmarks/tree/comparison_start/models">here</a>.</p>
 </div>
 <div class="paragraph">
 <p>In the following we give a small summary overview, of how four of the major string solvers, <a href="http://cvc4.cs.stanford.edu/web/">CVC4</a>, <a href="https://github.com/Z3Prover/z3">Z3str</a>, <a href="https://github.com/Z3Prover/z3">Z3Seq</a> and
 <a href="https://github.com/guluchen/z3/tree/new_trau">Trau</a>, and our tool <a href="https://www.informatik.uni-kiel.de/~mku/woorpjeLevi/">Woorpje</a> (on it&#8217;s restricted set of features) survived.</p>
-</div>
 </div>
 <div class="paragraph">
 <p>To obtain the below results we used a server having 64 Intel&#174; Xeon&#174; Gold 6242 CPU @ 2.80GHz and 1.5 TB RAM running Ubuntu Linux. We compiled the master of Z3s <a href="https://github.com/Z3Prover/z3.git">GIT</a> on commit c816d45a7def3f7ca18fa3e94f28f7450c183a05 for Z3str3 and Z3Seq.
@@ -323,12 +326,17 @@ For Trau we used their <a href="https://github.com/guluchen/z3.git">GIT</a> vers
 <p><code>pytho3 ast20</code></p>
 </div>
 <div class="paragraph">
-<p>The script will create an SQLite Database file and produces a shell output.</p>
+<p>The script will create a SQLite Database file and produces a shell output.</p>
 </div>
 <div class="sect2">
 <h3 id="_woorpje_word_equations">Woorpje Word Equations</h3>
 <div class="paragraph">
 <p>We created a set of benchmarks to test the abilities of our tool Woorpje. It contains 5 tracks with instances containing mostly string constraints, but also linear length constrains. Running this set on their competitors revealed its difficulty. The set is generated using several hard involved examples developed in the theoretical study of word equations.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="img/woorpje.png" alt="cactus">
+</div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -353,194 +361,194 @@ For Trau we used their <a href="https://github.com/guluchen/z3.git">GIT</a> vers
 <td class="tableblock halign-left valign-top"><p class="tableblock">Total time</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">z3seq</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">539</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">165</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">105</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">105</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">809</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3570.63</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">z3str3</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">448</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">175</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">186</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">11</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">163</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">809</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">5448.80</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">cvc4</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">539</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">163</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">107</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">107</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">809</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3418.15</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">trau</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">563</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">208</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">38</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">25</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">38</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">809</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1983.50</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">variableTermRatio_3.14_cvc4</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">610</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">611</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">164</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">35</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">35</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">34</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">809</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1325.08</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1333.49</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">variableTermRatio_3.14_z3str3</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">568</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">569</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">162</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">79</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">78</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">77</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">809</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2939.16</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2937.93</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">variableTermRatio_3.14_z3seq</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">614</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">612</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">164</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">31</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">31</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">33</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">809</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1360.05</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1448.25</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">waitingListLimit_15_cvc4</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">613</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">612</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">161</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">35</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">35</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">36</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">809</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1295.04</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1320.17</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">waitingListLimit_15_z3str3</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">570</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">571</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">160</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">79</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">79</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">77</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">809</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2912.04</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2864.23</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">waitingListLimit_15_z3seq</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">613</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">617</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">161</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">35</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">35</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">31</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">809</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1450.13</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1380.54</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">equationGrowth_1.075_cvc4</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">611</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">613</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">162</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">36</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">36</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">34</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">809</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1404.98</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1350.58</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">equationGrowth_1.075_z3str3</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">583</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">161</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">65</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">63</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">64</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">809</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2402.44</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2445.48</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">equationGrowth_1.075_z3seq</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">605</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">603</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">162</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">42</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">41</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">44</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">809</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1659.15</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1722.63</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">equationLength_20_cvc4</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">609</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">164</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">36</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">36</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">809</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1390.61</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1378.36</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">equationLength_20_z3str3</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">558</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">163</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">88</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">86</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">809</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3194.53</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3154.42</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">equationLength_20_z3seq</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">614</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">163</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">32</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">32</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">616</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">164</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">29</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">809</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1441.03</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1382.88</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">none_5_cvc4</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">603</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">602</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">161</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">45</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">44</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">809</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1649.46</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1660.04</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">none_5_z3str3</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">605</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">161</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">43</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">40</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">42</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">809</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1580.76</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1603.85</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">none_5_z3seq</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">606</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">161</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">42</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">41</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">809</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1590.30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1596.05</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">z3seq</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">535</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">165</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">109</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">809</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3640.26</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">z3str3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">446</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">176</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">23</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">13</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">164</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">809</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5281.62</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cvc4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">539</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">163</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">107</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">809</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3417.15</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">trau</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">562</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">208</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">39</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">809</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1967.58</p></td>
 </tr>
 </tbody>
 </table>
@@ -554,6 +562,11 @@ marks. They used 19 target functions sampled from four popular Python packages t
 <div class="paragraph">
 <p>The benchmarks are available <a href="https://sites.google.com/site/z3strsolver/benchmarks">here</a>.</p>
 </div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="img/pyex.png" alt="cactus">
+</div>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 12.5%;">
@@ -578,43 +591,43 @@ marks. They used 19 target functions sampled from four popular Python packages t
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">z3seq</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">6481</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1370</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">563</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6497</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1369</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">563</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">548</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">8414</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">26248.39</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">26246.91</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">z3str3</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1130</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1735</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">5549</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">373</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">5077</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1129</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1784</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">444</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">414</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5057</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">8414</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">174072.27</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">163031.49</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cvc4</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">6291</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6295</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1357</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">766</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">766</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">762</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">8414</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">32389.03</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">32440.41</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">trau</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">7018</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7019</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1384</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">12</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">12</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">8414</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">5367.56</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5307.30</p></td>
 </tr>
 </tbody>
 </table>
@@ -627,6 +640,11 @@ marks. They used 19 target functions sampled from four popular Python packages t
 <div class="paragraph">
 <p>The benchmarks are available <a href="https://sites.google.com/site/z3strsolver/benchmarks">here</a>.</p>
 </div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="img/pisa.png" alt="cactus">
+</div>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 12.5%;">
@@ -657,17 +675,17 @@ marks. They used 19 target functions sampled from four popular Python packages t
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">12</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0.50</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.53</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">z3str3</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">7</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">12</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">30.60</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">30.63</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cvc4</p></td>
@@ -677,7 +695,7 @@ marks. They used 19 target functions sampled from four popular Python packages t
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">12</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.06</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.11</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">trau</p></td>
@@ -687,7 +705,7 @@ marks. They used 19 target functions sampled from four popular Python packages t
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">12</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0.59</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.60</p></td>
 </tr>
 </tbody>
 </table>
@@ -701,6 +719,11 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <div class="paragraph">
 <p>The benchmarks are available <a href="http://user.it.uu.se/~jarst116/norn/">here</a>.</p>
 </div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="img/norn.png" alt="cactus">
+</div>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 12.5%;">
@@ -725,33 +748,33 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">z3seq</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">552</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">544</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">104</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">371</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">40</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">331</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">339</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1027</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">13297.80</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">12244.94</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">z3str3</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">217</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">89</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">721</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">658</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">90</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">66</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">654</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1027</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">21677.49</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">20145.14</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cvc4</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">656</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">186</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">185</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">185</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1027</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">5668.27</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5668.98</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">trau</p></td>
@@ -761,7 +784,7 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">74</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1027</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">18960.72</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">218.54</p></td>
 </tr>
 </tbody>
 </table>
@@ -774,6 +797,11 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <div class="paragraph">
 <p>Set taken from <a href="https://github.com/guluchen/z3/tree/master">here</a>.</p>
 </div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="img/trau.png" alt="cactus">
+</div>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 12.5%;">
@@ -800,41 +828,41 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">z3seq</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">94</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">100</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">64.53</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">64.34</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">z3str3</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">93</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">100</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">33.90</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">33.95</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cvc4</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">94</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">100</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">93.07</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">93.22</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">trau</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">94</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">100</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">42.66</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">42.90</p></td>
 </tr>
 </tbody>
 </table>
@@ -844,6 +872,11 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <div class="paragraph">
 <p>An interesting set of benchmarks shared by the <a href="https://github.com/guluchen/z3/tree/master">Trau</a> developers.</p>
 </div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="img/leetcode.png" alt="cactus">
+</div>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 12.5%;">
@@ -874,27 +907,27 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2666</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">96.82</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">98.53</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">z3str3</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">653</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1790</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">223</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">69</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1791</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">157</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">65</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2666</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2282.71</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2186.52</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cvc4</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">876</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">881</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1785</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2666</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">361.02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">328.82</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">trau</p></td>
@@ -904,7 +937,7 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">2666</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">305.80</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">309.15</p></td>
 </tr>
 </tbody>
 </table>
@@ -917,6 +950,11 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <div class="paragraph">
 <p>The benchmarks are available <a href="https://sites.google.com/site/z3strsolver/benchmarks">here</a>.</p>
 </div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="img/ibm.png" alt="cactus">
+</div>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 12.5%;">
@@ -943,31 +981,31 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">z3seq</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">7</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">8</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">31.68</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">31.69</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">z3str3</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">8</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">150.16</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">124.08</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cvc4</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">7</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">8</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">43.57</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">43.56</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">trau</p></td>
@@ -977,7 +1015,7 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">8</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2.72</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.73</p></td>
 </tr>
 </tbody>
 </table>
@@ -987,6 +1025,11 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <div class="paragraph">
 <p>A nice set of benchmarks shared by the Sloth developers. This set is available in their <a href="https://github.com/uuverifiers/sloth/tree/master/tests">GIT</a>.</p>
 </div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="img/stringfuzz.png" alt="cactus">
+</div>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 12.5%;">
@@ -1011,43 +1054,43 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">z3seq</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">11</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">12</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">17</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">408</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">207</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">40</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">510.96</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">450</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1065</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">14602.83</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">z3str3</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">9</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">10</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">21</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">591</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">223</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">9</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">40</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">630.67</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">246</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1065</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8028.16</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cvc4</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">20</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">16</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">626</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">259</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">40</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">120.90</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">180</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1065</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5894.73</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">trau</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">11</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">13</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">16</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">40</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">480.80</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">512</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">329</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">12</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">223</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1065</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7416.98</p></td>
 </tr>
 </tbody>
 </table>
@@ -1060,6 +1103,11 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <div class="paragraph">
 <p>The benchmarks are available <a href="https://sites.google.com/site/z3strsolver/benchmarks">here</a>.</p>
 </div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="img/stringfuzz.png" alt="cactus">
+</div>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 12.5%;">
@@ -1084,43 +1132,43 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">z3seq</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">409</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">408</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">207</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">449</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">449</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">450</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1065</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">14554.45</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">14602.83</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">z3str3</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">591</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">224</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">250</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">223</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">245</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">246</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1065</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">7997.74</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8028.16</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cvc4</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">626</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">259</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">180</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">180</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1065</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">5900.69</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5894.73</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">trau</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">511</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">328</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">226</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">512</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">329</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">12</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">225</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">223</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1065</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">7452.32</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7416.98</p></td>
 </tr>
 </tbody>
 </table>
@@ -1133,6 +1181,11 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <div class="paragraph">
 <p>The benchmarks are available <a href="https://sites.google.com/site/z3strsolver/benchmarks">here</a>.</p>
 </div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="img/kaluza.png" alt="cactus">
+</div>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 12.5%;">
@@ -1157,48 +1210,53 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">z3seq</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">33438</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">33301</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">11799</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2047</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2047</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2184</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">47284</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">66661.53</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">70747.60</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">z3str3</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">32560</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">11831</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2893</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">32633</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">11832</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">237</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">32</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2643</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2582</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">47284</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">85791.92</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">84339.60</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cvc4</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">35162</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">35235</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">12014</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">108</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">35</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">47284</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">19975.44</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">17841.00</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">trau</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">34858</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">34856</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">12014</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">412</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">412</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">414</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">47284</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">27302.20</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">27307.57</p></td>
 </tr>
 </tbody>
 </table>
 <div class="sect3">
 <h4 id="_kaluza_restricted_to_the_feature_set_of_woorpje">Kaluza restricted to the feature set of woorpje</h4>
+<div class="imageblock text-center">
+<div class="content">
+<img src="img/kaluzawoorpje.png" alt="cactus">
+</div>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 12.5%;">
@@ -1220,46 +1278,6 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">Timeout</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Total instances</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Total time</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">z3seq</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">586.79</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">z3str3</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">587.84</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">cvc4</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">337.42</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">trau</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">600.29</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">variableTermRatio_3.14_cvc4</p></td>
@@ -1269,7 +1287,7 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">446.72</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">353.26</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">variableTermRatio_3.14_z3str3</p></td>
@@ -1279,7 +1297,7 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">583.30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">491.66</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">variableTermRatio_3.14_z3seq</p></td>
@@ -1289,7 +1307,7 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">585.04</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">493.93</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">waitingListLimit_15_cvc4</p></td>
@@ -1299,7 +1317,7 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">420.44</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">328.10</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">waitingListLimit_15_z3str3</p></td>
@@ -1309,7 +1327,7 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">494.62</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">402.88</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">waitingListLimit_15_z3seq</p></td>
@@ -1319,7 +1337,7 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">491.02</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">399.78</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">equationGrowth_1.075_cvc4</p></td>
@@ -1329,7 +1347,7 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">419.84</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">328.45</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">equationGrowth_1.075_z3str3</p></td>
@@ -1339,7 +1357,7 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">495.73</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">404.05</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">equationGrowth_1.075_z3seq</p></td>
@@ -1349,7 +1367,7 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">492.37</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">400.11</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">equationLength_20_cvc4</p></td>
@@ -1359,7 +1377,7 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">420.57</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">327.61</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">equationLength_20_z3str3</p></td>
@@ -1369,7 +1387,7 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">495.39</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">403.28</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">equationLength_20_z3seq</p></td>
@@ -1379,7 +1397,7 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">488.30</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">397.56</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">none_5_cvc4</p></td>
@@ -1389,7 +1407,7 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">418.38</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">327.66</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">none_5_z3str3</p></td>
@@ -1399,7 +1417,7 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">474.82</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">384.72</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">none_5_z3seq</p></td>
@@ -1409,7 +1427,47 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">450.72</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">363.54</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">z3seq</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">511.90</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">z3str3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">512.28</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">cvc4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">260.01</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">trau</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">14793</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">524.46</p></td>
 </tr>
 </tbody>
 </table>
@@ -1423,6 +1481,11 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <div class="paragraph">
 <p>The benchmarks are available <a href="https://ieee-dataport.org/documents/benchmark-suite-integrated-approach-effective-injection-vulnerability-analysis-web">here</a>.</p>
 </div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="img/cashew.png" alt="cactus">
+</div>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 12.5%;">
@@ -1447,43 +1510,43 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">z3seq</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">377</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">376</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">12</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">394</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">210.04</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">238.68</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">z3str3</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">360</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">361</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">12</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">22</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">22</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">21</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">394</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">674.42</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">650.20</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cvc4</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">367</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">366</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">12</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">15</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">15</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">16</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">394</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">507.69</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">516.41</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">trau</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">376</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">12</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">6</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">6</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">394</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">226.18</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">225.96</p></td>
 </tr>
 </tbody>
 </table>
@@ -1496,6 +1559,11 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <div class="paragraph">
 <p>The benchmarks are available <a href="https://ieee-dataport.org/documents/benchmark-suite-integrated-approach-effective-injection-vulnerability-analysis-web">here</a>.</p>
 </div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="img/joaco.png" alt="cactus">
+</div>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 12.5%;">
@@ -1526,7 +1594,7 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">94</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">271.54</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">268.17</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">z3str3</p></td>
@@ -1536,17 +1604,17 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">94</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">6.19</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6.12</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cvc4</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">57</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">21</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">16</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">16</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">94</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">483.27</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">483.21</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">trau</p></td>
@@ -1556,7 +1624,7 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">94</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1744.34</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">59.68</p></td>
 </tr>
 </tbody>
 </table>
@@ -1569,6 +1637,11 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <div class="paragraph">
 <p>The benchmarks are available <a href="https://ieee-dataport.org/documents/benchmark-suite-integrated-approach-effective-injection-vulnerability-analysis-web">here</a>.</p>
 </div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="img/stranger.png" alt="cactus">
+</div>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 12.5%;">
@@ -1599,7 +1672,7 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">32.78</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">33.07</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">z3str3</p></td>
@@ -1609,13 +1682,13 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">0.55</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0.56</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cvc4</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
@@ -1629,7 +1702,7 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">5.35</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5.37</p></td>
 </tr>
 </tbody>
 </table>
@@ -1641,6 +1714,11 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 </div>
 <div class="paragraph">
 <p>The benchmarks are available <a href="https://ieee-dataport.org/documents/benchmark-suite-integrated-approach-effective-injection-vulnerability-analysis-web">here</a>.</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="img/kausler.png" alt="cactus">
+</div>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1668,21 +1746,21 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">z3seq</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">119</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">120</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">89.72</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">75.63</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">z3str3</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">115</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">120</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">165.47</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">134.76</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">cvc4</p></td>
@@ -1692,7 +1770,7 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">120</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">40.78</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">41.95</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">trau</p></td>
@@ -1702,7 +1780,7 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">120</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">9.36</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">9.11</p></td>
 </tr>
 </tbody>
 </table>
@@ -1733,7 +1811,7 @@ benchmarks , but makes heavy use of regular expressions containing Kleene stars.
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-01-24 20:32:34 +0100
+Last updated 2020-01-26 10:42:59 +0100
 </div>
 </div>
 <script type="text/x-mathjax-config">
